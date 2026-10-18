@@ -1,0 +1,35 @@
+.avatar {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 47px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-red);
+}
+
+.circle {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.initials {
+  position: relative;
+  color: var(--color-white);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+@media (min-width: 1024px) {
+  .avatar {
+    width: 101px;
+    height: 101px;
+  }
+
+  .initials {
+    font-size: 40px;
+  }
+}

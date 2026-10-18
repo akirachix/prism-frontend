@@ -1,0 +1,173 @@
+.shell {
+  --nav-height: 80px;
+  --nav-active-mobile: #f07934;
+
+  min-height: 100vh;
+  background: var(--color-cream);
+  color: var(--color-navy);
+}
+
+.content {
+  min-width: 0;
+
+  padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom));
+}
+
+.main {
+  width: 100%;
+}
+
+.sidebar {
+  position: fixed;
+  z-index: 10;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-bottom: env(safe-area-inset-bottom);
+  border-top: 1px solid #000;
+  background: var(--color-white);
+}
+
+.logo {
+  display: none;
+}
+
+.nav {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  height: var(--nav-height);
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--color-navy);
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.icon {
+  width: 32px;
+  height: 28px;
+}
+
+.active {
+  color: var(--nav-active-mobile);
+}
+
+@media (min-width: 1024px) {
+  .shell {
+    display: grid;
+    grid-template-columns: clamp(240px, 22.5vw, 324px) minmax(0, 1fr);
+  }
+
+  .content {
+    padding-bottom: 48px;
+  }
+
+  .main {
+    max-width: none;
+    margin: 0;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 0;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    height: 100vh;
+    padding: 40px 0 0 24px;
+    border-top: none;
+    background: var(--color-navy);
+    color: var(--color-white);
+  }
+
+  .logo {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    margin-left: 11px;
+  }
+
+  .logoMark {
+    display: block;
+    width: 68px;
+    height: 63px;
+  }
+
+  .logoText {
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 38px;
+  }
+
+  .nav {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    height: auto;
+    margin-top: 90px;
+  }
+
+  .link {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 21px;
+    height: 50px;
+    padding-left: 18px;
+    border-radius: 20px 0 0 20px;
+    color: var(--color-white);
+    font-size: clamp(22px, 2.1vw, 30px);
+    font-weight: 600;
+  }
+
+  .link:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .icon {
+    width: 32px;
+    height: 29px;
+  }
+
+  .active,
+  .active:hover {
+    background: var(--color-red);
+    color: var(--color-white);
+  }
+}
+
+.iconWrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -12px;
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border: 2px solid var(--color-white);
+  border-radius: 10px;
+  background: var(--color-red);
+  color: var(--color-white);
+  font-family: var(--font-button-mobile);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+@media (min-width: 1024px) {
+  .badge {
+    border-color: var(--color-navy);
+  }
+}

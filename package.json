@@ -1,26 +1,61 @@
 {
-  "name": "my-app",
+  "name": "prism-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "features": "node scripts/register-features.mjs",
+    "predev": "npm run features",
     "dev": "next dev",
+    "prebuild": "npm run features",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "prelint": "npm run features",
+    "lint": "eslint",
+    "pretypecheck": "npm run features",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "pretest": "npm run features",
+    "test": "jest",
+    "test:watch": "npm run features && jest --watch",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run build"
   },
   "dependencies": {
+    "@fontsource/inter": "^5.1.0",
+    "@fontsource/quicksand": "^5.1.0",
+    "@hookform/resolvers": "^5.2.1",
     "next": "16.4.2",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "react-hook-form": "^7.62.0",
+    "zod": "^4.1.5"
   },
   "devDependencies": {
+    "@mswjs/interceptors": "0.37.6",
     "@tailwindcss/turbopack": "^4",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
+    "eslint-config-prettier": "^10.1.8",
+    "jest": "^30.0.0",
+    "jest-environment-jsdom": "^30.0.0",
+    "jest-fixed-jsdom": "^0.0.10",
+    "msw": "2.7.3",
+    "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "description": "mirAI PWA for teachers and parents.",
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

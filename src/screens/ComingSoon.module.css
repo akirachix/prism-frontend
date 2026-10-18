@@ -1,0 +1,125 @@
+.page {
+  --orange: #f47c30;
+  --muted: #5a6b8a;
+  --line: #6e83a5;
+
+  display: grid;
+  min-height: 100vh;
+  padding: 24px;
+  place-items: center;
+  background: var(--color-cream);
+  color: var(--color-navy);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 520px;
+  padding: 40px 24px 28px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--color-white);
+  text-align: center;
+}
+
+.badge {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--color-navy);
+  color: var(--color-white);
+  box-shadow:
+    0 0 0 8px var(--color-cream),
+    0 0 0 9px var(--orange);
+}
+
+.icon {
+  width: 34px;
+  height: 34px;
+}
+
+.title {
+  margin: 28px 0 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.text {
+  max-width: 360px;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.primary,
+.secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 28px;
+  border: 2px solid var(--color-navy);
+  border-radius: 24px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.primary {
+  background: var(--color-red);
+  color: var(--color-white);
+}
+
+.secondary {
+  background: var(--color-white);
+  color: var(--color-navy);
+}
+
+.primary:focus-visible,
+.secondary:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 2px;
+}
+
+@media (min-width: 1024px) {
+  .card {
+    max-width: 640px;
+    padding: 64px 48px 48px;
+  }
+
+  .title {
+    font-size: 40px;
+  }
+
+  .text {
+    font-size: 18px;
+  }
+
+  .actions {
+    flex-direction: row;
+    justify-content: center;
+    align-self: center;
+  }
+
+  .actions > * {
+    min-width: 200px;
+    min-height: 52px;
+    font-size: 18px;
+  }
+}

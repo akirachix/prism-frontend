@@ -1,0 +1,356 @@
+.page {
+  --orange: #f47c30;
+
+  min-height: 100vh;
+  background: var(--color-cream);
+  color: var(--color-navy);
+  overflow-x: hidden;
+}
+
+.panel {
+  position: relative;
+  min-height: 222px;
+  padding: 72px 24px 32px 29px;
+  border-radius: 0 0 32px 32px;
+  background: var(--color-navy);
+  color: var(--color-white);
+}
+
+.logo {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.logoMark {
+  display: block;
+  width: 37px;
+  height: 40px;
+}
+
+.logoText {
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.mobileTitle {
+  position: relative;
+  z-index: 1;
+  max-width: 270px;
+  margin: 26px 0 0;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.welcome {
+  display: none;
+}
+
+.decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  display: block;
+}
+
+.redTop {
+  top: -11px;
+  right: -29px;
+  width: 94px;
+  height: 94px;
+  border-radius: 50%;
+  background: var(--color-red);
+}
+
+.redRing {
+  top: 125px;
+  right: 49px;
+  width: 58px;
+  height: 58px;
+  border: 5px solid var(--color-red);
+  border-radius: 50%;
+}
+
+.orangeLeft {
+  top: 167px;
+  left: 0;
+  width: 57px;
+  height: 57px;
+  border-radius: 50%;
+  background: var(--orange);
+}
+
+.squiggleTop {
+  top: 50px;
+  left: 197px;
+  width: 64px;
+  height: 25px;
+  color: var(--orange);
+}
+
+.wave,
+.star,
+.orangeRing,
+.redBottom,
+.orangeBottom,
+.squiggleBottom,
+.whiteRing {
+  display: none;
+}
+
+.plain .panel {
+  min-height: 185px;
+  padding-top: 48px;
+}
+
+.plain .redTop,
+.plain .redRing,
+.plain .orangeLeft,
+.plain .squiggleTop {
+  display: none;
+}
+
+.topBar {
+  display: none;
+}
+
+.main {
+  padding: 40px 21px 48px;
+}
+
+@media (min-width: 1024px) {
+  .page {
+    display: grid;
+    grid-template-columns: 510px minmax(0, 1fr);
+  }
+
+  .panel {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    min-height: 640px;
+    padding: 50px 40px 40px 48px;
+    border-radius: 0;
+    overflow: hidden;
+  }
+
+  .logoMark {
+    width: 46px;
+    height: 49px;
+  }
+
+  .logoText {
+    font-size: 30px;
+  }
+
+  .mobileTitle {
+    display: none;
+  }
+
+  .welcome {
+    position: relative;
+    z-index: 1;
+    display: block;
+    margin-top: 262px;
+  }
+
+  .heart {
+    display: block;
+    width: 44px;
+    height: 44px;
+  }
+
+  .tagline {
+    max-width: 400px;
+    margin: 24px 0 0;
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .dot {
+    color: var(--orange);
+  }
+
+  .intro {
+    max-width: 400px;
+    margin: 28px 0 0;
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 27px;
+  }
+
+  .redTop {
+    top: -40px;
+    right: auto;
+    left: 410px;
+    width: 130px;
+    height: 130px;
+  }
+
+  .redRing {
+    top: 172px;
+    right: auto;
+    left: 398px;
+    width: 72px;
+    height: 72px;
+  }
+
+  .orangeLeft {
+    top: 213px;
+    left: 131px;
+    width: 66px;
+    height: 66px;
+  }
+
+  .squiggleTop {
+    top: 191px;
+    left: 279px;
+    width: 45px;
+    height: 19px;
+  }
+
+  .wave {
+    display: block;
+    top: 312px;
+    left: 47px;
+    width: 76px;
+    height: 22px;
+    color: var(--orange);
+  }
+
+  .star {
+    display: block;
+    top: 432px;
+    left: 388px;
+    width: 168px;
+    height: 168px;
+    color: var(--color-white);
+    transform: rotate(-14deg);
+  }
+
+  .orangeRing {
+    display: block;
+    bottom: 133px;
+    left: 186px;
+    width: 36px;
+    height: 36px;
+    border: 5px solid var(--orange);
+    border-radius: 50%;
+  }
+
+  .redBottom {
+    display: block;
+    bottom: 137px;
+    left: 356px;
+    width: 75px;
+    height: 65px;
+    border-radius: 50%;
+    background: var(--color-red);
+  }
+
+  .orangeBottom {
+    display: block;
+    right: -70px;
+    bottom: -22px;
+    width: 166px;
+    height: 166px;
+    border-radius: 50%;
+    background: var(--orange);
+  }
+
+  .squiggleBottom {
+    display: block;
+    bottom: 24px;
+    left: 178px;
+    width: 112px;
+    height: 37px;
+    color: var(--color-white);
+  }
+
+  .plain .panel {
+    min-height: 640px;
+    padding-top: 50px;
+  }
+
+  .plain .redTop,
+  .plain .redRing,
+  .plain .orangeLeft,
+  .plain .squiggleTop {
+    display: block;
+  }
+
+  .plain .whiteRing {
+    display: block;
+    bottom: 113px;
+    left: -78px;
+    width: 156px;
+    height: 156px;
+    border: 5px solid var(--color-white);
+    border-radius: 50%;
+  }
+
+  @media (max-height: 760px) {
+    .star,
+    .wave {
+      display: none;
+    }
+  }
+
+  .side {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .topBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 77px;
+    padding: 0 45px 0 42px;
+    border-bottom: 1px solid rgba(0, 35, 91, 0.6);
+  }
+
+  .portal {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .account {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .account:hover {
+    text-decoration: underline;
+  }
+
+  .userIcon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 40px 96px;
+  }
+}

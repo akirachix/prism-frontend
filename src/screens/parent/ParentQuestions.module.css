@@ -1,0 +1,550 @@
+.page {
+  --muted: #5a6b8a;
+  --line: #6e83a5;
+  --orange: #f47c30;
+  --track: #f5e9da;
+  --cheer: #1f7a1f;
+  --sky: #dfeff9;
+  --green: #d5f0dd;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 176px;
+  padding: 40px 24px 30px;
+  border-radius: 0 0 32px 32px;
+  background: var(--color-navy);
+  color: var(--color-white);
+}
+
+.back {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 40px;
+  margin-left: -6px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: 24px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.back:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.heading {
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 27px;
+  font-weight: 700;
+}
+
+.overall {
+  margin: 4px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.parts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+}
+
+.partTab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 10px 6px;
+  border: 1px solid var(--color-navy);
+  border-radius: 15px;
+  background: var(--color-white);
+  text-align: center;
+}
+
+.partNumber {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-navy);
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.partTitle {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 15px;
+  overflow-wrap: anywhere;
+}
+
+.part_current {
+  border-width: 2px;
+  background: var(--sky);
+}
+
+.part_current .partNumber {
+  background: var(--color-navy);
+  color: var(--color-white);
+}
+
+.part_done {
+  background: var(--green);
+}
+
+.squiggle {
+  display: none;
+}
+
+.body {
+  padding: 30px 24px 28px;
+}
+
+.message {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.linkButton {
+  border: none;
+  background: none;
+  color: var(--color-navy);
+  font-family: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.progressBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.progressLabel {
+  order: 1;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.progressRow {
+  order: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.count {
+  flex: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.bar {
+  display: block;
+  flex: 1;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--track);
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--color-red);
+  transition: width 0.2s ease;
+}
+
+.cheer {
+  order: 3;
+  margin: 26px 0 0 4px;
+  color: var(--cheer);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.question {
+  margin: 20px 0 0;
+  padding: 0;
+  border: none;
+}
+
+.questionText {
+  padding: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.options {
+  display: grid;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 50px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--color-white);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.option:focus-within {
+  outline: 2px solid var(--color-navy);
+  outline-offset: 2px;
+}
+
+.optionChosen {
+  border-color: var(--color-navy);
+  background: var(--orange);
+  color: var(--color-white);
+}
+
+.radio {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border: 2px solid var(--color-navy);
+  border-radius: 50%;
+  background: var(--color-white);
+  appearance: none;
+  cursor: pointer;
+}
+
+.radio:checked {
+  border-color: var(--color-white);
+  background: radial-gradient(circle, var(--color-navy) 0 4px, var(--color-white) 5px);
+}
+
+.error {
+  margin: 16px 0 0;
+  color: var(--color-red);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  margin-top: 24px;
+}
+
+.next {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 28px;
+  border: 2px solid var(--color-navy);
+  border-radius: 24px;
+  background: var(--color-red);
+  color: var(--color-white);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.next:hover:not(:disabled) {
+  filter: brightness(0.95);
+}
+
+.next:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.next:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 2px;
+}
+
+.done {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 140px 0 32px;
+  text-align: center;
+}
+
+.doneBadge {
+  position: relative;
+  width: 96px;
+  height: 96px;
+}
+
+.doneRing {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--color-navy);
+  border-radius: 50%;
+}
+
+.doneCircle {
+  position: absolute;
+  inset: 12px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-navy);
+  color: var(--color-white);
+}
+
+.doneTick {
+  width: 32px;
+  height: 32px;
+}
+
+.doneDotRed {
+  position: absolute;
+  top: 0;
+  right: -8px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--color-red);
+}
+
+.doneDotOrange {
+  position: absolute;
+  bottom: 16px;
+  left: -10px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--orange);
+}
+
+.doneTitle {
+  margin: 30px 0 0;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.doneText {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.doneActions {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  align-self: stretch;
+  margin-top: 40px;
+}
+
+.doneActions .next {
+  flex: none;
+}
+
+.secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 28px;
+  border: 2px solid var(--color-navy);
+  border-radius: 24px;
+  background: var(--color-white);
+  color: var(--color-navy);
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.secondary:hover {
+  background: var(--color-cream);
+}
+
+.secondary:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 2px;
+}
+
+@media (min-width: 1024px) {
+  .hero {
+    min-height: 0;
+    padding: 40px 62px 0 42px;
+    border-radius: 0;
+    background: none;
+    color: var(--color-navy);
+  }
+
+  .title {
+    font-size: 40px;
+  }
+
+  .hero {
+    align-items: flex-start;
+  }
+
+  .back {
+    margin-top: 6px;
+  }
+
+  .squiggle {
+    display: block;
+    width: 76px;
+    height: 24px;
+    margin-top: 16px;
+    margin-left: auto;
+    color: var(--orange);
+  }
+
+  .body {
+    max-width: none;
+    padding: 18px 148px 48px 42px;
+  }
+
+  .cheer {
+    order: 0;
+    margin: 0 0 8px;
+  }
+
+  .overall {
+    margin-top: 6px;
+    font-size: 16px;
+  }
+
+  .parts {
+    gap: 28px;
+    margin-bottom: 30px;
+  }
+
+  .partTab {
+    flex-direction: row;
+    justify-content: center;
+    gap: 12px;
+    min-height: 62px;
+    padding: 10px 16px;
+  }
+
+  .partNumber {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  .partTitle {
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  .progressLabel {
+    font-size: 15px;
+  }
+
+  .progressRow {
+    margin-top: 14px;
+  }
+
+  .count {
+    font-size: 15px;
+  }
+
+  .bar {
+    height: 7px;
+  }
+
+  .question {
+    margin-top: 26px;
+  }
+
+  .questionText {
+    font-size: 19px;
+    font-weight: 500;
+  }
+
+  .options {
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .option {
+    min-height: 56px;
+    gap: 20px;
+    padding: 0 22px;
+    font-size: 15px;
+  }
+
+  .radio {
+    width: 28px;
+    height: 24px;
+  }
+
+  .radio:checked {
+    background: radial-gradient(circle, var(--color-navy) 0 5px, var(--color-white) 6px);
+  }
+
+  .actions {
+    justify-content: flex-end;
+    margin-top: 22px;
+  }
+
+  .next {
+    flex: none;
+    min-width: 146px;
+    min-height: 52px;
+    border-radius: 26px;
+    font-size: 18px;
+  }
+
+  .done {
+    max-width: 520px;
+    padding-top: 80px;
+  }
+
+  .doneActions {
+    flex-direction: row;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .doneActions .next,
+  .secondary {
+    flex: 0 1 260px;
+    min-height: 52px;
+    border-radius: 26px;
+    font-size: 18px;
+  }
+}
