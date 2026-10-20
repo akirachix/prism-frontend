@@ -31,9 +31,9 @@ export const FINISHED_STATUSES: CaseStatus[] = [
 
 export interface CaseUpdate {
   status?: CaseStatus;
-  autism_score?: number;
-  adhd_score?: number;
-  dyslexia_score?: number;
-  domain_density_score?: number;
-  primary_domain?: string;
+  autism_score?: number | null;
+  adhd_score?: number | null;
+  dyslexia_score?: number | null;
+  domain_density_score?: number | null;
+  primary_domain?: string | null;
 }

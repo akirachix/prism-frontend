@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { ApiError } from "@/lib/api";
 import { casesApi } from "@/lib/cases";
@@ -23,6 +23,9 @@ const TITLES: Record<View, string> = {
   delete: "Delete the case",
 };
 
+const FOCUSABLE =
+  'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 export default function CaseDetailModal({
   item,
   onClose,
@@ -38,10 +41,54 @@ export default function CaseDetailModal({
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const finished = FINISHED_STATUSES.includes(item.status);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
+  // Remember what had focus before the modal opened and give it back on close.
+  useEffect(() => {
+    const previous = document.activeElement as HTMLElement | null;
+    return () => previous?.focus?.();
+  }, []);
+
+  // Move focus into the modal when it opens, and again whenever the view
+  // changes (the button that had focus disappears when the view switches).
+  useEffect(() => {
+    dialogRef.current?.focus();
+  }, [view]);
+
+  // Escape closes the modal; Tab and Shift+Tab stay inside it.
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+      const focusable = Array.from(
+        dialog.querySelectorAll<HTMLElement>(FOCUSABLE),
+      );
+      if (focusable.length === 0) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+      const outside = !dialog.contains(active) || active === dialog;
+
+      if (event.shiftKey) {
+        if (active === first || outside) {
+          event.preventDefault();
+          last.focus();
+        }
+      } else if (active === last || outside) {
+        event.preventDefault();
+        first.focus();
+      }
     }
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -98,6 +145,9 @@ export default function CaseDetailModal({
   return (
     <div className="case-modal__backdrop" onClick={onClose}>
       <div
+        ref={dialogRef}
+        tabIndex={-1}
+        style={{ outline: "none" }}
         className="case-modal"
         role="dialog"
         aria-modal="true"

@@ -32,9 +32,7 @@ export async function request<T>(
     try {
       const body = await response.json();
       if (typeof body.detail === "string") message = body.detail;
-    } catch {
-      // the server sent no readable message, keep the default one
-    }
+    } catch {}
     throw new ApiError(response.status, message);
   }
 
