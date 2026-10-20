@@ -1,0 +1,10 @@
+{
+  "name": "Mirai",
+  "short_name": "Mirai",
+  "description": "Supporting learning, together.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff8ef",
+  "theme_color": "#062657",
+  "icons": [{ "src": "/images/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+}

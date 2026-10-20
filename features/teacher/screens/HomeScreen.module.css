@@ -1,0 +1,122 @@
+.body {
+  display: grid;
+  gap: 22px;
+}
+.hello {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.avatar {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--red);
+  color: var(--cream);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.stat {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px;
+  background: var(--white);
+}
+.stat--students { background: var(--cream-card); }
+.stat--cases { background: #ffd9b8; }
+.stat--active { background: #ffd6dc; }
+.statValue {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+}
+.statLabel {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.sectionTitle {
+  font-size: 17px;
+  font-weight: 700;
+}
+.seeAll {
+  color: var(--red);
+  font-size: 13px;
+  font-weight: 600;
+}
+.attention {
+  background: #ffd9b8;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 6px 16px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+}
+.row + .row {
+  border-top: 1px solid rgba(6, 38, 87, 0.15);
+}
+.rowTitle {
+  font-weight: 600;
+  font-size: 14px;
+}
+.rowNote {
+  font-size: 12px;
+  color: var(--muted);
+}
+.pill {
+  flex: none;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 100px;
+  background: var(--red);
+  color: var(--cream);
+}
+.latest {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 6px 16px;
+}
+.time {
+  flex: none;
+  font-size: 12px;
+  color: var(--muted);
+}
+.empty {
+  padding: 14px 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+@media (min-width: 1024px) {
+  .stats {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+  .stat { padding: 20px 22px; }
+  .statValue { font-size: 38px; }
+  .statLabel { font-size: 14px; }
+  .sectionTitle { font-size: 22px; }
+  .rowTitle { font-size: 16px; }
+  .rowNote, .time { font-size: 14px; }
+  .attention, .latest { padding: 8px 24px; }
+}
