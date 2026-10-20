@@ -1,0 +1,20 @@
+.teacher-shell {
+  display: flex;
+  min-height: 100vh;
+  background: #fdf3ea;
+}
+
+.teacher-shell__main {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .teacher-shell {
+    flex-direction: column;
+  }
+
+  .teacher-shell__main {
+    padding-bottom: 72px;
+  }
+}

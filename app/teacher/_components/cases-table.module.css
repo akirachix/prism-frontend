@@ -1,0 +1,112 @@
+.cases-table {
+  padding: 40px 48px;
+}
+
+.cases-table__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.cases-table__search,
+.cases-table__select {
+  border: 2px solid #0a2a66;
+  border-radius: 16px;
+  background: #fdf3ea;
+  padding: 16px 22px;
+  font: inherit;
+  font-size: 1.1rem;
+  color: #0a2a66;
+}
+
+.cases-table__search {
+  flex: 1 1 280px;
+  max-width: 560px;
+}
+
+.cases-table__select {
+  min-width: 200px;
+}
+
+.cases-table__card {
+  overflow-x: auto;
+  background: #ffffff;
+  border: 2px solid #0a2a66;
+  border-radius: 24px;
+}
+
+.cases-table__table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #0a2a66;
+}
+
+.cases-table__table th {
+  padding: 22px 28px;
+  border-bottom: 2px solid #0a2a66;
+  text-align: left;
+  font-size: 1.1rem;
+}
+
+.cases-table__table td {
+  padding: 18px 28px;
+  white-space: nowrap;
+}
+
+.cases-table__student {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-weight: 600;
+}
+
+.cases-table__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.cases-table__pill {
+  display: inline-block;
+  min-width: 170px;
+  border-radius: 14px;
+  background: #d62839;
+  padding: 14px 20px;
+  text-align: center;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.cases-table__pill--done {
+  background: #e3e8f2;
+  color: #0a2a66;
+}
+
+.cases-table__open {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: #2a2fbd;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.cases-table__empty {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #0a2a66;
+}
+
+@media (max-width: 768px) {
+  .cases-table {
+    padding: 24px 20px;
+  }
+}
