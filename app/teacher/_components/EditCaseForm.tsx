@@ -6,7 +6,7 @@ import { ApiError } from "@/lib/api";
 import { casesApi } from "@/lib/cases";
 import { labelOf } from "@/lib/format";
 import type { Case, CaseUpdate } from "@/lib/types";
-import "./edit-case-form.module.css";
+import "./edit-case-form.css";
 
 const STATUSES = ["INITIATED", "COMPLETED", "NO_CONCERN_IDENTIFIED", "CLOSED"];
 const DOMAINS = ["AUTISM", "ADHD", "DYSLEXIA"];

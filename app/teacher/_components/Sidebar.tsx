@@ -1,15 +1,36 @@
 "use client";
 
+import {
+  ClipboardList,
+  GraduationCap,
+  House,
+  ListChecks,
+  User,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import "./sidebar.css";
 
+const LOGO_WIDTH = 560;
+const LOGO_HEIGHT = 192;
+
+const ICONS = {
+  home: House,
+  students: GraduationCap,
+  cases: ClipboardList,
+  todo: ListChecks,
+  account: User,
+};
+
+export type IconName = keyof typeof ICONS;
+
 export interface NavLink {
   href: string;
   label: string;
   exact?: boolean;
+  icon?: IconName;
 }
 
 export default function Sidebar({ links }: { links: NavLink[] }) {
@@ -21,8 +42,9 @@ export default function Sidebar({ links }: { links: NavLink[] }) {
         <Image
           src="/mirai-logo.png"
           alt="Mirai"
-          width={140}
-          height={48}
+          width={LOGO_WIDTH}
+          height={LOGO_HEIGHT}
+          loading="eager"
           className="sidebar__logo-img"
         />
       </Link>
@@ -31,6 +53,7 @@ export default function Sidebar({ links }: { links: NavLink[] }) {
           const active = link.exact
             ? pathname === link.href
             : pathname.startsWith(link.href);
+          const Icon = link.icon ? ICONS[link.icon] : null;
           return (
             <Link
               key={link.href}
@@ -40,6 +63,9 @@ export default function Sidebar({ links }: { links: NavLink[] }) {
                 active ? "sidebar__link sidebar__link--active" : "sidebar__link"
               }
             >
+              {Icon && (
+                <Icon className="sidebar__icon" size={24} aria-hidden="true" />
+              )}
               {link.label}
             </Link>
           );

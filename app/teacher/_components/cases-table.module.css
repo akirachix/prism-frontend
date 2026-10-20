@@ -109,4 +109,83 @@
   .cases-table {
     padding: 24px 20px;
   }
+
+  .cases-table__filters {
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .cases-table__search,
+  .cases-table__select {
+    flex: none;
+    max-width: none;
+    width: 100%;
+    padding: 14px 18px;
+  }
+
+  .cases-table__card {
+    overflow: visible;
+    border-radius: 20px;
+  }
+
+  .cases-table__table thead {
+    display: none;
+  }
+
+  .cases-table__table,
+  .cases-table__table tbody {
+    display: block;
+  }
+
+  .cases-table__table tr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "student open"
+      "pill started";
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border-bottom: 1px solid #eadfd2;
+  }
+
+  .cases-table__table tr:last-child {
+    border-bottom: 0;
+  }
+
+  .cases-table__table td {
+    padding: 0;
+    white-space: normal;
+  }
+
+  .cases-table__table td:nth-child(1) {
+    grid-area: student;
+  }
+
+  .cases-table__table td:nth-child(2) {
+    grid-area: started;
+    font-size: 0.85rem;
+    color: #4a5b7a;
+    text-align: right;
+  }
+
+  .cases-table__table td:nth-child(3) {
+    grid-area: pill;
+  }
+
+  .cases-table__table td:nth-child(4) {
+    grid-area: open;
+  }
+
+  .cases-table__avatar {
+    width: 44px;
+    height: 44px;
+  }
+
+  .cases-table__pill {
+    min-width: 0;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
 }
