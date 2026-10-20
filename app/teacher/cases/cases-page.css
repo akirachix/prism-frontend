@@ -1,0 +1,60 @@
+.cases-page {
+  min-height: 100vh;
+  background: #fdf3ea;
+}
+
+.cases-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #0a2a66;
+  color: #ffffff;
+  padding: 40px 48px 44px;
+  border-radius: 0 0 32px 32px;
+}
+
+.cases-page__title {
+  margin: 0;
+  font-size: 2.4rem;
+  color: #ffffff;
+}
+
+.cases-page__count {
+  margin: 8px 0 0;
+  font-size: 1.1rem;
+  color: #ffffff;
+  opacity: 0.85;
+}
+
+.cases-page__content {
+  padding: 40px 48px;
+}
+
+.cases-page__message {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #0a2a66;
+}
+
+.cases-page__error {
+  background: #fde8ea;
+  border: 1px solid #d62839;
+  border-radius: 12px;
+  color: #8a1220;
+  padding: 14px 18px;
+}
+
+@media (max-width: 768px) {
+  .cases-page__header {
+    padding: 28px 20px 32px;
+  }
+
+  .cases-page__title {
+    font-size: 1.9rem;
+  }
+
+  .cases-page__content {
+    padding: 24px 20px;
+  }
+}

@@ -1,0 +1,453 @@
+{
+  "info": {
+    "_postman_id": "9d5a4a85-8733-4680-86f9-5a2815ffa52a",
+    "name": "Mirai",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56426215",
+    "_collection_link": "https://go.postman.co/collection/56426215-9d5a4a85-8733-4680-86f9-5a2815ffa52a?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get all cases",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/cases",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["cases"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Post a cases",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"school_id\": \"11111111-1111-1111-1111-111111111111\",\n  \"student_id\": \"c0000000-0000-0000-0000-000000000002\",\n  \"initiated_by\": \"a0000000-0000-0000-0000-000000000001\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/cases",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["cases"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get cases by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/cases/1e87dc87-9ae7-4861-92a4-a900d7146fd5",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["cases", "1e87dc87-9ae7-4861-92a4-a900d7146fd5"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update a case by ID",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"INITIATED\",\n  \"autism_score\": 3,\n  \"adhd_score\": 3,\n  \"dyslexia_score\": 3,\n  \"domain_density_score\": 3,\n  \"primary_domain\": \"AUTISM\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/cases/46002db1-3c70-4bbe-a2e8-68a37a90bb4a",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["cases", "46002db1-3c70-4bbe-a2e8-68a37a90bb4a"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete a case",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/cases/1e87dc87-9ae7-4861-92a4-a900d7146fd5",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["cases", "1e87dc87-9ae7-4861-92a4-a900d7146fd5"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "close a case",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"reason\": \"I am kidding\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/cases/1e87dc87-9ae7-4861-92a4-a900d7146fd5/close",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["cases", "1e87dc87-9ae7-4861-92a4-a900d7146fd5", "close"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Post a notification",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"kind\": \"string\",\n  \"message\": \"string\",\n  \"user_id\": \"33333333-3333-3333-3333-333333333333\",\n  \"case_id\": \"46002db1-3c70-4bbe-a2e8-68a37a90bb4a\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/notifications",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["notifications"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List all notifications",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Get un read notifications",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"kind\": \"CASE_UPDATE\",\n  \"message\": \"Your child's case has been updated.\",\n  \"user_id\": \"b0000000-0000-0000-0000-000000000001\",\n  \"case_id\": \"46002db1-3c70-4bbe-a2e8-68a37a90bb4a\"\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/notifications/unread-count?user_id=b0000000-0000-0000-0000-000000000001",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["notifications", "unread-count"],
+          "query": [
+            {
+              "key": "user_id",
+              "value": "b0000000-0000-0000-0000-000000000001"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Read all notifications",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/notifications/read-all?user_id=b0000000-0000-0000-0000-000000000001",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["notifications", "read-all"],
+          "query": [
+            {
+              "key": "user_id",
+              "value": "b0000000-0000-0000-0000-000000000001"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get notification by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/notifications/88888888-8888-8888-8888-888888888888",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["notifications", "88888888-8888-8888-8888-888888888888"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update notification",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"is_read\": false\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/notifications/88888888-8888-8888-8888-888888888888",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["notifications", "88888888-8888-8888-8888-888888888888"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete notification",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/notifications/e0000000-0000-0000-0000-000000000001",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["notifications", "e0000000-0000-0000-0000-000000000001"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Post an audit log",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"school_id\": \"11111111-1111-1111-1111-111111111111\",\n  \"user_id\": \"44444444-4444-4444-4444-444444444444\",\n  \"actor_role\": \"teacherr\",\n  \"action\": \"LOGIN\",\n  \"resource_type\": \"user\",\n  \"resource_id\": \"123\",\n  \"details\": {\"note\": \"test login\"},\n  \"ip_address\": \"127.0.0.1\"\n}\n\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/audit-logs",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["audit-logs"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get all audit logs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/audit-logs?limit=50&offset=0",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["audit-logs"],
+          "query": [
+            {
+              "key": "limit",
+              "value": "50"
+            },
+            {
+              "key": "offset",
+              "value": "0"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get audit logs by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/audit-logs/e9a456bc-838d-4933-8d13-853de8afb114",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["audit-logs", "e9a456bc-838d-4933-8d13-853de8afb114"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Post revoked tokens",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"jti\": \"test-jti-001\",\n  \"user_id\": \"PASTE-A-REAL-USER-ID\",\n  \"expires_at\": \"2026-12-01T10:00:00Z\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/revoked-tokens",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["revoked-tokens"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get all revoked tokens",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "post expired revoked tokens",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"jti\": \"test-jti-001\",\n  \"user_id\": \"PASTE-A-REAL-USER-ID\",\n  \"expires_at\": \"2026-12-01T10:00:00Z\"\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/revoked-tokens/purge-expired",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["revoked-tokens", "purge-expired"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get revoked token by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/revoked-tokens/test-jti-001",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["revoked-tokens", "test-jti-001"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update revoked token",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"expires_at\": \"2027-01-01T10:00:00Z\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/revoked-tokens/test-jti-001",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["revoked-tokens", "test-jti-001"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "delete revoked token",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/revoked-tokens/test-jti-001",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["revoked-tokens", "test-jti-001"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
