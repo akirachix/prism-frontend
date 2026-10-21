@@ -1,0 +1,42 @@
+.home {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 24px 16px;
+  background: var(--navy-deep) url("/bg/teacher-desktop.png") center / cover
+    no-repeat;
+}
+
+.home__card {
+  width: 100%;
+  max-width: 460px;
+  border-radius: 24px;
+  background: var(--cream);
+  padding: 36px 28px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.home__logo {
+  width: 140px;
+  height: auto;
+  border-radius: 14px;
+  background: var(--navy-deep);
+  padding: 10px 14px;
+}
+
+.home__title {
+  margin: 20px 0 10px;
+  font-size: 1.8rem;
+}
+
+.home__text {
+  margin: 0 0 28px;
+  line-height: 1.5;
+}
+
+.home__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
