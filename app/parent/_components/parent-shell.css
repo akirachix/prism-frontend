@@ -39,6 +39,22 @@
   .portal-topbar {
     display: flex;
   }
+
+  .parent-shell .ui-header {
+    border-radius: 0;
+    background: transparent;
+    color: var(--navy);
+    padding-bottom: 8px;
+  }
+
+  .parent-shell .ui-header__title,
+  .parent-shell .ui-header__back {
+    color: var(--navy);
+  }
+
+  .parent-shell .ui-lift {
+    margin-top: 0;
+  }
 }
 
 @media (max-width: 768px) {

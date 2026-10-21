@@ -1,7 +1,9 @@
 import type { ReactNode } from "react";
 import { Suspense } from "react";
 
+import RequireRole from "@/_components/RequireRole";
 import Sidebar, { type NavLink } from "@/app/teacher/_components/Sidebar";
+import ChildProvider from "../_components/ChildProvider";
 import ParentTopbar from "../_components/ParentTopbar";
 import "../_components/parent-shell.css";
 
@@ -15,14 +17,18 @@ const LINKS: NavLink[] = [
 
 export default function ParentLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="parent-shell">
-      <Suspense fallback={null}>
-        <Sidebar links={LINKS} variant="parent" />
-      </Suspense>
-      <div className="parent-shell__main">
-        <ParentTopbar />
-        {children}
-      </div>
-    </div>
+    <Suspense fallback={null}>
+      <RequireRole role="PARENT" loginPath="/parent/login">
+        <ChildProvider>
+          <div className="parent-shell">
+            <Sidebar links={LINKS} variant="parent" />
+            <div className="parent-shell__main">
+              <ParentTopbar />
+              {children}
+            </div>
+          </div>
+        </ChildProvider>
+      </RequireRole>
+    </Suspense>
   );
 }
