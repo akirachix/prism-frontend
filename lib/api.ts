@@ -112,3 +112,24 @@ export async function request<T>(
   return (await response.json()) as T;
 }
 
+export function query(
+  params: Record<string, string | number | boolean | null | undefined>,
+): string {
+  const search = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null) search.set(key, String(value));
+  }
+  const text = search.toString();
+  return text ? `?${text}` : "";
+}
+
+export function errorMessage(
+  e: unknown,
+  fallback = "Something went wrong. Please try again.",
+): string {
+  return e instanceof Error ? e.message : fallback;
+}
+
+export function orNull<T>(promise: Promise<T>): Promise<T | null> {
+  return promise.catch(() => null);
+}
