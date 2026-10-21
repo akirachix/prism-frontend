@@ -1,0 +1,66 @@
+.todo-group {
+  margin-bottom: 28px;
+}
+
+.todo-group__title {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  color: #00235a;
+}
+
+.todo-group__card {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1.5px solid #00235a;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.todo-group__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.todo-group__row + .todo-group__row {
+  border-top: 1px solid #d6dbe6;
+}
+
+.todo-group__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-group__name {
+  font-weight: 600;
+  color: #00235a;
+}
+
+.todo-group__text {
+  font-size: 0.875rem;
+  color: #4a5568;
+}
+
+.todo-group__btn {
+  padding: 6px 16px;
+  border: 1.5px solid #00235a;
+  border-radius: 999px;
+  background: transparent;
+  color: #00235a;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.todo-group__btn--primary {
+  border-color: #d62839;
+  background: #d62839;
+  color: #fff;
+}
+
+.todo-group__btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
