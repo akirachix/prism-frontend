@@ -1,5 +1,12 @@
 # fe-sample-template
 
+## Local auth routes
+
+Use the actual portal routes when testing sign-in flows:
+
+- Parent portal: /parent/login
+- Teacher portal: /teacher/login
+
 ## Pull Request Rules
 
 Every PR uses the [PR template](.github/pull_request_template.md). Fill in every section.

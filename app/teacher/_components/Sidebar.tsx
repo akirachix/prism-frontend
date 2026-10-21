@@ -1,10 +1,13 @@
 "use client";
 
 import {
+  BarChart3,
+  ClipboardCheck,
   ClipboardList,
   GraduationCap,
   House,
   ListChecks,
+  School,
   User,
 } from "lucide-react";
 import Image from "next/image";
@@ -22,6 +25,9 @@ const ICONS = {
   cases: ClipboardList,
   todo: ListChecks,
   account: User,
+  reports: BarChart3,
+  school: School,
+  evaluation: ClipboardCheck,
 };
 
 export type IconName = keyof typeof ICONS;
@@ -30,14 +36,23 @@ export interface NavLink {
   href: string;
   label: string;
   exact?: boolean;
+  also?: string;
   icon?: IconName;
 }
 
-export default function Sidebar({ links }: { links: NavLink[] }) {
+export default function Sidebar({
+  links,
+  variant,
+}: {
+  links: NavLink[];
+  variant?: "parent";
+}) {
   const pathname = usePathname();
 
   return (
-    <aside className="sidebar">
+    <aside
+      className={variant === "parent" ? "sidebar sidebar--parent" : "sidebar"}
+    >
       <Link href="/" className="sidebar__logo" aria-label="Mirai home">
         <Image
           src="/mirai-logo.png"
@@ -52,7 +67,8 @@ export default function Sidebar({ links }: { links: NavLink[] }) {
         {links.map((link) => {
           const active = link.exact
             ? pathname === link.href
-            : pathname.startsWith(link.href);
+            : pathname.startsWith(link.href) ||
+              (link.also ? pathname.startsWith(link.also) : false);
           const Icon = link.icon ? ICONS[link.icon] : null;
           return (
             <Link
