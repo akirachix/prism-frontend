@@ -1,4 +1,4 @@
-import { landingFor, safeNext } from "@/app/_components/auth/flow";
+import { landingFor, safeNext } from "@/_components/auth/flow";
 import type { UserRead } from "@/lib/users";
 
 describe("safeNext", () => {

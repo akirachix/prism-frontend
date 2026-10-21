@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Suspense } from "react";
 
-import RequireRole from "@/app/_components/RequireRole";
+import RequireRole from "@/_components/RequireRole";
 import Sidebar, { type NavLink } from "../_components/Sidebar";
 import "../teacher-layout.css";
 

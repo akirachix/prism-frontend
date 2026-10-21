@@ -4,11 +4,7 @@ import type { ComponentProps, ReactNode } from "react";
 import "./ui.css";
 
 export type ButtonVariant =
-  | "primary"
-  | "outline"
-  | "orange"
-  | "danger-outline"
-  | "link";
+  "primary" | "outline" | "orange" | "danger-outline" | "link";
 
 interface Common {
   variant?: ButtonVariant;

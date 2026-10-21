@@ -1,4 +1,4 @@
-import AccountView from "@/app/_components/account/AccountView";
+import AccountView from "@/_components/account/AccountView";
 
 export const metadata = { title: "Account · Mirai" };
 

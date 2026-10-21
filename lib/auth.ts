@@ -3,9 +3,7 @@ import { clearSession, getSession, setSession } from "@/lib/session";
 import type { UserRead } from "@/lib/users";
 
 export type AuthStage =
-  | "password_change_required"
-  | "mfa_enrollment_required"
-  | "mfa_required";
+  "password_change_required" | "mfa_enrollment_required" | "mfa_required";
 
 export interface AuthStageResponse {
   stage: AuthStage;

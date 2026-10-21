@@ -1,4 +1,4 @@
-import SignOutConfirm from "@/app/_components/account/SignOutConfirm";
+import SignOutConfirm from "@/_components/account/SignOutConfirm";
 
 export const metadata = { title: "Sign out · Mirai" };
 

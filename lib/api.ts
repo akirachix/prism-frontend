@@ -1,6 +1,6 @@
 import { clearSession, getSession, setSession } from "@/lib/session";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export class ApiError extends Error {
   status: number;
@@ -62,6 +62,10 @@ function refreshSession(): Promise<boolean> {
 }
 
 async function send(path: string, options: RequestInit): Promise<Response> {
+  if (!BASE_URL) {
+    throw new ApiError(0, "API URL is not configured.");
+  }
+
   const token = isPublic(path) ? null : getSession()?.access_token;
   try {
     return await fetch(`${BASE_URL}${path}`, {

@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 
-import { useUser } from "@/app/_components/SessionProvider";
-import { Avatar, PageHeader } from "@/app/_components/ui/bits";
+import { useUser } from "@/_components/SessionProvider";
+import { Avatar, PageHeader } from "@/_components/ui/bits";
 import { fullName } from "@/lib/users";
-import "@/app/_components/portal.css";
+import "@/_components/portal.css";
 
 /**
  * Where a teacher lands after signing in.

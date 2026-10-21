@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
 
-import OtpInput from "@/app/_components/ui/OtpInput";
+import OtpInput from "@/_components/ui/OtpInput";
 
 function Harness({ onValue }: { onValue?: (v: string) => void }) {
   const [value, setValue] = useState("");

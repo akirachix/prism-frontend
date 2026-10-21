@@ -33,10 +33,19 @@ export default function VerifyForm({ portal }: { portal: Portal }) {
   const stored = useStoredFlow();
   const [override, setFlow] = useState<AuthFlow | null>(null);
   const flow = override ?? stored;
+
+  useEffect(() => {
+    const isExpired = Boolean(flow && flow.expires_at <= Date.now());
+    if (isExpired) {
+      router.replace(`/${portal}/login`);
+    }
+  }, [flow, portal, router]);
+
   const usable =
     flow !== null &&
     flow.portal === portal &&
     flow.stage !== "password_change_required";
+
   const [enroll, setEnroll] = useState<MfaEnrollInfo | null>(null);
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);

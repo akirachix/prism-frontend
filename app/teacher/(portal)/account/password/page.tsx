@@ -1,4 +1,4 @@
-import ChangePassword from "@/app/_components/account/ChangePassword";
+import ChangePassword from "@/_components/account/ChangePassword";
 
 export const metadata = { title: "Change password · Mirai" };
 

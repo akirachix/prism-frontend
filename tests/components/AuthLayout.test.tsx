@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 
-import AuthLayout from "@/app/_components/AuthLayout";
+import AuthLayout from "@/_components/AuthLayout";
 import TeacherLayout from "@/app/teacher/layout";
 
 describe("AuthLayout", () => {
