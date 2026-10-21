@@ -1,0 +1,63 @@
+.parent-shell {
+  display: flex;
+  min-height: 100vh;
+  background: #fdf3ea;
+}
+
+.parent-shell__main {
+  flex: 1;
+  min-width: 0;
+}
+
+.portal-topbar {
+  position: relative;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1.5px solid #7f8fb0;
+  padding: 20px 40px;
+  font-weight: 600;
+  color: #0a2a66;
+}
+
+.portal-topbar__account {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  color: #0a2a66;
+  text-decoration: none;
+}
+
+.portal-topbar__squiggle {
+  position: absolute;
+  right: 40px;
+  bottom: -40px;
+}
+
+@media (min-width: 769px) {
+  .portal-topbar {
+    display: flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .parent-shell {
+    flex-direction: column;
+  }
+
+  .parent-shell__main {
+    padding-bottom: 88px;
+  }
+}
+
+@media print {
+  .parent-shell .sidebar,
+  .parent-shell .portal-topbar {
+    display: none !important;
+  }
+
+  .parent-shell {
+    background: #ffffff;
+  }
+}
