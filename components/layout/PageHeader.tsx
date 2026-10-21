@@ -14,13 +14,25 @@ interface Props {
 }
 
 /** Page title: mobile header bar + desktop heading with the orange squiggle. */
-export function PageHeader({ title, mobileTitle, back, onBack, decor, hideOnDesktop }: Props) {
+export function PageHeader({
+  title,
+  mobileTitle,
+  back,
+  onBack,
+  decor,
+  hideOnDesktop,
+}: Props) {
   const arrow = back ? (
     <Link href={back} className="pageheader__back" aria-label="Go back">
       <ArrowLeftIcon size={16} />
     </Link>
   ) : onBack ? (
-    <button type="button" className="pageheader__back" aria-label="Go back" onClick={onBack}>
+    <button
+      type="button"
+      className="pageheader__back"
+      aria-label="Go back"
+      onClick={onBack}
+    >
       <ArrowLeftIcon size={16} />
     </button>
   ) : null;

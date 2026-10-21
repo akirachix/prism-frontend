@@ -10,26 +10,16 @@ import { saveUser, useSession } from "../session";
 
 interface AuthGuardProps {
   children: ReactNode;
-  /** Only these roles may see the page (backend values, e.g. "SYSTEM_ADMIN"). Omit = any signed-in user. */
   allowedRoles?: string[];
 }
 
-/**
- * Wrap any page that needs a signed-in user.
- *  - signed out   -> /login?next=<this page> (the portal chooser)
- *  - wrong role   -> that role's own home
- * It also asks the backend for the current user once on load. That checks the
- * session is still valid (an expired access token is refreshed silently) and
- * keeps the stored profile fresh.
- * The token lives in localStorage, so this is a client-side guard; the
- * backend is what really protects the data.
- */
 export function AuthGuard({ children, allowedRoles }: AuthGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { status, user } = useSession();
 
-  const roleAllowed = !allowedRoles || !user?.role || allowedRoles.includes(user.role);
+  const roleAllowed =
+    !allowedRoles || !user?.role || allowedRoles.includes(user.role);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -44,10 +34,7 @@ export function AuthGuard({ children, allowedRoles }: AuthGuardProps) {
     authApi
       .me()
       .then(saveUser)
-      .catch(() => {
-        // A 401 is already handled by the HTTP client (sign out + redirect).
-        // Anything else (e.g. offline) must not break the page.
-      });
+      .catch(() => {});
   }, [status]);
 
   if (status !== "authenticated" || !roleAllowed) {

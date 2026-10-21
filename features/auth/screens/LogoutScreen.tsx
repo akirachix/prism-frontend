@@ -7,11 +7,6 @@ import { authApi } from "../api";
 import { loginRouteFor, portalForRole } from "../roles";
 import { clearSession, useSession } from "../session";
 
-/**
- * /logout - "Logout of Mirai?" confirmation.
- * POST /auth/logout revokes the refresh token on the server; whatever the
- * answer, the browser session is cleared so the person is signed out here.
- */
 export function LogoutScreen() {
   const router = useRouter();
   const { user } = useSession();
@@ -23,7 +18,6 @@ export function LogoutScreen() {
     try {
       await authApi.logout();
     } catch {
-      // Network / expired token: still sign out locally.
     } finally {
       clearSession();
       router.replace(loginRouteFor(portal));
@@ -32,8 +26,18 @@ export function LogoutScreen() {
 
   return (
     <AuthShell subtitle="Logout" role={portal}>
-      <div style={{ maxWidth: 380, width: "100%", margin: "0 auto", display: "grid", gap: 20 }}>
-        <div style={{ display: "flex", justifyContent: "center", marginTop: 8 }}>
+      <div
+        style={{
+          maxWidth: 380,
+          width: "100%",
+          margin: "0 auto",
+          display: "grid",
+          gap: 20,
+        }}
+      >
+        <div
+          style={{ display: "flex", justifyContent: "center", marginTop: 8 }}
+        >
           <div
             style={{
               width: 126,
@@ -57,7 +61,10 @@ export function LogoutScreen() {
                 background: "#f8f4ef",
               }}
             >
-              <span aria-hidden="true" style={{ fontSize: 28, fontWeight: 700 }}>
+              <span
+                aria-hidden="true"
+                style={{ fontSize: 28, fontWeight: 700 }}
+              >
                 →
               </span>
             </div>
@@ -77,9 +84,19 @@ export function LogoutScreen() {
         </div>
 
         <div style={{ textAlign: "center" }}>
-          <h2 style={{ fontSize: 30, color: "#0a2d5d", marginBottom: 10 }}>Logout of Mirai?</h2>
-          <p style={{ fontSize: 16, color: "#062657", opacity: 0.8, lineHeight: 1.5 }}>
-            Are you sure you want to log out? You can sign in again to access your {portal} account.
+          <h2 style={{ fontSize: 30, color: "#0a2d5d", marginBottom: 10 }}>
+            Logout of Mirai?
+          </h2>
+          <p
+            style={{
+              fontSize: 16,
+              color: "#062657",
+              opacity: 0.8,
+              lineHeight: 1.5,
+            }}
+          >
+            Are you sure you want to log out? You can sign in again to access
+            your {portal} account.
           </p>
         </div>
 

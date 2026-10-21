@@ -1,14 +1,9 @@
-/**
- * The ONE HTTP client for the whole app. Every feature calls the backend
- * through `api`, never with a bare fetch().
- *
- *  - prefixes paths with NEXT_PUBLIC_API_BASE_URL
- *  - sends `Authorization: Bearer <token>` (skip with { public: true })
- *  - turns FastAPI errors into a readable ApiError.message
- *  - on 401 tries ONE silent token refresh, then retries; if that fails it
- *    clears the tokens and sends the user to the login screen
- */
-import { API_BASE_URL, API_CREDENTIALS, AUTH_REFRESH_PATH, LOGIN_ROUTE } from "./config";
+import {
+  API_BASE_URL,
+  API_CREDENTIALS,
+  AUTH_REFRESH_PATH,
+  LOGIN_ROUTE,
+} from "./config";
 import { tokenStore } from "./token-store";
 
 export class ApiError extends Error {
@@ -26,9 +21,7 @@ export class ApiError extends Error {
 type Params = Record<string, string | number | boolean | null | undefined>;
 
 export interface RequestOptions {
-  /** Query-string values; null / undefined / "" are skipped. */
   params?: Params;
-  /** Public endpoint (login, forgot password ...): no token, no 401 redirect. */
   public?: boolean;
   signal?: AbortSignal;
 }
@@ -46,11 +39,11 @@ export function withQuery(path: string, params?: Params): string {
   return `${path}${path.includes("?") ? "&" : "?"}${query}`;
 }
 
-/** FastAPI: { detail: "text" } or { detail: [{ loc: [...], msg: "text" }] }. */
 function messageFrom(details: unknown, status: number): string {
-  // slowapi answers 429 with { error: "Rate limit exceeded: ..." } (no "detail").
-  if (status === 429) return "Too many attempts. Please wait a minute and try again.";
-  const body = details as { detail?: unknown; message?: unknown } | null | undefined;
+  if (status === 429)
+    return "Too many attempts. Please wait a minute and try again.";
+  const body = details as
+    { detail?: unknown; message?: unknown } | null | undefined;
   const detail = body?.detail ?? body?.message;
   if (typeof detail === "string" && detail) return detail;
   if (Array.isArray(detail)) {
@@ -59,7 +52,8 @@ function messageFrom(details: unknown, status: number): string {
         if (!item || typeof item !== "object" || !("msg" in item)) return "";
         const loc = "loc" in item && Array.isArray(item.loc) ? item.loc : [];
         const field = loc[loc.length - 1];
-        const where = typeof field === "string" && field !== "body" ? `${field}: ` : "";
+        const where =
+          typeof field === "string" && field !== "body" ? `${field}: ` : "";
         return `${where}${String(item.msg)}`;
       })
       .filter(Boolean);
@@ -76,7 +70,9 @@ function authHeaders(isPublic?: boolean): Record<string, string> {
 function handleUnauthorized() {
   tokenStore.clear();
   if (typeof window !== "undefined") {
-    window.location.assign(`${LOGIN_ROUTE}?reason=expired`);
+    const targetUrl = `${LOGIN_ROUTE}?reason=expired`;
+    window.history.pushState({}, "", targetUrl);
+    window.dispatchEvent(new PopStateEvent("popstate"));
   }
 }
 
@@ -91,7 +87,6 @@ async function send(path: string, init: RequestInit): Promise<Response> {
   }
 }
 
-/** Silent refresh. Refresh tokens rotate and work ONCE, so only one refresh may run at a time. */
 type RefreshOutcome = "ok" | "rejected" | "unreachable";
 let refreshing: Promise<RefreshOutcome> | null = null;
 
@@ -118,7 +113,10 @@ function refreshSession(): Promise<RefreshOutcome> {
         access_token?: unknown;
         refresh_token?: unknown;
       };
-      if (typeof data.access_token !== "string" || typeof data.refresh_token !== "string") {
+      if (
+        typeof data.access_token !== "string" ||
+        typeof data.refresh_token !== "string"
+      ) {
         return "rejected";
       }
       tokenStore.set(data.access_token, data.refresh_token);
@@ -164,11 +162,11 @@ async function request<T>(
 
   if (!response.ok) {
     if (response.status === 401 && !options.public && !isRetry) {
-      // Another tab/request may already have refreshed: then just retry.
       const current = tokenStore.get();
       const outcome: RefreshOutcome =
         current && current !== usedToken ? "ok" : await refreshSession();
-      if (outcome === "ok") return request<T>(method, path, body, options, true);
+      if (outcome === "ok")
+        return request<T>(method, path, body, options, true);
       if (outcome === "unreachable") {
         throw new ApiError(
           "Cannot reach the server. Check that the backend is running and the API URL is correct.",
@@ -177,7 +175,11 @@ async function request<T>(
       }
     }
     if (response.status === 401 && !options.public) handleUnauthorized();
-    throw new ApiError(messageFrom(data, response.status), response.status, data);
+    throw new ApiError(
+      messageFrom(data, response.status),
+      response.status,
+      data,
+    );
   }
   return data as T;
 }
@@ -195,7 +197,6 @@ export const api = {
     request<T>("DELETE", path, undefined, options),
 };
 
-/** List endpoints may return [..] or { items | results | data: [..] }. */
 export function asList<T>(payload: unknown): T[] {
   if (Array.isArray(payload)) return payload as T[];
   if (payload && typeof payload === "object") {
@@ -207,7 +208,6 @@ export function asList<T>(payload: unknown): T[] {
   return [];
 }
 
-/** Save a Blob as a file download. */
 export function saveBlob(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");

@@ -16,11 +16,23 @@ export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
  * Works with react-hook-form: `<TextField label="Email" {...register("email")} />`
  * (register() returns name / onChange / onBlur / ref, all passed to the <input>).
  */
-export function TextField({ label, error, password, type, ref, id, ...rest }: TextFieldProps) {
+export function TextField({
+  label,
+  error,
+  password,
+  type,
+  ref,
+  id,
+  ...rest
+}: TextFieldProps) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
   const [visible, setVisible] = useState(false);
-  const inputType = password ? (visible ? "text" : "password") : (type ?? "text");
+  const inputType = password
+    ? visible
+      ? "text"
+      : "password"
+    : (type ?? "text");
 
   return (
     <div className="field">

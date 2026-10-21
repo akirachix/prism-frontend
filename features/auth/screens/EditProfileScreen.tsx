@@ -20,10 +20,8 @@ interface Values {
   phone: string;
 }
 
-/** /edit-profile - PATCH /users/{id}: a person may change their own name and phone. */
 export function EditProfileScreen() {
   const { user } = useSession();
-  // The form's default values come from the user, so wait until it is known.
   return user ? <EditProfileForm user={user} /> : <Loading />;
 }
 
@@ -76,7 +74,13 @@ function EditProfileForm({ user }: { user: AuthUser }) {
             error={errors.lastName?.message}
             {...register("lastName", { validate: requiredRule("Last name") })}
           />
-          <TextField label="Phone" type="tel" autoComplete="tel" error={errors.phone?.message} {...register("phone")} />
+          <TextField
+            label="Phone"
+            type="tel"
+            autoComplete="tel"
+            error={errors.phone?.message}
+            {...register("phone")}
+          />
 
           {formError && (
             <p className="form-error" role="alert">
@@ -88,7 +92,11 @@ function EditProfileForm({ user }: { user: AuthUser }) {
             <Button type="submit" loading={isSubmitting}>
               Save
             </Button>
-            <Button variant="outline" onClick={() => router.back()} disabled={isSubmitting}>
+            <Button
+              variant="outline"
+              onClick={() => router.back()}
+              disabled={isSubmitting}
+            >
               Cancel
             </Button>
           </div>

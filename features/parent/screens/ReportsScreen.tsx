@@ -1,15 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronRightIcon, DocIcon } from "@/components/icons";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { Button } from "@/components/ui/Button";
-import { ErrorMessage, Loading } from "@/components/ui/StateMessage";
-import { useAsync } from "@/lib/use-async";
+import { ChevronRightIcon, DocIcon } from "../../../components/icons";
+import { PageHeader } from "../../../components/layout/PageHeader";
+import { Button } from "../../../components/ui/Button";
+import { ErrorMessage, Loading } from "../../../components/ui/StateMessage";
+import { useAsync } from "../../../lib/use-async";
 import { parentApi } from "../api";
 import type { ReportSummary } from "../types";
 
-/** Parent reports: Screening report + Evaluation report, each with "Download PDF" (PDF endpoint PENDING). */
 export function ReportsScreen() {
   const { data: reports, error, loading, reload } = useAsync(parentApi.reports);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
@@ -21,7 +20,9 @@ export function ReportsScreen() {
     try {
       await parentApi.downloadReport(report);
     } catch (err) {
-      setDownloadError(err instanceof Error ? err.message : "Could not download the report.");
+      setDownloadError(
+        err instanceof Error ? err.message : "Could not download the report.",
+      );
     } finally {
       setDownloadingId(null);
     }

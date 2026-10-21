@@ -1,13 +1,5 @@
 "use client";
 
-/**
- * Run an async loader when the component mounts and expose
- * { data, error, loading, reload }.
- *
- * Pass a STABLE function (a module-level function such as `parentApi.child`,
- * or one wrapped in useCallback): the loader runs again whenever its identity
- * changes. Results of a superseded request are ignored.
- */
 import { useEffect, useState } from "react";
 
 interface Settled<T> {
@@ -31,7 +23,8 @@ export function useAsync<T>(loader: () => Promise<T>) {
         if (!cancelled) setSettled({ loader, attempt, data, error: null });
       },
       (err: unknown) => {
-        if (!cancelled) setSettled({ loader, attempt, data: null, error: messageOf(err) });
+        if (!cancelled)
+          setSettled({ loader, attempt, data: null, error: messageOf(err) });
       },
     );
     return () => {
@@ -39,7 +32,8 @@ export function useAsync<T>(loader: () => Promise<T>) {
     };
   }, [loader, attempt]);
 
-  const current = settled && settled.loader === loader && settled.attempt === attempt;
+  const current =
+    settled && settled.loader === loader && settled.attempt === attempt;
   return {
     data: current ? settled.data : null,
     error: current ? settled.error : null,

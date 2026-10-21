@@ -11,11 +11,6 @@ import { StatusScreen } from "../components/StatusScreen";
 import { useQuestionnaire } from "../hooks/use-questionnaire";
 import type { ScreeningQuestion } from "../types";
 
-/**
- * Parent screening: one question per page. The questions (and how many there
- * are) come from the API; each answer is sent when "Next" is pressed.
- * Backend endpoints are PENDING (see parentApi.startScreening).
- */
 export function ScreeningScreen() {
   const q = useQuestionnaire<ScreeningQuestion, string>({
     start: parentApi.startScreening,
@@ -75,7 +70,9 @@ export function ScreeningScreen() {
       <>
         {header}
         <div className="page-body">
-          <p className="subtle">There are no screening questions available yet.</p>
+          <p className="subtle">
+            There are no screening questions available yet.
+          </p>
         </div>
       </>
     );
@@ -90,9 +87,14 @@ export function ScreeningScreen() {
       {header}
       <div className="page-body">
         <div className="q-wrap">
-          <ProgressBar label={`Question ${number} of ${q.totalQuestions}`} progress={q.progress} />
+          <ProgressBar
+            label={`Question ${number} of ${q.totalQuestions}`}
+            progress={q.progress}
+          />
 
-          {question.encouragement && <p className="q-encourage">{question.encouragement}</p>}
+          {question.encouragement && (
+            <p className="q-encourage">{question.encouragement}</p>
+          )}
           <h2 className="q-text">
             {number}. {question.text}
           </h2>
@@ -116,11 +118,19 @@ export function ScreeningScreen() {
 
           <div className="q-actions">
             {q.step > 0 && (
-              <Button variant="outline" onClick={q.back} disabled={q.submitting}>
+              <Button
+                variant="outline"
+                onClick={q.back}
+                disabled={q.submitting}
+              >
                 Back
               </Button>
             )}
-            <Button onClick={q.next} disabled={!q.canContinue} loading={q.submitting}>
+            <Button
+              onClick={q.next}
+              disabled={!q.canContinue}
+              loading={q.submitting}
+            >
               {q.isLast ? "Finish" : "Next"}
             </Button>
           </div>

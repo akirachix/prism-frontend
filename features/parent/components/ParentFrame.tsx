@@ -1,8 +1,17 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { BookIcon, ChecklistIcon, DocIcon, HomeIcon, UserIcon } from "@/components/icons";
-import { PortalFrame, type PortalNavItem } from "@/components/layout/PortalFrame";
+import {
+  BookIcon,
+  ChecklistIcon,
+  DocIcon,
+  HomeIcon,
+  UserIcon,
+} from "@/components/icons";
+import {
+  PortalFrame,
+  type PortalNavItem,
+} from "@/components/layout/PortalFrame";
 import { AuthGuard } from "@/features/auth";
 import { useNavLocked } from "../nav-lock";
 
@@ -14,8 +23,20 @@ const NAV: PortalNavItem[] = [
     mobile: "Home",
     Icon: HomeIcon,
   },
-  { href: "/parent/reports", match: ["/parent/reports"], desktop: "Reports", mobile: "Reports", Icon: DocIcon },
-  { href: "/parent/school", match: ["/parent/school"], desktop: "School", mobile: "School", Icon: BookIcon },
+  {
+    href: "/parent/reports",
+    match: ["/parent/reports"],
+    desktop: "Reports",
+    mobile: "Reports",
+    Icon: DocIcon,
+  },
+  {
+    href: "/parent/school",
+    match: ["/parent/school"],
+    desktop: "School",
+    mobile: "School",
+    Icon: BookIcon,
+  },
   {
     href: "/parent/evaluation",
     match: ["/parent/evaluation"],
@@ -23,10 +44,15 @@ const NAV: PortalNavItem[] = [
     mobile: "Evaluation",
     Icon: ChecklistIcon,
   },
-  { href: "/parent/profile", match: ["/parent/profile"], desktop: "More", mobile: "Profile", Icon: UserIcon },
+  {
+    href: "/parent/profile",
+    match: ["/parent/profile"],
+    desktop: "More",
+    mobile: "Profile",
+    Icon: UserIcon,
+  },
 ];
 
-/** Shell for every /parent/* page: only signed-in PARENT users get in. */
 export function ParentFrame({ children }: { children: ReactNode }) {
   const locked = useNavLocked();
   return (

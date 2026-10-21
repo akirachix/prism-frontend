@@ -19,11 +19,6 @@ import type { MfaEnrollInfo } from "../types";
 import { useStepFlow } from "../use-step-flow";
 import { codeRule } from "../validation";
 
-/**
- * Every call to /auth/mfa/enroll creates a NEW secret and replaces the old
- * one. So: ask once per step token (this map also survives React Strict
- * Mode's double effect) and keep the answer in the sign-in flow.
- */
 const inFlight = new Map<string, Promise<MfaEnrollInfo>>();
 
 function ensureEnroll(stepToken: string): Promise<MfaEnrollInfo> {
@@ -42,11 +37,6 @@ interface Values {
   code: string;
 }
 
-/**
- * Stage "mfa_enrollment_required" (first sign-in): link an authenticator app,
- * then prove it works with its first code. POST /auth/mfa/enroll gives the key,
- * POST /auth/mfa/enroll/confirm finishes the sign-in.
- */
 export function MfaSetupScreen() {
   const router = useRouter();
   const flow = useStepFlow("mfa_enrollment_required");
@@ -73,7 +63,6 @@ export function MfaSetupScreen() {
           clearFlow();
           router.replace(`${loginRouteFor(portal)}?reason=step`);
         }
-        // Other errors: the "Try again" button below lets the person retry.
       });
   }, [stepToken, hasEnroll, portal, router]);
 
@@ -83,7 +72,11 @@ export function MfaSetupScreen() {
   const onSubmit = handleSubmit(async ({ code }) => {
     setFormError(null);
     try {
-      const session = await authApi.mfaEnrollConfirm(flow.stepToken, code, flow.email);
+      const session = await authApi.mfaEnrollConfirm(
+        flow.stepToken,
+        code,
+        flow.email,
+      );
       router.replace(completeSignIn(session));
     } catch (caught) {
       if (isStepExpired(caught)) {
@@ -105,7 +98,11 @@ export function MfaSetupScreen() {
 
   return (
     <AuthShell
-      subtitle={flow.portal ? `Sign-in into the ${flow.portal} portal` : "Set up your account"}
+      subtitle={
+        flow.portal
+          ? `Sign-in into the ${flow.portal} portal`
+          : "Set up your account"
+      }
       role={flow.portal ?? "any"}
     >
       <div style={{ display: "flex", justifyContent: "center", marginTop: 8 }}>
@@ -118,8 +115,8 @@ export function MfaSetupScreen() {
         Set up your authenticator
       </h1>
       <p className="lead" style={{ marginTop: 16 }}>
-        Add Mirai to an authenticator app (Google Authenticator, Microsoft Authenticator, Authy…), then
-        enter the {OTP_LENGTH}-digit code it shows.
+        Add Mirai to an authenticator app (Google Authenticator, Microsoft
+        Authenticator, Authy…), then enter the {OTP_LENGTH}-digit code it shows.
       </p>
 
       <form onSubmit={onSubmit} noValidate style={{ marginTop: 18 }}>
@@ -128,12 +125,19 @@ export function MfaSetupScreen() {
             <p style={{ fontWeight: 700 }}>Setup key</p>
             <p
               data-testid="mfa-secret"
-              style={{ fontFamily: "monospace", fontSize: 16, letterSpacing: 1.5, wordBreak: "break-all", marginTop: 4 }}
+              style={{
+                fontFamily: "monospace",
+                fontSize: 16,
+                letterSpacing: 1.5,
+                wordBreak: "break-all",
+                marginTop: 4,
+              }}
             >
               {groups(enroll.secret)}
             </p>
             <p className="subtle" style={{ marginTop: 8 }}>
-              In the app choose “Enter a setup key” (time based). On a phone you can also{" "}
+              In the app choose “Enter a setup key” (time based). On a phone you
+              can also{" "}
               <a href={enroll.otpauthUri} className="link-red">
                 open it in your authenticator app
               </a>
@@ -153,7 +157,9 @@ export function MfaSetupScreen() {
           name="code"
           control={control}
           rules={{ validate: codeRule }}
-          render={({ field }) => <CodeInput value={field.value} onChange={field.onChange} />}
+          render={({ field }) => (
+            <CodeInput value={field.value} onChange={field.onChange} />
+          )}
         />
 
         {(errors.code?.message || formError) && (
@@ -169,7 +175,11 @@ export function MfaSetupScreen() {
         </div>
       </form>
 
-      <Link href={loginRouteFor(flow.portal)} className="text-link" onClick={() => clearFlow()}>
+      <Link
+        href={loginRouteFor(flow.portal)}
+        className="text-link"
+        onClick={() => clearFlow()}
+      >
         Back to sign in
       </Link>
     </AuthShell>

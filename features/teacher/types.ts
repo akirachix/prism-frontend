@@ -1,5 +1,3 @@
-/** UI-facing types of the teacher portal (adapters.ts converts the backend shapes into these). */
-
 export interface DashboardStats {
   students: number;
   openCases: number;
@@ -32,7 +30,6 @@ export interface StudentRow {
 }
 export interface StudentList {
   students: StudentRow[];
-  /** True while real student names are not available (rows are built from cases). */
   namesPending: boolean;
 }
 export interface NewStudentPayload {

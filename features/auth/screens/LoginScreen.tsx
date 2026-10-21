@@ -12,14 +12,22 @@ import { errorMessage } from "../error-message";
 import { STAGE_ROUTE, startFlow } from "../flow";
 import { loginRouteFor } from "../roles";
 import type { Portal } from "../types";
-import { emailRule, requiredRule, safeNext, validateEmail } from "../validation";
+import {
+  emailRule,
+  requiredRule,
+  safeNext,
+  validateEmail,
+} from "../validation";
 
 const NOTICES: Record<string, string> = {
   expired: "Your session expired. Please sign in again.",
   step: "That sign-in step timed out. Please start again.",
 };
 
-const COPY: Record<Portal, { subtitle: string; lead: string; other: Portal; otherQuestion: string }> = {
+const COPY: Record<
+  Portal,
+  { subtitle: string; lead: string; other: Portal; otherQuestion: string }
+> = {
   parent: {
     subtitle: "Sign-in into the parent portal",
     lead: "Sign in to your parent account.",
@@ -39,11 +47,6 @@ interface Values {
   password: string;
 }
 
-/**
- * /login/parent and /login/teacher.
- * Step 1 of the sign-in: POST /auth/login. The backend answers with the NEXT
- * step (change password / set up authenticator / enter code) - see flow.ts.
- */
 export function LoginScreen({ portal }: { portal: Portal }) {
   const router = useRouter();
   const params = useSearchParams();
@@ -74,7 +77,6 @@ export function LoginScreen({ portal }: { portal: Portal }) {
     }
   });
 
-  /** POST /auth/forgot-password. The reply is always the same, so it never reveals if the e-mail exists. */
   async function forgotPassword() {
     setFormError(null);
     setInfo(null);
@@ -97,7 +99,12 @@ export function LoginScreen({ portal }: { portal: Portal }) {
       <h1 className="heading">Welcome back</h1>
       <p className="lead">{copy.lead}</p>
 
-      <form onSubmit={onSubmit} noValidate className="card--mobile-only" style={{ marginTop: 28 }}>
+      <form
+        onSubmit={onSubmit}
+        noValidate
+        className="card--mobile-only"
+        style={{ marginTop: 28 }}
+      >
         {notice && (
           <p className="form-info" role="status">
             {notice}
@@ -121,7 +128,12 @@ export function LoginScreen({ portal }: { portal: Portal }) {
         />
         <div className="row-between">
           <span />
-          <button type="button" className="btn btn--link" onClick={forgotPassword} style={{ fontSize: 11 }}>
+          <button
+            type="button"
+            className="btn btn--link"
+            onClick={forgotPassword}
+            style={{ fontSize: 11 }}
+          >
             Forgot password?
           </button>
         </div>

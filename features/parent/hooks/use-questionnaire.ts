@@ -1,17 +1,5 @@
 "use client";
 
-/**
- * Drives any question-by-question screen (screening, evaluation).
- *
- * - `start()` fetches the questions. The number of questions - and therefore
- *   the number of pages - always comes from the API response.
- * - Answers are sent when the parent presses Next (one request per answered
- *   question on that page). Already-saved, unchanged answers are not sent
- *   twice, so going Back and Next again is safe.
- * - `confirmBeforeSubmit` adds a "confirm" phase after the last page.
- *
- * Pass STABLE callbacks (e.g. `parentApi.startEvaluation`), not inline arrows.
- */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { AnswerPayload, QuestionnaireSession } from "../types";
 
@@ -21,15 +9,13 @@ interface Options<Q extends { id: string }, A> {
   start: () => Promise<QuestionnaireSession<Q, A>>;
   sendAnswer: (sessionId: string, payload: AnswerPayload<A>) => Promise<void>;
   complete: (sessionId: string) => Promise<void>;
-  /** Questions shown per page (screening: 1, evaluation: 2). */
   pageSize: number;
-  /** Fetch the questions on mount (default). Otherwise call `begin()`. */
   autoStart?: boolean;
-  /** Show a confirm screen after the last page before calling `complete`. */
   confirmBeforeSubmit?: boolean;
 }
 
-const errorText = (err: unknown, fallback: string) => (err instanceof Error ? err.message : fallback);
+const errorText = (err: unknown, fallback: string) =>
+  err instanceof Error ? err.message : fallback;
 
 export function useQuestionnaire<Q extends { id: string }, A>({
   start,
@@ -39,7 +25,9 @@ export function useQuestionnaire<Q extends { id: string }, A>({
   autoStart = true,
   confirmBeforeSubmit = false,
 }: Options<Q, A>) {
-  const [session, setSession] = useState<QuestionnaireSession<Q, A> | null>(null);
+  const [session, setSession] = useState<QuestionnaireSession<Q, A> | null>(
+    null,
+  );
   const [answers, setAnswers] = useState<Record<string, A>>({});
   const saved = useRef<Record<string, A>>({});
 
@@ -50,32 +38,37 @@ export function useQuestionnaire<Q extends { id: string }, A>({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const run = useCallback(async () => {
-    try {
-      const loaded = await start();
-      saved.current = { ...(loaded.answers ?? {}) };
-      setAnswers({ ...(loaded.answers ?? {}) });
-      setStep(0);
-      setPhase("answering");
-      setSession(loaded);
+  const run = useCallback(
+    async (isInitialMount = false) => {
+      if (!isInitialMount) {
+        setLoading(true);
+      }
       setError(null);
-    } catch (err) {
-      setError(errorText(err, "Could not load the questions."));
-    } finally {
-      setLoading(false);
-    }
-  }, [start]);
+      try {
+        const loaded = await start();
+        saved.current = { ...(loaded.answers ?? {}) };
+        setAnswers({ ...(loaded.answers ?? {}) });
+        setStep(0);
+        setPhase("answering");
+        setSession(loaded);
+      } catch (err) {
+        setError(errorText(err, "Could not load the questions."));
+      } finally {
+        setLoading(false);
+      }
+    },
+    [start],
+  );
 
   useEffect(() => {
-    if (autoStart) void run();
+    if (autoStart) {
+      void run(true);
+    }
   }, [autoStart, run]);
 
-  /** Fetch (or re-fetch) the questions on demand: "Start" / "Try again". */
   const begin = () => {
     setStarted(true);
-    setLoading(true);
-    setError(null);
-    void run();
+    void run(false);
   };
 
   const questions = useMemo(() => session?.questions ?? [], [session]);
@@ -88,9 +81,12 @@ export function useQuestionnaire<Q extends { id: string }, A>({
     [questions, firstIndex, pageSize],
   );
   const isLast = safeStep >= totalSteps - 1;
-  const canContinue = pageQuestions.length > 0 && pageQuestions.every((q) => answers[q.id] !== undefined);
+  const canContinue =
+    pageQuestions.length > 0 &&
+    pageQuestions.every((q) => answers[q.id] !== undefined);
 
-  const select = (questionId: string, answer: A) => setAnswers((prev) => ({ ...prev, [questionId]: answer }));
+  const select = (questionId: string, answer: A) =>
+    setAnswers((prev) => ({ ...prev, [questionId]: answer }));
 
   const finish = async () => {
     if (!session) return;
@@ -106,7 +102,10 @@ export function useQuestionnaire<Q extends { id: string }, A>({
       for (const question of pageQuestions) {
         const answer = answers[question.id];
         if (saved.current[question.id] === answer) continue;
-        await sendAnswer(session.sessionId, { questionId: question.id, answer });
+        await sendAnswer(session.sessionId, {
+          questionId: question.id,
+          answer,
+        });
         saved.current[question.id] = answer;
       }
       if (!isLast) setStep(safeStep + 1);
@@ -119,7 +118,6 @@ export function useQuestionnaire<Q extends { id: string }, A>({
     }
   };
 
-  /** Used on the confirm screen. */
   const submit = async () => {
     if (submitting) return;
     setSubmitting(true);
@@ -157,10 +155,10 @@ export function useQuestionnaire<Q extends { id: string }, A>({
     isLast,
     firstQuestionNumber: firstIndex + 1,
     lastQuestionNumber: firstIndex + pageQuestions.length,
-    /** 0 -> 1 across the questions (based on the last question on this page). */
-    progress: totalQuestions ? (firstIndex + pageQuestions.length) / totalQuestions : 0,
+    progress: totalQuestions
+      ? (firstIndex + pageQuestions.length) / totalQuestions
+      : 0,
     canContinue,
-    // actions
     begin,
     reload: begin,
     select,

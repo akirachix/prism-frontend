@@ -5,11 +5,16 @@ import { AuthShell } from "@/components/layout/AuthShell";
 import { Button } from "@/components/ui/Button";
 
 const NOTICES: Record<string, { className: string; text: string }> = {
-  expired: { className: "form-info", text: "Your session expired. Please sign in again." },
-  reset: { className: "form-info", text: "Password updated. Sign in with your new password." },
+  expired: {
+    className: "form-info",
+    text: "Your session expired. Please sign in again.",
+  },
+  reset: {
+    className: "form-info",
+    text: "Password updated. Sign in with your new password.",
+  },
 };
 
-/** /login - choose the portal (parent or teacher). */
 export function PortalChooserScreen() {
   const notice = NOTICES[useSearchParams().get("reason") ?? ""];
 

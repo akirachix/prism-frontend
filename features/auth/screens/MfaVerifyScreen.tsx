@@ -22,10 +22,6 @@ interface Values {
   code: string;
 }
 
-/**
- * Stage "mfa_required": the 6-digit code from the person's authenticator app.
- * POST /auth/mfa/verify -> tokens + user, then the person's own portal opens.
- */
 export function MfaVerifyScreen() {
   const router = useRouter();
   const flow = useStepFlow("mfa_required");
@@ -58,7 +54,10 @@ export function MfaVerifyScreen() {
   });
 
   return (
-    <AuthShell subtitle={portal ? `Sign-in into the ${portal} portal` : "Sign-in"} role={portal ?? "any"}>
+    <AuthShell
+      subtitle={portal ? `Sign-in into the ${portal} portal` : "Sign-in"}
+      role={portal ?? "any"}
+    >
       <div style={{ display: "flex", justifyContent: "center", marginTop: 8 }}>
         <Halo>
           <LockIcon size={34} />
@@ -77,7 +76,9 @@ export function MfaVerifyScreen() {
           name="code"
           control={control}
           rules={{ validate: codeRule }}
-          render={({ field }) => <CodeInput value={field.value} onChange={field.onChange} />}
+          render={({ field }) => (
+            <CodeInput value={field.value} onChange={field.onChange} />
+          )}
         />
 
         {(errors.code?.message || formError) && (
@@ -93,7 +94,11 @@ export function MfaVerifyScreen() {
         </div>
       </form>
 
-      <Link href={loginRouteFor(portal)} className="text-link" onClick={() => clearFlow()}>
+      <Link
+        href={loginRouteFor(portal)}
+        className="text-link"
+        onClick={() => clearFlow()}
+      >
         Back to sign in
       </Link>
     </AuthShell>

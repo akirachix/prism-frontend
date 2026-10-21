@@ -1,12 +1,3 @@
-/**
- * Auth API calls. Screens only talk to `authApi`; nothing else in the app
- * needs to know the auth URLs or JSON field names (this file + endpoints.ts).
- * Field names match backend schemas/auth.py and schemas/user.py. The backend
- * rejects unknown fields (extra="forbid"), so send exactly what is listed.
- *
- * Every call goes through fromSource(): real API by default, features/auth/mocks.ts
- * when NEXT_PUBLIC_USE_MOCKS=true.
- */
 import { api } from "@/lib/http";
 import { fromSource } from "@/lib/data-source";
 import { pendingEndpoint } from "@/lib/pending";
@@ -27,9 +18,9 @@ const STAGES: AuthStage[] = [
   "mfa_required",
 ];
 
-const text = (value: unknown): string => (typeof value === "string" ? value : "");
+const text = (value: unknown): string =>
+  typeof value === "string" ? value : "";
 
-// ── Adapters: raw backend JSON -> the types the screens use ──────────────
 export function toAuthUser(raw: unknown): AuthUser {
   const r = (raw && typeof raw === "object" ? raw : {}) as Raw;
   const firstName = text(r.first_name);
@@ -72,16 +63,17 @@ function toSession(raw: Raw | undefined): AuthSession {
 
 const mocks = () => import("./mocks");
 
-// ── API ──────────────────────────────────────────────────────────────────
 export const authApi = {
   /** Step 1. Password check -> which step comes next. */
   login: (email: string, password: string): Promise<StageResult> =>
     fromSource({
-      api: () => api.post<Raw>(e.login, { email, password }, { public: true }).then(toStage),
+      api: () =>
+        api
+          .post<Raw>(e.login, { email, password }, { public: true })
+          .then(toStage),
       mock: async () => (await mocks()).mockLogin(email, password),
     }),
 
-  /** Stage "password_change_required". */
   changePassword: (input: {
     stepToken: string;
     currentPassword: string;
@@ -103,42 +95,64 @@ export const authApi = {
       mock: async () => (await mocks()).mockAfterPasswordChange(),
     }),
 
-  /** Stage "mfa_enrollment_required", part 1: get the key to put in the app. */
   mfaEnroll: (stepToken: string): Promise<MfaEnrollInfo> =>
     fromSource({
       api: () =>
         api
           .post<Raw>(e.mfaEnroll, { step_token: stepToken }, { public: true })
-          .then((raw) => ({ secret: text(raw.secret), otpauthUri: text(raw.otpauth_uri) })),
+          .then((raw) => ({
+            secret: text(raw.secret),
+            otpauthUri: text(raw.otpauth_uri),
+          })),
       mock: async () => (await mocks()).mockEnroll(),
     }),
 
-  /** Stage "mfa_enrollment_required", part 2: first code -> signed in. */
-  mfaEnrollConfirm: (stepToken: string, code: string, email: string): Promise<AuthSession> =>
+  mfaEnrollConfirm: (
+    stepToken: string,
+    code: string,
+    email: string,
+  ): Promise<AuthSession> =>
     fromSource({
       api: () =>
         api
-          .post<Raw>(e.mfaEnrollConfirm, { step_token: stepToken, code }, { public: true })
+          .post<Raw>(
+            e.mfaEnrollConfirm,
+            { step_token: stepToken, code },
+            { public: true },
+          )
           .then(toSession),
       mock: async () => (await mocks()).mockSession(email, code),
     }),
 
-  /** Stage "mfa_required": code from the authenticator app -> signed in. */
-  mfaVerify: (stepToken: string, code: string, email: string): Promise<AuthSession> =>
+  mfaVerify: (
+    stepToken: string,
+    code: string,
+    email: string,
+  ): Promise<AuthSession> =>
     fromSource({
       api: () =>
         api
-          .post<Raw>(e.mfaVerify, { step_token: stepToken, code }, { public: true })
+          .post<Raw>(
+            e.mfaVerify,
+            { step_token: stepToken, code },
+            { public: true },
+          )
           .then(toSession),
       mock: async () => (await mocks()).mockSession(email, code),
     }),
 
-  /** /accept-invitation?token=...: choose the first password. */
-  acceptInvitation: (token: string, newPassword: string): Promise<StageResult> =>
+  acceptInvitation: (
+    token: string,
+    newPassword: string,
+  ): Promise<StageResult> =>
     fromSource({
       api: () =>
         api
-          .post<Raw>(e.acceptInvitation, { token, new_password: newPassword }, { public: true })
+          .post<Raw>(
+            e.acceptInvitation,
+            { token, new_password: newPassword },
+            { public: true },
+          )
           .then(toStage),
       mock: async () => (await mocks()).mockAfterInvitation(token),
     }),
@@ -149,15 +163,17 @@ export const authApi = {
       mock: () => undefined,
     }),
 
-  /** /reset-password?token=...: choose a new password. */
   resetPassword: (token: string, newPassword: string): Promise<void> =>
     fromSource({
       api: () =>
-        api.post<void>(e.resetPassword, { token, new_password: newPassword }, { public: true }),
+        api.post<void>(
+          e.resetPassword,
+          { token, new_password: newPassword },
+          { public: true },
+        ),
       mock: async () => (await mocks()).mockReset(token),
     }),
 
-  /** Ends the session on the server (the refresh token is read at send time). */
   logout: (): Promise<void> =>
     fromSource({
       api: () =>
@@ -168,22 +184,16 @@ export const authApi = {
       mock: () => undefined,
     }),
 
-  /**
-   * Change the password while signed in.
-   * PENDING: the backend only has POST /auth/change-password for the forced
-   * change at sign-in (it needs a step token, not a Bearer token). When a
-   * signed-in endpoint exists, put it in the `api` branch.
-   */
   changePasswordSignedIn: (_input: {
     currentPassword: string;
     newPassword: string;
   }): Promise<void> =>
     fromSource({
-      api: () => pendingEndpoint("Changing your password from the account page"),
+      api: () =>
+        pendingEndpoint("Changing your password from the account page"),
       mock: () => undefined,
     }),
 
-  /** PATCH /users/{id}: edit your own name / phone. Returns the updated user. */
   updateProfile: (
     userId: string,
     input: { firstName: string; lastName: string; phone: string },
@@ -200,7 +210,6 @@ export const authApi = {
       mock: async () => (await mocks()).mockUpdateProfile(userId, input),
     }),
 
-  /** The signed-in user. */
   me: (): Promise<AuthUser> =>
     fromSource({
       api: () => api.get<Raw>(e.me).then(toAuthUser),

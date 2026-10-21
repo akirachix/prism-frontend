@@ -1,11 +1,3 @@
-/**
- * Shapes of the backend resources the features read (backend schemas/*.py;
- * the OpenAPI "Read" models). These are RAW API shapes: snake_case, ids named
- * `<thing>_id`, enums in UPPER_CASE. Screens never use them directly - each
- * feature has an adapter that converts them into its own UI types.
- * Only fields the app uses are listed.
- */
-
 export type CaseStatus =
   | "INITIATED"
   | "TEACHER_SCREENING_COMPLETED"
@@ -31,7 +23,8 @@ export interface CaseRead {
   closed_reason: string | null;
 }
 
-export type IepStatus = "DRAFT" | "PENDING_APPROVAL" | "ACTIVE" | "REJECTED" | "SUPERSEDED";
+export type IepStatus =
+  "DRAFT" | "PENDING_APPROVAL" | "ACTIVE" | "REJECTED" | "SUPERSEDED";
 
 export interface IepRead {
   iep_id: string;
@@ -68,7 +61,6 @@ export interface EvaluationResponseRead {
 export interface ReportRead {
   report_id: string;
   case_id: string;
-  /** Free-form object; its keys are decided by whoever generates the report. */
   content: Record<string, unknown>;
   generated_at: string;
 }
@@ -92,5 +84,8 @@ export interface UserRead {
   role: string;
 }
 
-/** Cases that are finished: nothing left to do on them. */
-export const CLOSED_CASE_STATUSES: CaseStatus[] = ["CLOSED", "COMPLETED", "NO_CONCERN_IDENTIFIED"];
+export const CLOSED_CASE_STATUSES: CaseStatus[] = [
+  "CLOSED",
+  "COMPLETED",
+  "NO_CONCERN_IDENTIFIED",
+];

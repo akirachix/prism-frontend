@@ -18,11 +18,6 @@ interface Values {
   confirmPassword: string;
 }
 
-/**
- * /change-password - change the password while signed in (from the account page).
- * PENDING backend endpoint: in real mode the API call explains that it is not
- * available yet (see authApi.changePasswordSignedIn); mock mode works.
- */
 export function ChangePasswordScreen() {
   const router = useRouter();
   const { user } = useSession();
@@ -33,7 +28,13 @@ export function ChangePasswordScreen() {
     handleSubmit,
     getValues,
     formState: { errors, isSubmitting },
-  } = useForm<Values>({ defaultValues: { currentPassword: "", newPassword: "", confirmPassword: "" } });
+  } = useForm<Values>({
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
+  });
 
   const onSubmit = handleSubmit(async ({ currentPassword, newPassword }) => {
     setFormError(null);
@@ -62,7 +63,9 @@ export function ChangePasswordScreen() {
             autoComplete="current-password"
             placeholder="Enter current password"
             error={errors.currentPassword?.message}
-            {...register("currentPassword", { validate: requiredRule("Current password") })}
+            {...register("currentPassword", {
+              validate: requiredRule("Current password"),
+            })}
           />
           <TextField
             label="New password"
@@ -70,7 +73,9 @@ export function ChangePasswordScreen() {
             autoComplete="new-password"
             placeholder="Enter new password"
             error={errors.newPassword?.message}
-            {...register("newPassword", { validate: newPasswordRule(user?.email) })}
+            {...register("newPassword", {
+              validate: newPasswordRule(user?.email),
+            })}
           />
           <TextField
             label="Confirm password"
@@ -78,7 +83,9 @@ export function ChangePasswordScreen() {
             autoComplete="new-password"
             placeholder="Confirm new password"
             error={errors.confirmPassword?.message}
-            {...register("confirmPassword", { validate: sameAsRule(() => getValues("newPassword")) })}
+            {...register("confirmPassword", {
+              validate: sameAsRule(() => getValues("newPassword")),
+            })}
           />
 
           {formError && (
@@ -91,7 +98,11 @@ export function ChangePasswordScreen() {
             <Button type="submit" loading={isSubmitting}>
               Save
             </Button>
-            <Button variant="outline" onClick={() => router.back()} disabled={isSubmitting}>
+            <Button
+              variant="outline"
+              onClick={() => router.back()}
+              disabled={isSubmitting}
+            >
               Cancel
             </Button>
           </div>

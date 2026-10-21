@@ -1,19 +1,11 @@
-/**
- * Fake data for the auth feature. Only used when NEXT_PUBLIC_USE_MOCKS=true
- * (loaded lazily by api.ts, so it is never downloaded otherwise).
- *
- * Try it:
- *   - password "wrong-password" is rejected
- *   - e-mail containing "new"    -> goes through authenticator SETUP first
- *   - e-mail containing "change" -> must choose a new password first
- *   - any other e-mail           -> asks for the authenticator code
- *   - the code is accepted unless it is 000000
- *   - the role comes from the e-mail: teacher@... -> TEACHER, school@ / system@ -> admins, anything else PARENT
- *   - the reset / invitation token is accepted unless it is "badtoken"
- */
 import { ApiError } from "@/lib/http";
 import { getStoredUser } from "./session";
-import type { AuthSession, AuthUser, MfaEnrollInfo, StageResult } from "./types";
+import type {
+  AuthSession,
+  AuthUser,
+  MfaEnrollInfo,
+  StageResult,
+} from "./types";
 
 export function mockUser(email: string): AuthUser {
   const local = email.split("@")[0] ?? "user";
@@ -25,7 +17,11 @@ export function mockUser(email: string): AuthUser {
         ? "TEACHER"
         : "PARENT";
   const [firstName, lastName] =
-    role === "TEACHER" ? ["Mary", "Wambui"] : role === "PARENT" ? ["Grace", "Otieno"] : ["Alex", "Admin"];
+    role === "TEACHER"
+      ? ["Mary", "Wambui"]
+      : role === "PARENT"
+        ? ["Grace", "Otieno"]
+        : ["Alex", "Admin"];
   return {
     id: "mock-user-1",
     email,
@@ -54,9 +50,11 @@ export function mockLogin(email: string, password: string): StageResult {
   return stage("mfa_required");
 }
 
-export const mockAfterPasswordChange = (): StageResult => stage("mfa_enrollment_required");
+export const mockAfterPasswordChange = (): StageResult =>
+  stage("mfa_enrollment_required");
 export const mockAfterInvitation = (token: string): StageResult => {
-  if (token === "badtoken") throw new ApiError("This link is invalid or has expired.", 400);
+  if (token === "badtoken")
+    throw new ApiError("This link is invalid or has expired.", 400);
   return stage("mfa_enrollment_required");
 };
 
@@ -75,7 +73,8 @@ export function mockSession(email: string, code: string): AuthSession {
 }
 
 export function mockReset(token: string): void {
-  if (token === "badtoken") throw new ApiError("This link is invalid or has expired.", 400);
+  if (token === "badtoken")
+    throw new ApiError("This link is invalid or has expired.", 400);
 }
 
 export function mockUpdateProfile(
@@ -93,5 +92,5 @@ export function mockUpdateProfile(
   };
 }
 
-/** In mock mode "the server" simply remembers who signed in. */
-export const mockMe = (): AuthUser => getStoredUser() ?? mockUser("parent@example.com");
+export const mockMe = (): AuthUser =>
+  getStoredUser() ?? mockUser("parent@example.com");

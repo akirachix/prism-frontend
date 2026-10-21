@@ -14,11 +14,6 @@ import { useQuestionnaire } from "../hooks/use-questionnaire";
 import { navLock } from "../nav-lock";
 import type { EvaluationQuestion } from "../types";
 
-/**
- * Parent evaluation: intro -> questions (2 per page) -> confirm -> saved.
- * Questions come from the IEP's evaluation questions; every answer is saved
- * as an evaluation response when "Next" is pressed (see parentApi.startEvaluation).
- */
 export function EvaluationScreen() {
   const router = useRouter();
   const q = useQuestionnaire<EvaluationQuestion, number>({
@@ -30,9 +25,9 @@ export function EvaluationScreen() {
     confirmBeforeSubmit: true,
   });
 
-  const inProgress = q.started && !q.loading && q.questions.length > 0 && q.phase !== "done";
+  const inProgress =
+    q.started && !q.loading && q.questions.length > 0 && q.phase !== "done";
 
-  // Lock the other nav items while the parent is answering.
   useEffect(() => {
     navLock.set(inProgress);
     return () => navLock.set(false);
@@ -89,7 +84,9 @@ export function EvaluationScreen() {
       <>
         <PageHeader title="Your evaluation" />
         <div className="page-body">
-          <p className="subtle">There are no evaluation questions available yet.</p>
+          <p className="subtle">
+            There are no evaluation questions available yet.
+          </p>
         </div>
       </>
     );
@@ -109,7 +106,11 @@ export function EvaluationScreen() {
                 <Button onClick={q.submit} loading={q.submitting}>
                   Submit
                 </Button>
-                <Button variant="outline" onClick={q.back} disabled={q.submitting}>
+                <Button
+                  variant="outline"
+                  onClick={q.back}
+                  disabled={q.submitting}
+                >
                   Review answers
                 </Button>
               </>
@@ -132,10 +133,16 @@ export function EvaluationScreen() {
 
   return (
     <>
-      <PageHeader title="Your evaluation" onBack={q.step > 0 ? q.back : () => router.push("/parent/dashboard")} />
+      <PageHeader
+        title="Your evaluation"
+        onBack={q.step > 0 ? q.back : () => router.push("/parent/dashboard")}
+      />
       <div className="page-body">
         <div className="q-wrap">
-          <ProgressBar label={`${range} of ${q.totalQuestions}`} progress={q.progress} />
+          <ProgressBar
+            label={`${range} of ${q.totalQuestions}`}
+            progress={q.progress}
+          />
 
           {q.pageQuestions.map((question, index) => (
             <RatingScale
@@ -155,11 +162,19 @@ export function EvaluationScreen() {
 
           <div className="q-actions">
             {q.step > 0 && (
-              <Button variant="outline" onClick={q.back} disabled={q.submitting}>
+              <Button
+                variant="outline"
+                onClick={q.back}
+                disabled={q.submitting}
+              >
                 Back
               </Button>
             )}
-            <Button onClick={q.next} disabled={!q.canContinue} loading={q.submitting}>
+            <Button
+              onClick={q.next}
+              disabled={!q.canContinue}
+              loading={q.submitting}
+            >
               Next
             </Button>
           </div>

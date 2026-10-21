@@ -1,4 +1,3 @@
-/** Form validation. Each function returns an error message or null. */
 import { OTP_LENGTH } from "@/lib/config";
 
 export function validateEmail(value: string): string | null {
@@ -14,10 +13,6 @@ export function validateRequired(value: string, label: string): string | null {
   return value.trim() ? null : `${label} is required.`;
 }
 
-/**
- * Mirrors the backend rule (core/security.py password_problems) so people
- * see the problem before sending. The backend stays the judge.
- */
 export function passwordProblems(password: string, email = ""): string[] {
   const problems: string[] = [];
   if (password.length < 12) problems.push("at least 12 characters");
@@ -51,7 +46,9 @@ export function validateCode(value: string): string | null {
 
 /** Only allow in-app redirects (blocks "https://evil.com" and "//evil.com"). */
 export function safeNext(value: string | null): string | null {
-  return value && value.startsWith("/") && !value.startsWith("//") ? value : null;
+  return value && value.startsWith("/") && !value.startsWith("//")
+    ? value
+    : null;
 }
 
 // ── react-hook-form helpers ───────────────────────────────────────────────
@@ -66,11 +63,15 @@ export const requiredRule = (label: string) => (value: string) =>
 export const codeRule = (value: string) => validateCode(value) ?? true;
 
 /** New password: the backend's strength rule. `email` makes "contains your name" detectable. */
-export const newPasswordRule = (email = "") => (value: string) => {
-  if (!value) return "New password is required.";
-  const problems = passwordProblems(value, email);
-  return problems.length ? `The new password needs: ${problems.join(", ")}.` : true;
-};
+export const newPasswordRule =
+  (email = "") =>
+  (value: string) => {
+    if (!value) return "New password is required.";
+    const problems = passwordProblems(value, email);
+    return problems.length
+      ? `The new password needs: ${problems.join(", ")}.`
+      : true;
+  };
 
 /** Confirm field: must equal another field's current value. */
 export const sameAsRule = (other: () => string) => (value: string) =>

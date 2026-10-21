@@ -51,9 +51,21 @@
   background: var(--cream-card);
 }
 @media (min-width: 1024px) {
-  .tab { font-size: 14px; height: 40px; padding: 0 22px; }
-  .item { padding: 22px 26px; }
-  .title { font-size: 18px; }
-  .meta { font-size: 14px; }
-  .pill { font-size: 13px; }
+  .tab {
+    font-size: 14px;
+    height: 40px;
+    padding: 0 22px;
+  }
+  .item {
+    padding: 22px 26px;
+  }
+  .title {
+    font-size: 18px;
+  }
+  .meta {
+    font-size: 14px;
+  }
+  .pill {
+    font-size: 13px;
+  }
 }

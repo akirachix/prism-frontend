@@ -19,11 +19,6 @@ interface Values {
   confirmPassword: string;
 }
 
-/**
- * Stage "password_change_required": the account still has the temporary
- * password it was created with. POST /auth/change-password, then the backend
- * names the next step (authenticator setup or code).
- */
 export function PasswordChangeScreen() {
   const router = useRouter();
   const flow = useStepFlow("password_change_required");
@@ -34,7 +29,13 @@ export function PasswordChangeScreen() {
     handleSubmit,
     getValues,
     formState: { errors, isSubmitting },
-  } = useForm<Values>({ defaultValues: { currentPassword: "", newPassword: "", confirmPassword: "" } });
+  } = useForm<Values>({
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
+  });
 
   if (!flow) return null;
 
@@ -61,7 +62,10 @@ export function PasswordChangeScreen() {
   return (
     <AuthShell subtitle="Create a new password" role={flow.portal ?? "any"}>
       <h1 className="heading">Create a new password</h1>
-      <p className="lead">Your account still uses a temporary password. Choose a new one to continue.</p>
+      <p className="lead">
+        Your account still uses a temporary password. Choose a new one to
+        continue.
+      </p>
 
       <form onSubmit={onSubmit} noValidate style={{ marginTop: 28 }}>
         <TextField
@@ -70,7 +74,9 @@ export function PasswordChangeScreen() {
           autoComplete="current-password"
           placeholder="Enter your temporary password"
           error={errors.currentPassword?.message}
-          {...register("currentPassword", { validate: requiredRule("Temporary password") })}
+          {...register("currentPassword", {
+            validate: requiredRule("Temporary password"),
+          })}
         />
         <TextField
           label="New password"
@@ -78,7 +84,9 @@ export function PasswordChangeScreen() {
           autoComplete="new-password"
           placeholder="Enter new password"
           error={errors.newPassword?.message}
-          {...register("newPassword", { validate: newPasswordRule(flow.email) })}
+          {...register("newPassword", {
+            validate: newPasswordRule(flow.email),
+          })}
         />
         <TextField
           label="Confirm password"
@@ -86,7 +94,9 @@ export function PasswordChangeScreen() {
           autoComplete="new-password"
           placeholder="Confirm new password"
           error={errors.confirmPassword?.message}
-          {...register("confirmPassword", { validate: sameAsRule(() => getValues("newPassword")) })}
+          {...register("confirmPassword", {
+            validate: sameAsRule(() => getValues("newPassword")),
+          })}
         />
 
         {formError && (

@@ -1,14 +1,6 @@
 import { LOGIN_ROUTE } from "@/lib/config";
 import type { Portal } from "./types";
 
-/**
- * Role -> landing page after sign-in. Roles are the backend's exact values.
- *
- * Mirai has two portals: PARENT and TEACHER. School / system admins have no
- * Mirai portal; they land on DEFAULT_HOME (the admin console that another
- * feature owner adds). Unknown roles go there too, so a new role from the
- * backend never breaks sign-in.
- */
 export const DEFAULT_HOME = "/dashboard";
 
 export const ROLE_HOME: Record<string, string> = {

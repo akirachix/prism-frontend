@@ -1,6 +1,11 @@
 "use client";
 
-import { useRef, type ClipboardEvent, type CSSProperties, type KeyboardEvent } from "react";
+import {
+  useRef,
+  type ClipboardEvent,
+  type CSSProperties,
+  type KeyboardEvent,
+} from "react";
 import { OTP_LENGTH } from "@/lib/config";
 
 interface Props {
@@ -15,7 +20,12 @@ interface Props {
  * One box per digit. Typing moves forward, Backspace moves back, pasting a
  * whole code fills every box. With react-hook-form use it through <Controller>.
  */
-export function CodeInput({ length = OTP_LENGTH, value, onChange, label = "Verification code" }: Props) {
+export function CodeInput({
+  length = OTP_LENGTH,
+  value,
+  onChange,
+  label = "Verification code",
+}: Props) {
   const refs = useRef<Array<HTMLInputElement | null>>([]);
   const digits = Array.from({ length }, (_, i) => value[i] ?? "");
 
@@ -28,18 +38,27 @@ export function CodeInput({ length = OTP_LENGTH, value, onChange, label = "Verif
     }
     // Digits are always filled left to right, so never leave a gap.
     const position = Math.min(i, value.length);
-    onChange((value.slice(0, position) + char + value.slice(position + 1)).slice(0, length));
+    onChange(
+      (value.slice(0, position) + char + value.slice(position + 1)).slice(
+        0,
+        length,
+      ),
+    );
     refs.current[Math.min(position + 1, length - 1)]?.focus();
   };
 
   const handleKey = (i: number, e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Backspace" && !digits[i] && i > 0) refs.current[i - 1]?.focus();
+    if (e.key === "Backspace" && !digits[i] && i > 0)
+      refs.current[i - 1]?.focus();
     if (e.key === "ArrowLeft" && i > 0) refs.current[i - 1]?.focus();
     if (e.key === "ArrowRight" && i < length - 1) refs.current[i + 1]?.focus();
   };
 
   const handlePaste = (e: ClipboardEvent<HTMLInputElement>) => {
-    const text = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, length);
+    const text = e.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, length);
     if (!text) return;
     e.preventDefault();
     onChange(text);

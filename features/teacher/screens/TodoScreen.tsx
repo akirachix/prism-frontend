@@ -17,7 +17,6 @@ const TABS: Array<{ id: Tab; label: string }> = [
   { id: "referral", label: "Referrals" },
 ];
 
-/** Teacher to-do list with filter tabs. The tasks are worked out from the teacher's cases and IEPs. */
 export function TodoScreen() {
   const { data: todos, error, loading, reload } = useAsync(teacherApi.todos);
   const [tab, setTab] = useState<Tab>("all");
@@ -48,13 +47,17 @@ export function TodoScreen() {
 
         {todos && (
           <div className={styles.list}>
-            {visible.length === 0 && <p className="subtle">Nothing to do here. 🎉</p>}
+            {visible.length === 0 && (
+              <p className="subtle">Nothing to do here. 🎉</p>
+            )}
             {visible.map((todo) => (
               <div key={todo.id} className={styles.item}>
                 <div>
                   <p className={styles.title}>{todo.title}</p>
                   <p className={styles.meta}>
-                    {[todo.studentName, todo.dueDate && `Due ${todo.dueDate}`].filter(Boolean).join(" · ")}
+                    {[todo.studentName, todo.dueDate && `Due ${todo.dueDate}`]
+                      .filter(Boolean)
+                      .join(" · ")}
                   </p>
                 </div>
                 <span className={styles.pill}>{todo.status}</span>

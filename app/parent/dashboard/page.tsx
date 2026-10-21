@@ -1,4 +1,4 @@
-import { DashboardScreen } from "@/features/parent";
+import { DashboardScreen } from "../../../features/parent";
 
 export default function Page() {
   return <DashboardScreen />;

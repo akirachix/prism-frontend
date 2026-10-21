@@ -29,9 +29,15 @@
   padding: 16px;
   background: var(--white);
 }
-.stat--students { background: var(--cream-card); }
-.stat--cases { background: #ffd9b8; }
-.stat--active { background: #ffd6dc; }
+.stat--students {
+  background: var(--cream-card);
+}
+.stat--cases {
+  background: #ffd9b8;
+}
+.stat--active {
+  background: #ffd6dc;
+}
 .statValue {
   font-size: 30px;
   font-weight: 700;
@@ -112,11 +118,27 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 18px;
   }
-  .stat { padding: 20px 22px; }
-  .statValue { font-size: 38px; }
-  .statLabel { font-size: 14px; }
-  .sectionTitle { font-size: 22px; }
-  .rowTitle { font-size: 16px; }
-  .rowNote, .time { font-size: 14px; }
-  .attention, .latest { padding: 8px 24px; }
+  .stat {
+    padding: 20px 22px;
+  }
+  .statValue {
+    font-size: 38px;
+  }
+  .statLabel {
+    font-size: 14px;
+  }
+  .sectionTitle {
+    font-size: 22px;
+  }
+  .rowTitle {
+    font-size: 16px;
+  }
+  .rowNote,
+  .time {
+    font-size: 14px;
+  }
+  .attention,
+  .latest {
+    padding: 8px 24px;
+  }
 }

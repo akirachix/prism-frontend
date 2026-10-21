@@ -30,19 +30,16 @@ const linkRow = {
   fontWeight: 600,
 } as const;
 
-/**
- * Signed-in person's own account page (parent "Profile", teacher "Account").
- * Everything shown comes from the real user (GET /auth/me, kept fresh by AuthGuard).
- * The school name from the design is not shown: the backend has no /schools
- * endpoint yet (the user only has a school_id).
- */
 export function AccountScreen({ title }: { title: string }) {
   const { user } = useSession();
 
   return (
     <>
       <PageHeader title={title} />
-      <div className="page-body" style={{ maxWidth: 500, margin: "0 auto", padding: "0 18px 48px" }}>
+      <div
+        className="page-body"
+        style={{ maxWidth: 500, margin: "0 auto", padding: "0 18px 48px" }}
+      >
         {!user ? (
           <Loading />
         ) : (
@@ -61,10 +58,27 @@ export function AccountScreen({ title }: { title: string }) {
                 border: "2px solid #062d5a",
               }}
             >
-              <span style={{ fontSize: 30, fontWeight: 700, letterSpacing: "-0.04em" }}>Account</span>
+              <span
+                style={{
+                  fontSize: 30,
+                  fontWeight: 700,
+                  letterSpacing: "-0.04em",
+                }}
+              >
+                Account
+              </span>
             </div>
 
-            <div style={{ ...card, padding: "18px 16px", display: "flex", alignItems: "center", gap: 16, marginBottom: 22 }}>
+            <div
+              style={{
+                ...card,
+                padding: "18px 16px",
+                display: "flex",
+                alignItems: "center",
+                gap: 16,
+                marginBottom: 22,
+              }}
+            >
               <div
                 style={{
                   width: 52,
@@ -81,12 +95,27 @@ export function AccountScreen({ title }: { title: string }) {
                 {initials(user.name)}
               </div>
               <div style={{ display: "grid", gap: 4 }}>
-                <div style={{ fontSize: 22, fontWeight: 700, color: "#0a2d5d" }}>{user.name}</div>
-                <div style={{ fontSize: 15, color: "#0a2d5d" }}>{ROLE_LABEL[user.role] ?? user.role}</div>
+                <div
+                  style={{ fontSize: 22, fontWeight: 700, color: "#0a2d5d" }}
+                >
+                  {user.name}
+                </div>
+                <div style={{ fontSize: 15, color: "#0a2d5d" }}>
+                  {ROLE_LABEL[user.role] ?? user.role}
+                </div>
               </div>
             </div>
 
-            <div style={{ marginBottom: 12, fontSize: 18, fontWeight: 700, color: "#0a2d5d" }}>Profile</div>
+            <div
+              style={{
+                marginBottom: 12,
+                fontSize: 18,
+                fontWeight: 700,
+                color: "#0a2d5d",
+              }}
+            >
+              Profile
+            </div>
 
             <div style={{ ...card, padding: "18px 18px 10px" }}>
               <dl style={{ display: "grid", gap: 18, margin: 0 }}>
@@ -96,8 +125,24 @@ export function AccountScreen({ title }: { title: string }) {
                   ["Name", user.name],
                 ].map(([label, value]) => (
                   <div key={label}>
-                    <dt style={{ fontSize: 14, color: "#0a2d5d", marginBottom: 4 }}>{label}</dt>
-                    <dd style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#0a2d5d", wordBreak: "break-word" }}>
+                    <dt
+                      style={{
+                        fontSize: 14,
+                        color: "#0a2d5d",
+                        marginBottom: 4,
+                      }}
+                    >
+                      {label}
+                    </dt>
+                    <dd
+                      style={{
+                        margin: 0,
+                        fontSize: 20,
+                        fontWeight: 700,
+                        color: "#0a2d5d",
+                        wordBreak: "break-word",
+                      }}
+                    >
                       {value || "—"}
                     </dd>
                   </div>
@@ -105,20 +150,46 @@ export function AccountScreen({ title }: { title: string }) {
               </dl>
             </div>
 
-            <div style={{ marginTop: 22, marginBottom: 12, fontSize: 18, fontWeight: 700, color: "#0a2d5d" }}>
+            <div
+              style={{
+                marginTop: 22,
+                marginBottom: 12,
+                fontSize: 18,
+                fontWeight: 700,
+                color: "#0a2d5d",
+              }}
+            >
               Security
             </div>
 
             <div style={{ ...card, overflow: "hidden" }}>
-              <Link href="/change-password" style={{ ...linkRow, borderBottom: "1px solid rgba(10,45,93,0.5)" }}>
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
+              <Link
+                href="/change-password"
+                style={{
+                  ...linkRow,
+                  borderBottom: "1px solid rgba(10,45,93,0.5)",
+                }}
+              >
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 12,
+                  }}
+                >
                   <span aria-hidden="true">🔒</span>
                   <span>Change password</span>
                 </span>
                 <ChevronRightIcon size={20} />
               </Link>
               <Link href="/edit-profile" style={linkRow}>
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 12,
+                  }}
+                >
                   <span aria-hidden="true">✎</span>
                   <span>Edit profile</span>
                 </span>

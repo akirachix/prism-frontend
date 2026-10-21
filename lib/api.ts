@@ -14,6 +14,7 @@ export async function request<T>(
   options: RequestInit = {},
 ): Promise<T> {
   let response: Response;
+
   try {
     response = await fetch(`${BASE_URL}${path}`, {
       ...options,
@@ -31,11 +32,18 @@ export async function request<T>(
     let message = "Something went wrong. Please try again.";
     try {
       const body = await response.json();
-      if (typeof body.detail === "string") message = body.detail;
-    } catch {}
+      if (typeof body.detail === "string") {
+        message = body.detail;
+      }
+    } catch (parseError) {
+      console.error("Failed to parse error response body:", parseError);
+    }
     throw new ApiError(response.status, message);
   }
 
-  if (response.status === 204) return undefined as T;
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
   return (await response.json()) as T;
 }

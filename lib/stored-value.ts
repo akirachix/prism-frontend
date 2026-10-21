@@ -1,11 +1,5 @@
 "use client";
 
-/**
- * A tiny reactive wrapper around localStorage / sessionStorage.
- * Components read it with `useStoredValue(store)`, which is safe for SSR:
- * it returns `undefined` on the server (and on the first client render),
- * then the real value (`string | null`).
- */
 import { useSyncExternalStore } from "react";
 
 export interface StoredValue {
@@ -29,15 +23,13 @@ export function createStoredValue(
       try {
         return storage().getItem(key);
       } catch {
-        return null; // storage blocked (private mode, SSR, ...)
+        return null;
       }
     },
     set(value) {
       try {
         storage().setItem(key, value);
-      } catch {
-        /* ignore: value just will not persist */
-      }
+      } catch {}
       notify();
     },
     clear() {
@@ -53,7 +45,7 @@ export function createStoredValue(
       const onStorage = (event: StorageEvent) => {
         if (event.key === key || event.key === null) listener();
       };
-      window.addEventListener("storage", onStorage); // other tabs
+      window.addEventListener("storage", onStorage);
       return () => {
         listeners.delete(listener);
         window.removeEventListener("storage", onStorage);

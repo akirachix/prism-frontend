@@ -9,7 +9,6 @@ import { useSession } from "@/features/auth";
 import { useAsync } from "@/lib/use-async";
 import { parentApi } from "../api";
 
-/** Parent home: the child's summary and quick links to screening, reports and evaluation. */
 export function DashboardScreen() {
   const { user } = useSession();
   const { data: child, error, reload } = useAsync(parentApi.child);
@@ -30,7 +29,9 @@ export function DashboardScreen() {
               <span className="avatar">
                 <UserIcon size={22} />
               </span>
-              <h3 className="child-card__name">{child?.name ?? "Your child"}</h3>
+              <h3 className="child-card__name">
+                {child?.name ?? "Your child"}
+              </h3>
             </div>
             <dl className="stats">
               <div>

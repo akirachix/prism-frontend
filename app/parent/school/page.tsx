@@ -1,4 +1,4 @@
-import { SchoolScreen } from "@/features/parent";
+import { SchoolScreen } from "../../../features/parent";
 
 export default function Page() {
   return <SchoolScreen />;

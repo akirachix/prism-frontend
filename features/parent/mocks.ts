@@ -1,7 +1,3 @@
-/**
- * Fake data for the parent portal. Only used with NEXT_PUBLIC_USE_MOCKS=true
- * (loaded lazily by api.ts, so it is never downloaded otherwise).
- */
 import { RATING_SCALE } from "./adapters";
 import type {
   ChildSummary,
@@ -28,15 +24,16 @@ const SCREENING_TEXTS = [
   "Does your child notice when someone is upset?",
 ];
 
-/** "Almost there!!" on roughly the last 30% of the questions. */
 const firstEncouraged = Math.ceil(SCREENING_TEXTS.length * 0.7);
 
-export const mockScreeningQuestions: ScreeningQuestion[] = SCREENING_TEXTS.map((text, i) => ({
-  id: `sq-${i + 1}`,
-  text,
-  options: FREQUENCY.map((label) => ({ id: label.toLowerCase(), label })),
-  encouragement: i + 1 >= firstEncouraged ? "Almost there!!" : null,
-}));
+export const mockScreeningQuestions: ScreeningQuestion[] = SCREENING_TEXTS.map(
+  (text, i) => ({
+    id: `sq-${i + 1}`,
+    text,
+    options: FREQUENCY.map((label) => ({ id: label.toLowerCase(), label })),
+    encouragement: i + 1 >= firstEncouraged ? "Almost there!!" : null,
+  }),
+);
 
 export const mockEvaluationQuestions: EvaluationQuestion[] = [
   "Has the child kept attention on a task on a planned time?",
@@ -47,13 +44,13 @@ export const mockEvaluationQuestions: EvaluationQuestion[] = [
   "Has the child completed tasks independently?",
 ].map((text, i) => ({ id: `eq-${i + 1}`, text, scale: RATING_SCALE }));
 
-/**
- * Fake "database": answers sent in mock mode are kept here (and logged) so you
- * can see exactly what would be saved, and so a half-done questionnaire resumes.
- */
 const saved: Record<string, Record<string, string | number>> = {};
 
-export function mockSaveAnswer(sessionId: string, questionId: string, answer: string | number) {
+export function mockSaveAnswer(
+  sessionId: string,
+  questionId: string,
+  answer: string | number,
+) {
   (saved[sessionId] ??= {})[questionId] = answer;
   console.info("[mock] saved answer", { sessionId, questionId, answer });
 }
@@ -62,16 +59,26 @@ export const mockCompleteScreening = (sessionId: string) => {
   console.info("[mock] screening completed", sessionId);
 };
 
-export const mockScreeningSession = (): QuestionnaireSession<ScreeningQuestion, string> => ({
+export const mockScreeningSession = (): QuestionnaireSession<
+  ScreeningQuestion,
+  string
+> => ({
   sessionId: "mock-screening",
   questions: mockScreeningQuestions,
-  answers: { ...(saved["mock-screening"] as Record<string, string> | undefined) },
+  answers: {
+    ...(saved["mock-screening"] as Record<string, string> | undefined),
+  },
 });
 
-export const mockEvaluationSession = (): QuestionnaireSession<EvaluationQuestion, number> => ({
+export const mockEvaluationSession = (): QuestionnaireSession<
+  EvaluationQuestion,
+  number
+> => ({
   sessionId: "mock-evaluation",
   questions: mockEvaluationQuestions,
-  answers: { ...(saved["mock-evaluation"] as Record<string, number> | undefined) },
+  answers: {
+    ...(saved["mock-evaluation"] as Record<string, number> | undefined),
+  },
 });
 
 export const mockChild: ChildSummary = {
@@ -104,14 +111,26 @@ export const mockTeacherEvaluation: TeacherEvaluation = {
   teacherName: "Mary Wambui",
   date: "12 Sep 2026",
   details: [
-    { question: "Has the child kept attention on a task?", rating: "A little better" },
-    { question: "Has the child followed a simple routine?", rating: "Much better" },
-    { question: "Has the child interacted with classmates?", rating: "No change" },
+    {
+      question: "Has the child kept attention on a task?",
+      rating: "A little better",
+    },
+    {
+      question: "Has the child followed a simple routine?",
+      rating: "Much better",
+    },
+    {
+      question: "Has the child interacted with classmates?",
+      rating: "No change",
+    },
   ],
-  teacher: { name: "Mary Wambui", phone: "+254 700 000 000", email: "mary@greenfield.example" },
+  teacher: {
+    name: "Mary Wambui",
+    phone: "+254 700 000 000",
+    email: "mary@greenfield.example",
+  },
 };
 
-/** A tiny valid one-page PDF so "Download PDF" works in mock mode. */
 export function mockPdf(title: string): Blob {
   const safe = title.replace(/[^\x20-\x7e]/g, "").replace(/[()\\]/g, "");
   const stream =
@@ -132,7 +151,9 @@ export function mockPdf(title: string): Blob {
   });
   const xref = pdf.length;
   pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
-  pdf += offsets.map((o) => `${String(o).padStart(10, "0")} 00000 n \n`).join("");
+  pdf += offsets
+    .map((o) => `${String(o).padStart(10, "0")} 00000 n \n`)
+    .join("");
   pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
   return new Blob([pdf], { type: "application/pdf" });
 }

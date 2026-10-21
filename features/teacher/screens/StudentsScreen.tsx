@@ -21,7 +21,6 @@ const statusClass = (status: string) => {
   return "";
 };
 
-/** Teacher students: search, filter chips, table and "Add a student" (add is PENDING in the backend). */
 export function StudentsScreen() {
   const { data, error, loading, reload } = useAsync(teacherApi.students);
   const students = data?.students;
@@ -36,21 +35,39 @@ export function StudentsScreen() {
     reset,
     formState: { errors, isSubmitting },
   } = useForm<NewStudentPayload>({
-    defaultValues: { name: "", admissionNumber: "", className: "", dateOfBirth: "" },
+    defaultValues: {
+      name: "",
+      admissionNumber: "",
+      className: "",
+      dateOfBirth: "",
+    },
   });
 
   const rows = useMemo(() => {
     const text = query.trim().toLowerCase();
     return (students ?? []).filter((s) => {
-      if (filter === "attention" && !s.status.toLowerCase().includes("attention")) return false;
-      if (filter === "active" && !s.status.toLowerCase().includes("active")) return false;
-      return !text || s.name.toLowerCase().includes(text) || (s.admissionNumber ?? "").toLowerCase().includes(text);
+      if (
+        filter === "attention" &&
+        !s.status.toLowerCase().includes("attention")
+      )
+        return false;
+      if (filter === "active" && !s.status.toLowerCase().includes("active"))
+        return false;
+      return (
+        !text ||
+        s.name.toLowerCase().includes(text) ||
+        (s.admissionNumber ?? "").toLowerCase().includes(text)
+      );
     });
   }, [students, query, filter]);
 
   const countOf = (f: Filter) =>
     (students ?? []).filter((s) =>
-      f === "all" ? true : s.status.toLowerCase().includes(f === "attention" ? "attention" : "active"),
+      f === "all"
+        ? true
+        : s.status
+            .toLowerCase()
+            .includes(f === "attention" ? "attention" : "active"),
     ).length;
 
   const onSubmit = handleSubmit(async (values) => {
@@ -61,7 +78,9 @@ export function StudentsScreen() {
       reset();
       reload();
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : "Could not add the student.");
+      setFormError(
+        err instanceof Error ? err.message : "Could not add the student.",
+      );
     }
   });
 
@@ -81,8 +100,9 @@ export function StudentsScreen() {
 
         {data?.namesPending && (
           <p className="subtle" role="note">
-            Student names and admission numbers will appear here once the backend has a students endpoint. For
-            now each row is a student from your cases.
+            Student names and admission numbers will appear here once the
+            backend has a students endpoint. For now each row is a student from
+            your cases.
           </p>
         )}
 
@@ -95,7 +115,11 @@ export function StudentsScreen() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <div className={styles.chips} role="group" aria-label="Filter students">
+          <div
+            className={styles.chips}
+            role="group"
+            aria-label="Filter students"
+          >
             {chips.map((chip) => (
               <button
                 key={chip.id}
@@ -133,9 +157,15 @@ export function StudentsScreen() {
               {rows.map((student) => (
                 <tr key={student.id}>
                   <td className={styles.name}>{student.name}</td>
-                  <td className={styles.hideOnMobile}>{student.admissionNumber ?? "—"}</td>
+                  <td className={styles.hideOnMobile}>
+                    {student.admissionNumber ?? "—"}
+                  </td>
                   <td>
-                    <span className={`${styles.status} ${statusClass(student.status)}`}>{student.status}</span>
+                    <span
+                      className={`${styles.status} ${statusClass(student.status)}`}
+                    >
+                      {student.status}
+                    </span>
                   </td>
                 </tr>
               ))}
@@ -144,22 +174,40 @@ export function StudentsScreen() {
         )}
 
         {adding && (
-          <form className={`card ${styles.form}`} onSubmit={onSubmit} noValidate>
+          <form
+            className={`card ${styles.form}`}
+            onSubmit={onSubmit}
+            noValidate
+          >
             <div className={styles.formGrid}>
               <TextField
                 label="Student name"
                 placeholder="Full name"
                 error={errors.name?.message}
-                {...register("name", { validate: (v) => v.trim() !== "" || "Enter the student's name." })}
+                {...register("name", {
+                  validate: (v) =>
+                    v.trim() !== "" || "Enter the student's name.",
+                })}
               />
               <TextField
                 label="Admission number"
                 placeholder="e.g. ADM-0042"
                 error={errors.admissionNumber?.message}
-                {...register("admissionNumber", { validate: (v) => v.trim() !== "" || "Enter the admission number." })}
+                {...register("admissionNumber", {
+                  validate: (v) =>
+                    v.trim() !== "" || "Enter the admission number.",
+                })}
               />
-              <TextField label="Class" placeholder="e.g. Grade 2" {...register("className")} />
-              <TextField label="Date of birth" type="date" {...register("dateOfBirth")} />
+              <TextField
+                label="Class"
+                placeholder="e.g. Grade 2"
+                {...register("className")}
+              />
+              <TextField
+                label="Date of birth"
+                type="date"
+                {...register("dateOfBirth")}
+              />
             </div>
             {formError && (
               <p className="form-error" role="alert">
@@ -178,9 +226,17 @@ export function StudentsScreen() {
         )}
 
         <div className={styles.footer}>
-          <p className={styles.count}>{students ? `You are viewing ${rows.length} of ${students.length}` : ""}</p>
+          <p className={styles.count}>
+            {students
+              ? `You are viewing ${rows.length} of ${students.length}`
+              : ""}
+          </p>
           {!adding && (
-            <button type="button" className={styles.addBtn} onClick={() => setAdding(true)}>
+            <button
+              type="button"
+              className={styles.addBtn}
+              onClick={() => setAdding(true)}
+            >
               + Add a student
             </button>
           )}

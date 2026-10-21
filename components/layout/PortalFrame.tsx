@@ -30,12 +30,19 @@ interface Props {
  * The signed-in shell: sidebar on desktop, top bar, tab bar on mobile.
  * It has no knowledge of auth; the feature's frame wraps it in <AuthGuard>.
  */
-export function PortalFrame({ portalName, accountLabel, nav, lockedExcept, children }: Props) {
+export function PortalFrame({
+  portalName,
+  accountLabel,
+  nav,
+  lockedExcept,
+  children,
+}: Props) {
   const pathname = usePathname();
   const activeIndex = nav.findIndex((item) =>
     item.match.some((m) => pathname === m || pathname.startsWith(`${m}/`)),
   );
-  const isLocked = (href: string) => Boolean(lockedExcept) && href !== lockedExcept;
+  const isLocked = (href: string) =>
+    Boolean(lockedExcept) && href !== lockedExcept;
 
   return (
     <div className="app">
@@ -58,7 +65,12 @@ export function PortalFrame({ portalName, accountLabel, nav, lockedExcept, child
               </>
             );
             return isLocked(item.href) ? (
-              <span key={item.href} className={cls} aria-disabled="true" style={{ cursor: "default" }}>
+              <span
+                key={item.href}
+                className={cls}
+                aria-disabled="true"
+                style={{ cursor: "default" }}
+              >
                 {body}
               </span>
             ) : (
@@ -94,7 +106,12 @@ export function PortalFrame({ portalName, accountLabel, nav, lockedExcept, child
             </>
           );
           return isLocked(item.href) ? (
-            <span key={item.href} className={cls} aria-disabled="true" style={{ cursor: "default" }}>
+            <span
+              key={item.href}
+              className={cls}
+              aria-disabled="true"
+              style={{ cursor: "default" }}
+            >
               {body}
             </span>
           ) : (

@@ -17,7 +17,6 @@ interface Values {
   confirmPassword: string;
 }
 
-/** /reset-password?token=...  (the link in the "forgot password" e-mail): POST /auth/reset-password. */
 export function ResetPasswordScreen() {
   const router = useRouter();
   const token = useSearchParams().get("token") ?? "";
@@ -28,7 +27,9 @@ export function ResetPasswordScreen() {
     handleSubmit,
     getValues,
     formState: { errors, isSubmitting },
-  } = useForm<Values>({ defaultValues: { newPassword: "", confirmPassword: "" } });
+  } = useForm<Values>({
+    defaultValues: { newPassword: "", confirmPassword: "" },
+  });
 
   const onSubmit = handleSubmit(async ({ newPassword }) => {
     setFormError(null);
@@ -44,7 +45,10 @@ export function ResetPasswordScreen() {
     return (
       <AuthShell subtitle="Reset your password" role="any">
         <h1 className="heading">This link is incomplete</h1>
-        <p className="lead">Open the link from your e-mail again, or request a new one from the sign-in page.</p>
+        <p className="lead">
+          Open the link from your e-mail again, or request a new one from the
+          sign-in page.
+        </p>
         <p className="subtle" style={{ marginTop: 24 }}>
           <Link href={LOGIN_ROUTE} className="link-red">
             Go to sign in
@@ -74,9 +78,14 @@ export function ResetPasswordScreen() {
           autoComplete="new-password"
           placeholder="Confirm new password"
           error={errors.confirmPassword?.message}
-          {...register("confirmPassword", { validate: sameAsRule(() => getValues("newPassword")) })}
+          {...register("confirmPassword", {
+            validate: sameAsRule(() => getValues("newPassword")),
+          })}
         />
-        <p className="subtle">At least 12 characters, with a lowercase letter, an uppercase letter and a digit.</p>
+        <p className="subtle">
+          At least 12 characters, with a lowercase letter, an uppercase letter
+          and a digit.
+        </p>
 
         {formError && (
           <p className="form-error" role="alert" style={{ marginTop: 12 }}>

@@ -14,7 +14,10 @@ interface Props {
   children: ReactNode;
 }
 
-const COPY: Record<ShellRole, { portal: string; account: string; title: string; body: string }> = {
+const COPY: Record<
+  ShellRole,
+  { portal: string; account: string; title: string; body: string }
+> = {
   parent: {
     portal: "Parent portal",
     account: "Parent account",
@@ -36,7 +39,12 @@ const COPY: Record<ShellRole, { portal: string; account: string; title: string; 
 };
 
 /** Two-column sign-in layout used by every public (signed-out) screen. */
-export function AuthShell({ subtitle, role = "parent", decor = false, children }: Props) {
+export function AuthShell({
+  subtitle,
+  role = "parent",
+  decor = false,
+  children,
+}: Props) {
   const copy = COPY[role];
 
   return (
@@ -66,13 +74,19 @@ export function AuthShell({ subtitle, role = "parent", decor = false, children }
           </span>
         </div>
 
-        <header className={`auth__header ${decor ? "auth__header--decor" : ""}`}>
+        <header
+          className={`auth__header ${decor ? "auth__header--decor" : ""}`}
+        >
           {decor && (
             <>
               <span className="deco deco--red-fill" />
               <span className="deco deco--orange-fill" />
               <span className="deco deco--red-ring" />
-              <Squiggle className="deco deco--squiggle" color="#f58220" width={59} />
+              <Squiggle
+                className="deco deco--squiggle"
+                color="#f58220"
+                width={59}
+              />
             </>
           )}
           <Image

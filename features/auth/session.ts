@@ -1,12 +1,5 @@
 "use client";
 
-/**
- * The signed-in session: tokens (lib/token-store.ts) + the user's profile.
- *
- *   useSession()   in components   -> { status, user }
- *   saveSession()  after the last sign-in step
- *   clearSession() on logout / expired session
- */
 import { useMemo } from "react";
 import { createStoredValue, useStoredValue } from "@/lib/stored-value";
 import { tokenStore, useAccessToken } from "@/lib/token-store";
@@ -59,6 +52,10 @@ export function useSession(): { status: SessionStatus; user: AuthUser | null } {
   const user = useMemo(() => parseUser(rawUser), [rawUser]);
 
   const status: SessionStatus =
-    token === undefined ? "loading" : token ? "authenticated" : "unauthenticated";
+    token === undefined
+      ? "loading"
+      : token
+        ? "authenticated"
+        : "unauthenticated";
   return { status, user: status === "authenticated" ? user : null };
 }

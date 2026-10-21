@@ -53,7 +53,7 @@ Mock mode works. To switch one on, replace its `pendingEndpoint(...)` in `api.ts
 ## Backend gaps found while testing (not fixed here)
 
 - `cases`, `ieps`, `reports`, `iep-evaluation-*`, `notifications` routers have no auth or scoping.
-- Evaluation answers are unique per question *and role*, not per parent.
+- Evaluation answers are unique per question _and role_, not per parent.
 - `seed_demo_data.py` stores IEP goals/strategies as objects; `IEPRead` expects strings, so
   `GET /ieps/case/{id}/active` returns 500 on seeded data. Unhandled 500s also lack CORS
   headers, so the browser reports them as "cannot reach the server".

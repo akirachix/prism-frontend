@@ -30,7 +30,12 @@ export function Button({
     );
   }
   return (
-    <button className={cls} type={type} disabled={disabled || loading} {...rest}>
+    <button
+      className={cls}
+      type={type}
+      disabled={disabled || loading}
+      {...rest}
+    >
       {loading ? "Please wait…" : children}
     </button>
   );

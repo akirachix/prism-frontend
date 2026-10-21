@@ -1,15 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { ErrorMessage, Loading } from "@/components/ui/StateMessage";
-import { useSession } from "@/features/auth";
-import { initials } from "@/lib/format";
-import { useAsync } from "@/lib/use-async";
+import { PageHeader } from "../../../components/layout/PageHeader";
+import { ErrorMessage, Loading } from "../../../components/ui/StateMessage";
+import { useSession } from "../../../features/auth";
+import { initials } from "../../../lib/format";
+import { useAsync } from "../../../lib/use-async";
 import { teacherApi } from "../api";
 import styles from "./HomeScreen.module.css";
 
-/** Teacher home: stat tiles, "Needs your attention" and "Latest actions". */
 export function HomeScreen() {
   const { user } = useSession();
   const { data, error, loading, reload } = useAsync(teacherApi.home);
@@ -17,9 +16,21 @@ export function HomeScreen() {
 
   const tiles = data
     ? [
-        { label: "Students", value: data.stats.students, tone: styles["stat--students"] },
-        { label: "Open cases", value: data.stats.openCases, tone: styles["stat--cases"] },
-        { label: "Active IEP", value: data.stats.activeIeps, tone: styles["stat--active"] },
+        {
+          label: "Students",
+          value: data.stats.students,
+          tone: styles["stat--students"],
+        },
+        {
+          label: "Open cases",
+          value: data.stats.openCases,
+          tone: styles["stat--cases"],
+        },
+        {
+          label: "Active IEP",
+          value: data.stats.activeIeps,
+          tone: styles["stat--active"],
+        },
         { label: "Unapproved IEP", value: data.stats.unapprovedIeps, tone: "" },
       ]
     : [];
@@ -56,7 +67,9 @@ export function HomeScreen() {
               </div>
               <div className={styles.attention}>
                 {data.needsAttention.length === 0 && (
-                  <p className={styles.empty}>Nothing needs your attention right now.</p>
+                  <p className={styles.empty}>
+                    Nothing needs your attention right now.
+                  </p>
                 )}
                 {data.needsAttention.map((item) => (
                   <div key={item.id} className={styles.row}>
@@ -75,7 +88,9 @@ export function HomeScreen() {
                 <h3 className={styles.sectionTitle}>Latest actions</h3>
               </div>
               <div className={styles.latest}>
-                {data.latestActions.length === 0 && <p className={styles.empty}>No recent activity.</p>}
+                {data.latestActions.length === 0 && (
+                  <p className={styles.empty}>No recent activity.</p>
+                )}
                 {data.latestActions.map((item) => (
                   <div key={item.id} className={styles.row}>
                     <p className={styles.rowTitle}>{item.text}</p>

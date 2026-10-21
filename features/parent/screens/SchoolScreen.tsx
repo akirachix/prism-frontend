@@ -1,17 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronRightIcon, ClipboardCheckIcon, PhoneIcon, UserIcon } from "@/components/icons";
-import { MailIcon } from "@/components/icons";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { Button } from "@/components/ui/Button";
-import { ErrorMessage, Loading } from "@/components/ui/StateMessage";
-import { useAsync } from "@/lib/use-async";
+import {
+  ChevronRightIcon,
+  ClipboardCheckIcon,
+  PhoneIcon,
+  UserIcon,
+} from "../../../components/icons";
+import { MailIcon } from "../../../components/icons";
+import { PageHeader } from "../../../components/layout/PageHeader";
+import { Button } from "../../../components/ui/Button";
+import { ErrorMessage, Loading } from "../../../components/ui/StateMessage";
+import { useAsync } from "../../../lib/use-async";
 import { parentApi } from "../api";
 
-/** Parent "Teacher evaluation" screen: what the teacher rated, and the teacher's contact details. */
 export function SchoolScreen() {
-  const { data: evaluation, error, loading, reload } = useAsync(parentApi.teacherEvaluation);
+  const {
+    data: evaluation,
+    error,
+    loading,
+    reload,
+  } = useAsync(parentApi.teacherEvaluation);
   const [showDetails, setShowDetails] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
@@ -22,7 +31,9 @@ export function SchoolScreen() {
     try {
       await parentApi.downloadTeacherEvaluation();
     } catch (err) {
-      setDownloadError(err instanceof Error ? err.message : "Could not download the PDF.");
+      setDownloadError(
+        err instanceof Error ? err.message : "Could not download the PDF.",
+      );
     } finally {
       setDownloading(false);
     }
@@ -52,12 +63,22 @@ export function SchoolScreen() {
               <button
                 type="button"
                 className="t-card__link"
-                style={{ background: "none", border: 0, padding: 0, width: "100%" }}
+                style={{
+                  background: "none",
+                  border: 0,
+                  padding: 0,
+                  width: "100%",
+                }}
                 aria-expanded={showDetails}
                 onClick={() => setShowDetails((v) => !v)}
               >
                 <span>{showDetails ? "Hide details" : "View details"}</span>
-                <ChevronRightIcon size={16} style={{ transform: showDetails ? "rotate(90deg)" : undefined }} />
+                <ChevronRightIcon
+                  size={16}
+                  style={{
+                    transform: showDetails ? "rotate(90deg)" : undefined,
+                  }}
+                />
               </button>
               {showDetails &&
                 (evaluation.details.length === 0 ? (
@@ -65,7 +86,10 @@ export function SchoolScreen() {
                     The teacher has not rated anything yet.
                   </p>
                 ) : (
-                  <ul className="subtle" style={{ marginBottom: 18, paddingLeft: 18 }}>
+                  <ul
+                    className="subtle"
+                    style={{ marginBottom: 18, paddingLeft: 18 }}
+                  >
                     {evaluation.details.map((d) => (
                       <li key={d.question}>
                         {d.question} — <strong>{d.rating}</strong>
@@ -74,11 +98,19 @@ export function SchoolScreen() {
                   </ul>
                 ))}
 
-              <Button className="btn--sm" onClick={download} loading={downloading}>
+              <Button
+                className="btn--sm"
+                onClick={download}
+                loading={downloading}
+              >
                 Download PDF
               </Button>
               {downloadError && (
-                <p className="form-error" role="alert" style={{ marginTop: 12 }}>
+                <p
+                  className="form-error"
+                  role="alert"
+                  style={{ marginTop: 12 }}
+                >
                   {downloadError}
                 </p>
               )}
@@ -89,7 +121,9 @@ export function SchoolScreen() {
                 <UserIcon size={28} />
                 <div>
                   <p className="t-card__label">Teacher information</p>
-                  <p className="t-card__meta">{evaluation.teacher.name ?? "Teacher"}</p>
+                  <p className="t-card__meta">
+                    {evaluation.teacher.name ?? "Teacher"}
+                  </p>
                 </div>
               </div>
               <div className="t-info">
