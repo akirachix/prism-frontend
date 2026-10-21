@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useMemo,
   useState,
@@ -50,10 +51,13 @@ export default function ChildProvider({
   children: ReactNode;
 }) {
   const user = useUser();
-  const { data, error, loading, reload } = useLoad(
+  const loadFamilyForUser = useCallback(
     () => loadFamily(user.user_id),
     [user.user_id],
   );
+  const { data, error, loading, reload } = useLoad(loadFamilyForUser, [
+    user.user_id,
+  ]);
   const [selected, setSelected] = useState<string | null>(null);
 
   const value = useMemo<ChildValue>(() => {
