@@ -1,4 +1,6 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
+import { clearSession, getSession, setSession } from "@/lib/session";
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export class ApiError extends Error {
   status: number;
@@ -9,15 +11,70 @@ export class ApiError extends Error {
   }
 }
 
-export async function request<T>(
-  path: string,
-  options: RequestInit = {},
-): Promise<T> {
-  let response: Response;
+const PUBLIC_AUTH_PATHS = [
+  "/auth/login",
+  "/auth/refresh",
+  "/auth/change-password",
+  "/auth/mfa/",
+  "/auth/accept-invitation",
+  "/auth/forgot-password",
+  "/auth/reset-password",
+];
+
+function isPublic(path: string): boolean {
+  return PUBLIC_AUTH_PATHS.some((prefix) => path.startsWith(prefix));
+}
+
+let refreshing: Promise<boolean> | null = null;
+
+async function exchangeRefreshToken(): Promise<boolean> {
+  const session = getSession();
+  if (!session?.refresh_token) return false;
   try {
-    response = await fetch(`${BASE_URL}${path}`, {
+    const response = await fetch(`${BASE_URL}/auth/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refresh_token: session.refresh_token }),
+      cache: "no-store",
+    });
+    if (!response.ok) return false;
+    const pair = await response.json();
+    setSession({
+      access_token: pair.access_token,
+      refresh_token: pair.refresh_token,
+      expires_at: Date.now() + pair.expires_in * 1000,
+      user: pair.user ?? session.user,
+      remember: session.remember,
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function refreshSession(): Promise<boolean> {
+  if (!refreshing) {
+    refreshing = exchangeRefreshToken().finally(() => {
+      refreshing = null;
+    });
+  }
+  return refreshing;
+}
+
+async function send(path: string, options: RequestInit): Promise<Response> {
+  if (!BASE_URL) {
+    throw new ApiError(0, "API URL is not configured.");
+  }
+
+  const token = isPublic(path) ? null : getSession()?.access_token;
+  try {
+    return await fetch(`${BASE_URL}${path}`, {
       ...options,
-      headers: { "Content-Type": "application/json", ...options.headers },
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...options.headers,
+      },
       cache: "no-store",
     });
   } catch {
@@ -25,6 +82,21 @@ export async function request<T>(
       0,
       "We could not reach the server. Check your connection and try again.",
     );
+  }
+}
+
+export async function request<T>(
+  path: string,
+  options: RequestInit = {},
+): Promise<T> {
+  let response = await send(path, options);
+
+  if (response.status === 401 && !isPublic(path) && getSession()) {
+    if (await refreshSession()) {
+      response = await send(path, options);
+    } else {
+      clearSession();
+    }
   }
 
   if (!response.ok) {
@@ -40,20 +112,3 @@ export async function request<T>(
   return (await response.json()) as T;
 }
 
-export function query(
-  params: Record<string, string | number | boolean | null | undefined>,
-): string {
-  const search = new URLSearchParams();
-  for (const [key, value] of Object.entries(params)) {
-    if (value !== undefined && value !== null) search.set(key, String(value));
-  }
-  const text = search.toString();
-  return text ? `?${text}` : "";
-}
-
-export function errorMessage(
-  e: unknown,
-  fallback = "Something went wrong. Please try again.",
-): string {
-  return e instanceof Error ? e.message : fallback;
-}
