@@ -57,10 +57,21 @@ export interface ParentReports {
   recommendation: Recommendation | null;
 }
 
+export type ParentReportKey = keyof ParentReports;
+
+export type ParentReportErrors = Partial<
+  Record<ParentReportKey, string | undefined>
+>;
+
+export interface ParentReportsResult {
+  reports: ParentReports;
+  errors: ParentReportErrors;
+}
+
 /** All three, where each one may not exist yet. */
 export async function loadParentReports(
   caseId: string,
-): Promise<ParentReports> {
+): Promise<ParentReportsResult> {
   const requests = [
     orNull(reportsApi.screening(caseId)),
     orNull(reportsApi.plan(caseId)),
@@ -68,28 +79,36 @@ export async function loadParentReports(
   ];
 
   const results = await Promise.allSettled(requests);
-  const reportData: ParentReports = {
+  const reports: ParentReports = {
     screening: null,
     plan: null,
     recommendation: null,
   };
+  const errors: ParentReportErrors = {
+    screening: undefined,
+    plan: undefined,
+    recommendation: undefined,
+  };
 
-  const failed: unknown[] = [];
   results.forEach((result, index) => {
     if (result.status === "fulfilled") {
       const value = result.value;
-      if (index === 0) reportData.screening = value as Report | null;
-      if (index === 1) reportData.plan = value as Plan | null;
-      if (index === 2)
-        reportData.recommendation = value as Recommendation | null;
+      if (index === 0) reports.screening = value as Report | null;
+      if (index === 1) reports.plan = value as Plan | null;
+      if (index === 2) reports.recommendation = value as Recommendation | null;
       return;
     }
-    failed.push(result.reason);
+
+    const reason = result.reason;
+    const message =
+      reason instanceof ApiError
+        ? reason.message
+        : "Something went wrong. Please try again.";
+
+    if (index === 0) errors.screening = message;
+    if (index === 1) errors.plan = message;
+    if (index === 2) errors.recommendation = message;
   });
 
-  if (failed.length === results.length) {
-    throw failed[0];
-  }
-
-  return reportData;
+  return { reports, errors };
 }

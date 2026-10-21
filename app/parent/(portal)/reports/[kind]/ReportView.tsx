@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   ActivitiesDocument,
@@ -15,7 +15,11 @@ import {
   withCase,
 } from "@/app/parent/_components/reports/useReportCase";
 import { ApiError } from "@/lib/api";
-import { loadParentReports, type ParentReports } from "@/lib/reports";
+import {
+  loadParentReports,
+  type ParentReportErrors,
+  type ParentReports,
+} from "@/lib/reports";
 import "@/app/parent/_components/reports/reports.css";
 
 const TITLES: Record<string, string> = {
@@ -36,26 +40,44 @@ function ReportContent({
   child: ReturnType<typeof useReportChild>;
 }) {
   const [reports, setReports] = useState<ParentReports | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [reportErrors, setReportErrors] = useState<ParentReportErrors>({});
   const printed = useRef(false);
 
-  useEffect(() => {
-    if (!caseId) return;
+  const loadReports = useCallback(() => {
+    if (!caseId) {
+      setReports(null);
+      setReportErrors({});
+      printed.current = false;
+      return;
+    }
 
     let active = true;
+    setReports(null);
+    setReportErrors({});
+    printed.current = false;
 
     loadParentReports(caseId)
-      .then((nextReports) => {
+      .then(({ reports: nextReports, errors: nextErrors }) => {
         if (!active) return;
         setReports(nextReports);
+        setReportErrors(nextErrors);
       })
       .catch((err) => {
         if (!active) return;
-        setError(
-          err instanceof ApiError
-            ? err.message
-            : "Something went wrong. Please try again.",
-        );
+        setReportErrors({
+          screening:
+            err instanceof ApiError
+              ? err.message
+              : "Something went wrong. Please try again.",
+          plan:
+            err instanceof ApiError
+              ? err.message
+              : "Something went wrong. Please try again.",
+          recommendation:
+            err instanceof ApiError
+              ? err.message
+              : "Something went wrong. Please try again.",
+        });
       });
 
     return () => {
@@ -63,11 +85,51 @@ function ReportContent({
     };
   }, [caseId]);
 
+  useEffect(() => {
+    if (!caseId) return;
+
+    let active = true;
+
+    loadParentReports(caseId)
+      .then(({ reports: nextReports, errors: nextErrors }) => {
+        if (!active) return;
+        setReports(nextReports);
+        setReportErrors(nextErrors);
+      })
+      .catch((err) => {
+        if (!active) return;
+        setReportErrors({
+          screening:
+            err instanceof ApiError
+              ? err.message
+              : "Something went wrong. Please try again.",
+          plan:
+            err instanceof ApiError
+              ? err.message
+              : "Something went wrong. Please try again.",
+          recommendation:
+            err instanceof ApiError
+              ? err.message
+              : "Something went wrong. Please try again.",
+        });
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [caseId]);
+
+  const currentError =
+    kind === "screening"
+      ? reportErrors.screening
+      : kind === "plan"
+        ? reportErrors.plan
+        : reportErrors.recommendation;
   const ready =
     (kind === "screening" && reports?.screening) ||
     (kind === "plan" && reports?.plan) ||
     (kind === "activities" && reports?.recommendation);
-  const printReady = ready && !child.loading;
+  const printReady = ready && !child.loading && !currentError;
 
   useEffect(() => {
     if (autoPrint && printReady && !printed.current) {
@@ -88,8 +150,17 @@ function ReportContent({
       <div className="preports__body">
         {!caseId || !TITLES[kind] ? (
           <p className="preports__message">This report is not available.</p>
-        ) : error ? (
-          <p className="preports__error">{error}</p>
+        ) : currentError ? (
+          <div className="preports__error-panel">
+            <p className="preports__error">{currentError}</p>
+            <button
+              type="button"
+              className="preports__button"
+              onClick={() => void loadReports()}
+            >
+              Retry
+            </button>
+          </div>
         ) : !reports ? (
           <p className="preports__message">Loading…</p>
         ) : !ready ? (
