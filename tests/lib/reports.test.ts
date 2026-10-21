@@ -43,7 +43,21 @@ describe("loadParentReports", () => {
     });
   });
 
-  it("still fails on real errors", async () => {
+  it("returns partial results when one report request fails", async () => {
+    mockRequest.mockImplementation(async (path: string) => {
+      if (path.startsWith("/reports")) return { report_id: "r1" };
+      if (path.startsWith("/ieps")) throw new ApiError(500, "Plan failed");
+      throw new ApiError(404, "Not found");
+    });
+
+    await expect(loadParentReports("c1")).resolves.toEqual({
+      screening: { report_id: "r1" },
+      plan: null,
+      recommendation: null,
+    });
+  });
+
+  it("still fails when all report requests fail", async () => {
     mockRequest.mockRejectedValue(new ApiError(500, "Server down"));
     await expect(loadParentReports("c1")).rejects.toMatchObject({
       status: 500,

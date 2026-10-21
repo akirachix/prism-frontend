@@ -24,39 +24,57 @@ const TITLES: Record<string, string> = {
   activities: "Home activities",
 };
 
-export default function ReportView() {
-  const { kind } = useParams<{ kind: string }>();
-  const autoPrint = useSearchParams().get("print") === "1";
-  const caseId = useReportCaseId();
-  const child = useReportChild(caseId);
+function ReportContent({
+  kind,
+  caseId,
+  autoPrint,
+  child,
+}: {
+  kind: string;
+  caseId: string | null;
+  autoPrint: boolean;
+  child: ReturnType<typeof useReportChild>;
+}) {
   const [reports, setReports] = useState<ParentReports | null>(null);
   const [error, setError] = useState<string | null>(null);
   const printed = useRef(false);
 
   useEffect(() => {
     if (!caseId) return;
+
+    let active = true;
+
     loadParentReports(caseId)
-      .then(setReports)
-      .catch((err) =>
+      .then((nextReports) => {
+        if (!active) return;
+        setReports(nextReports);
+      })
+      .catch((err) => {
+        if (!active) return;
         setError(
           err instanceof ApiError
             ? err.message
             : "Something went wrong. Please try again.",
-        ),
-      );
+        );
+      });
+
+    return () => {
+      active = false;
+    };
   }, [caseId]);
 
   const ready =
     (kind === "screening" && reports?.screening) ||
     (kind === "plan" && reports?.plan) ||
     (kind === "activities" && reports?.recommendation);
+  const printReady = ready && !child.loading;
 
   useEffect(() => {
-    if (autoPrint && ready && !printed.current) {
+    if (autoPrint && printReady && !printed.current) {
       printed.current = true;
       setTimeout(() => window.print(), 300);
     }
-  }, [autoPrint, ready]);
+  }, [autoPrint, printReady]);
 
   const title = TITLES[kind] ?? "Report";
   const student = child.data?.student;
@@ -112,5 +130,22 @@ export default function ReportView() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function ReportView() {
+  const { kind } = useParams<{ kind: string }>();
+  const autoPrint = useSearchParams().get("print") === "1";
+  const caseId = useReportCaseId();
+  const child = useReportChild(caseId);
+
+  return (
+    <ReportContent
+      key={caseId ?? "none"}
+      kind={kind}
+      caseId={caseId}
+      autoPrint={autoPrint}
+      child={child}
+    />
   );
 }

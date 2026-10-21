@@ -61,10 +61,35 @@ export interface ParentReports {
 export async function loadParentReports(
   caseId: string,
 ): Promise<ParentReports> {
-  const [screening, plan, recommendation] = await Promise.all([
+  const requests = [
     orNull(reportsApi.screening(caseId)),
     orNull(reportsApi.plan(caseId)),
     orNull(reportsApi.recommendation(caseId)),
-  ]);
-  return { screening, plan, recommendation };
+  ];
+
+  const results = await Promise.allSettled(requests);
+  const reportData: ParentReports = {
+    screening: null,
+    plan: null,
+    recommendation: null,
+  };
+
+  const failed: unknown[] = [];
+  results.forEach((result, index) => {
+    if (result.status === "fulfilled") {
+      const value = result.value;
+      if (index === 0) reportData.screening = value as Report | null;
+      if (index === 1) reportData.plan = value as Plan | null;
+      if (index === 2)
+        reportData.recommendation = value as Recommendation | null;
+      return;
+    }
+    failed.push(result.reason);
+  });
+
+  if (failed.length === results.length) {
+    throw failed[0];
+  }
+
+  return reportData;
 }
