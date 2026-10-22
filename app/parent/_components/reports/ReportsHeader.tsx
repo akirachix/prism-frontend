@@ -2,7 +2,6 @@ import Link from "next/link";
 
 import "./reports.css";
 
-/** The navy header from the parent designs, with an optional back link. */
 export default function ReportsHeader({
   title,
   back,

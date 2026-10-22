@@ -1,5 +1,5 @@
 import { ApiError, request } from "@/lib/api";
-import { loadParentReports, reportsApi } from "@/lib/reports";
+import { loadParentReports, loadReportChild, reportsApi } from "@/lib/reports";
 
 jest.mock("@/lib/api", () => ({
   ...jest.requireActual("@/lib/api"),
@@ -87,5 +87,32 @@ describe("reportsApi.listAll", () => {
   it("asks for up to 100 reports", async () => {
     await reportsApi.listAll();
     expect(mockRequest).toHaveBeenCalledWith("/reports?limit=100");
+  });
+});
+
+describe("loadReportChild", () => {
+  it("reads the case, then that child directly by id", async () => {
+    mockRequest.mockImplementation(async (path: string) => {
+      if (path === "/cases/c1") return { case_id: "c1", student_id: "s9" };
+      if (path === "/students/s9")
+        return { student_id: "s9", first_name: "Faith" };
+      throw new Error(`unexpected ${path}`);
+    });
+    await expect(loadReportChild("c1")).resolves.toEqual({
+      caseItem: { case_id: "c1", student_id: "s9" },
+      student: { student_id: "s9", first_name: "Faith" },
+    });
+    expect(mockRequest).not.toHaveBeenCalledWith("/students?limit=200");
+  });
+
+  it("fails when the child cannot be read, instead of returning no name", async () => {
+    mockRequest.mockImplementation(async (path: string) => {
+      if (path === "/cases/c1") return { case_id: "c1", student_id: "s9" };
+      throw new ApiError(403, "You cannot view this student.");
+    });
+    await expect(loadReportChild("c1")).rejects.toMatchObject({
+      status: 403,
+      message: "You cannot view this student.",
+    });
   });
 });

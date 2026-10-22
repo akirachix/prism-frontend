@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import {
   ActivitiesDocument,
@@ -9,17 +9,11 @@ import {
   ScreeningDocument,
 } from "@/app/parent/_components/reports/ReportDocuments";
 import ReportsHeader from "@/app/parent/_components/reports/ReportsHeader";
+import { useParentReports } from "@/app/parent/_components/reports/useParentReports";
 import {
   useReportCaseId,
-  useReportChild,
   withCase,
 } from "@/app/parent/_components/reports/useReportCase";
-import { ApiError } from "@/lib/api";
-import {
-  loadParentReports,
-  type ParentReportErrors,
-  type ParentReports,
-} from "@/lib/reports";
 import "@/app/parent/_components/reports/reports.css";
 
 const TITLES: Record<string, string> = {
@@ -32,92 +26,20 @@ function ReportContent({
   kind,
   caseId,
   autoPrint,
-  child,
 }: {
   kind: string;
   caseId: string | null;
   autoPrint: boolean;
-  child: ReturnType<typeof useReportChild>;
 }) {
-  const [reports, setReports] = useState<ParentReports | null>(null);
-  const [reportErrors, setReportErrors] = useState<ParentReportErrors>({});
+  const {
+    child,
+    childError,
+    reports,
+    errors: reportErrors,
+    loading,
+    retry,
+  } = useParentReports(caseId);
   const printed = useRef(false);
-
-  const loadReports = useCallback(() => {
-    if (!caseId) {
-      setReports(null);
-      setReportErrors({});
-      printed.current = false;
-      return;
-    }
-
-    let active = true;
-    setReports(null);
-    setReportErrors({});
-    printed.current = false;
-
-    loadParentReports(caseId)
-      .then(({ reports: nextReports, errors: nextErrors }) => {
-        if (!active) return;
-        setReports(nextReports);
-        setReportErrors(nextErrors);
-      })
-      .catch((err) => {
-        if (!active) return;
-        setReportErrors({
-          screening:
-            err instanceof ApiError
-              ? err.message
-              : "Something went wrong. Please try again.",
-          plan:
-            err instanceof ApiError
-              ? err.message
-              : "Something went wrong. Please try again.",
-          recommendation:
-            err instanceof ApiError
-              ? err.message
-              : "Something went wrong. Please try again.",
-        });
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [caseId]);
-
-  useEffect(() => {
-    if (!caseId) return;
-
-    let active = true;
-
-    loadParentReports(caseId)
-      .then(({ reports: nextReports, errors: nextErrors }) => {
-        if (!active) return;
-        setReports(nextReports);
-        setReportErrors(nextErrors);
-      })
-      .catch((err) => {
-        if (!active) return;
-        setReportErrors({
-          screening:
-            err instanceof ApiError
-              ? err.message
-              : "Something went wrong. Please try again.",
-          plan:
-            err instanceof ApiError
-              ? err.message
-              : "Something went wrong. Please try again.",
-          recommendation:
-            err instanceof ApiError
-              ? err.message
-              : "Something went wrong. Please try again.",
-        });
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [caseId]);
 
   const currentError =
     kind === "screening"
@@ -129,7 +51,14 @@ function ReportContent({
     (kind === "screening" && reports?.screening) ||
     (kind === "plan" && reports?.plan) ||
     (kind === "activities" && reports?.recommendation);
-  const printReady = ready && !child.loading && !currentError;
+  // Print only once this case's child and report are both loaded.
+  const printReady = Boolean(
+    ready &&
+    child &&
+    child.caseItem.case_id === caseId &&
+    !loading &&
+    !currentError,
+  );
 
   useEffect(() => {
     if (autoPrint && printReady && !printed.current) {
@@ -139,7 +68,7 @@ function ReportContent({
   }, [autoPrint, printReady]);
 
   const title = TITLES[kind] ?? "Report";
-  const student = child.data?.student;
+  const student = child?.student;
 
   return (
     <main className="preports">
@@ -150,19 +79,21 @@ function ReportContent({
       <div className="preports__body">
         {!caseId || !TITLES[kind] ? (
           <p className="preports__message">This report is not available.</p>
-        ) : currentError ? (
+        ) : loading ? (
+          <p className="preports__message">Loading…</p>
+        ) : childError || currentError ? (
           <div className="preports__error-panel">
-            <p className="preports__error">{currentError}</p>
-            <button
-              type="button"
-              className="preports__button"
-              onClick={() => void loadReports()}
-            >
+            <p className="preports__error">
+              {childError
+                ? `We could not load your child's details: ${childError}`
+                : currentError}
+            </p>
+            <button type="button" className="preports__button" onClick={retry}>
               Retry
             </button>
           </div>
-        ) : !reports ? (
-          <p className="preports__message">Loading…</p>
+        ) : !reports || !child ? (
+          <p className="preports__message">This report is not available.</p>
         ) : !ready ? (
           <p className="preports__message">This report is not ready yet.</p>
         ) : (
@@ -208,7 +139,6 @@ export default function ReportView() {
   const { kind } = useParams<{ kind: string }>();
   const autoPrint = useSearchParams().get("print") === "1";
   const caseId = useReportCaseId();
-  const child = useReportChild(caseId);
 
   return (
     <ReportContent
@@ -216,7 +146,6 @@ export default function ReportView() {
       kind={kind}
       caseId={caseId}
       autoPrint={autoPrint}
-      child={child}
     />
   );
 }

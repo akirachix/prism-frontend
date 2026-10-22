@@ -39,13 +39,8 @@ export default function DevReportPicker() {
 
   return (
     <section className="preports__section" aria-labelledby="dev-title">
-      <h2 id="dev-title" className="preports__section-title">
-        Reports in the database (local testing)
-      </h2>
-      <p className="preports__lead">
-        Pick a case to see it the way its parent will. This list only shows in
-        development.
-      </p>
+      <h2 id="dev-title" className="preports__section-title"></h2>
+      <p className="preports__lead"></p>
       {error && <p className="preports__error">{error}</p>}
       {!reports && !error && <p className="preports__message">Loading…</p>}
       {reports && reports.length === 0 && (

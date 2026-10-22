@@ -12,10 +12,6 @@ import {
 } from "@/lib/professionals";
 import "./reports.css";
 
-/**
- * Pro bono specialists. Contacting them is the family's own choice;
- * Mirai never books or refers on their behalf.
- */
 export default function ProfessionalsList() {
   const [items, setItems] = useState<Professional[]>([]);
   const [loading, setLoading] = useState(true);

@@ -1,4 +1,7 @@
-import { ApiError, request } from "@/lib/api";
+import { ApiError, errorMessage, request } from "@/lib/api";
+import { casesApi } from "@/lib/cases";
+import { studentsApi, type Student } from "@/lib/lookups";
+import type { Case } from "@/lib/types";
 
 export interface Report {
   report_id: string;
@@ -99,11 +102,7 @@ export async function loadParentReports(
       return;
     }
 
-    const reason = result.reason;
-    const message =
-      reason instanceof ApiError
-        ? reason.message
-        : "Something went wrong. Please try again.";
+    const message = errorMessage(result.reason);
 
     if (index === 0) errors.screening = message;
     if (index === 1) errors.plan = message;
@@ -111,4 +110,21 @@ export async function loadParentReports(
   });
 
   return { reports, errors };
+}
+
+/** The child a report belongs to. */
+export interface ReportChild {
+  caseItem: Case;
+  student: Student;
+}
+
+/**
+ * The case and its child, read directly by id. Fails (instead of
+ * returning no name) when either cannot be read, so a report is never
+ * shown or printed without the child it belongs to.
+ */
+export async function loadReportChild(caseId: string): Promise<ReportChild> {
+  const caseItem = await casesApi.get(caseId);
+  const student = await studentsApi.get(caseItem.student_id);
+  return { caseItem, student };
 }
