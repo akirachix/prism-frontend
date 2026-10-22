@@ -105,13 +105,3 @@
     padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
   }
 }
-
-@media (max-width: 768px) {
-  .sidebar--parent .sidebar__link--active {
-    color: #d62839;
-  }
-
-  .sidebar__link {
-    font-size: 0.72rem;
-  }
-}

@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "jest",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky"

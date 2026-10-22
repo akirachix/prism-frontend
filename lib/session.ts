@@ -1,17 +1,12 @@
 import type { UserRead } from "@/lib/users";
 
-/**
- * The signed-in session, kept in localStorage so the PWA stays signed in
- * between visits. Every read and write is wrapped because storage can be
- * blocked (private windows, some in-app browsers).
- */
+export const TEACHER_ID = process.env.NEXT_PUBLIC_TEACHER_ID ?? "";
+
 export interface Session {
   access_token: string;
   refresh_token: string;
-  /** Epoch milliseconds when the access token stops working. */
   expires_at: number;
   user: UserRead;
-  /** False when the person unticked "Remember me". */
   remember?: boolean;
 }
 
@@ -32,7 +27,6 @@ function read(): Session | null {
   return memory;
 }
 
-/** Sessions started without "Remember me" live only in this tab. */
 function storageFor(session: Session): Storage {
   return session.remember === false
     ? window.sessionStorage

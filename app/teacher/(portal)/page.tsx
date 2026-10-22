@@ -1,186 +1,40 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-import { useUser } from "@/app/_components/SessionProvider";
-import { Alert, Avatar, Empty, Loading } from "@/app/_components/ui/bits";
-import { useLoad } from "@/app/_components/useLoad";
-import { attentionItems, loadClassroom } from "@/lib/classroom";
-import { greeting, relativeDay } from "@/lib/format";
-import { notificationsApi } from "@/lib/notifications";
+import { useUser } from "@/_components/SessionProvider";
+import { Avatar, PageHeader } from "@/_components/ui/bits";
 import { fullName } from "@/lib/users";
-import "@/app/_components/portal.css";
+import "@/_components/portal.css";
 
+/**
+ * Where a teacher lands after signing in.
+ * The Home dashboard feature replaces this page.
+ */
 export default function TeacherHomePage() {
   const user = useUser();
-  const room = useLoad(() => loadClassroom(user.user_id), [user.user_id]);
-  const news = useLoad(
-    () => notificationsApi.list(user.user_id, 6),
-    [user.user_id],
-  );
-
-  const data = room.data;
-  const openCases = data?.cases.filter((item) => !item.closed_at).length ?? 0;
-  const ieps = data ? Array.from(data.iepByCase.values()) : [];
-  const active = ieps.filter((iep) => iep.status === "ACTIVE").length;
-  const unapproved = ieps.filter(
-    (iep) => iep.status === "PENDING_APPROVAL",
-  ).length;
-  const attention = data ? attentionItems(data).slice(0, 3) : [];
-
-  const tiles = [
-    {
-      label: data?.students.length === 1 ? "Student" : "Students",
-      value: data?.students.length,
-      tone: "peach",
-      href: "/teacher/students",
-    },
-    {
-      label: "Open cases",
-      value: openCases,
-      tone: "sky",
-      href: "/teacher/cases",
-    },
-    {
-      label: "Active IEP",
-      value: active,
-      tone: "pink",
-      href: "/teacher/students?filter=active",
-    },
-    {
-      label: "Unapproved IEP",
-      value: unapproved,
-      tone: "grey",
-      href: "/teacher/todo?tab=iep",
-    },
-  ];
-
   return (
     <main className="ui-page">
-      <header className="ui-header portal-home__header">
-        <div className="ui-header__title-row">
+      <PageHeader
+        title={`Hello ${user.first_name}!`}
+        avatar={
           <Avatar
             name={fullName(user)}
             id={user.user_id}
             colour="#d62839"
             size={52}
           />
-          <h1 className="ui-header__title">
-            <span className="portal-mobile-only">{greeting()}, </span>
-            <span className="portal-desktop-only">Hello </span>
-            {user.first_name}!
-          </h1>
-        </div>
-        <div className="portal-tiles">
-          {tiles.map((tile) => (
-            <Link
-              key={tile.label}
-              href={tile.href}
-              className={`portal-tile portal-tile--${tile.tone}`}
-            >
-              <span className="portal-tile__value">
-                {room.loading ? "–" : (tile.value ?? 0)}
-              </span>
-              <span className="portal-tile__label">{tile.label}</span>
-            </Link>
-          ))}
-        </div>
-      </header>
-
+        }
+      />
       <div className="ui-body">
-        {room.error && <Alert>{room.error}</Alert>}
-
-        <section className="portal-section" aria-labelledby="attention-title">
-          <div className="ui-row-between">
-            <h2 id="attention-title" className="ui-section-title">
-              Needs your attention
-            </h2>
-            <Link href="/teacher/todo" className="portal-see-all">
-              See all
-            </Link>
-          </div>
-          {room.loading ? (
-            <Loading />
-          ) : attention.length === 0 ? (
-            <Empty>Nothing needs you right now.</Empty>
-          ) : (
-            <ul className="portal-attention">
-              {attention.map((item) => (
-                <li key={item.id}>
-                  <Link href={item.href} className="portal-attention__item">
-                    <span>
-                      <span className="portal-attention__name">
-                        {item.name}
-                      </span>
-                      <span className="portal-attention__text">
-                        {item.text}
-                      </span>
-                    </span>
-                    <ChevronRight size={22} aria-hidden="true" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-
-        <section className="portal-section" aria-labelledby="latest-title">
-          <h2 id="latest-title" className="ui-section-title">
-            Latest actions
-          </h2>
-          {news.loading ? (
-            <Loading />
-          ) : news.error ? (
-            <Alert>{news.error}</Alert>
-          ) : !news.data || news.data.length === 0 ? (
-            <Empty>No updates yet.</Empty>
-          ) : (
-            <ul className="portal-news">
-              {news.data.map((item) => {
-                const href = item.case_id
-                  ? `/teacher/cases/${item.case_id}`
-                  : undefined;
-                const body = (
-                  <>
-                    <span
-                      className={
-                        item.is_read
-                          ? "portal-news__text"
-                          : "portal-news__text portal-news__text--unread"
-                      }
-                    >
-                      {item.message}
-                    </span>
-                    <span className="portal-news__date">
-                      {relativeDay(item.created_at)}
-                    </span>
-                  </>
-                );
-                return (
-                  <li key={item.notification_id}>
-                    {href ? (
-                      <Link
-                        href={href}
-                        className="portal-news__item"
-                        onClick={() => {
-                          if (!item.is_read)
-                            notificationsApi
-                              .markRead(item.notification_id)
-                              .catch(() => {});
-                        }}
-                      >
-                        {body}
-                      </Link>
-                    ) : (
-                      <div className="portal-news__item">{body}</div>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </section>
+        <ul className="portal-menu">
+          <li>
+            <Link href="/teacher/cases">Cases</Link>
+          </li>
+          <li>
+            <Link href="/teacher/account">Account</Link>
+          </li>
+        </ul>
       </div>
     </main>
   );

@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Quicksand } from "next/font/google";
 import type { ReactNode } from "react";
 
-import ServiceWorker from "./_components/ServiceWorker";
-import SessionProvider from "./_components/SessionProvider";
+import ServiceWorker from "../_components/ServiceWorker";
+import SessionProvider from "../_components/SessionProvider";
 import "./globals.css";
 
 const quicksand = Quicksand({

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import VerifyForm from "@/app/_components/auth/VerifyForm";
+import VerifyForm from "@/_components/auth/VerifyForm";
 import TeacherAuth from "../TeacherAuth";
 
 export const metadata = { title: "Verify your email · Mirai" };

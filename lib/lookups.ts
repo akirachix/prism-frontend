@@ -27,11 +27,14 @@ export interface StudentCreate {
 
 const STUDENTS_PATH = "/students";
 
-export function getStudents(teacherId?: string): Promise<Student[]> {
-  const search = teacherId
-    ? `?teacher_id=${teacherId}&limit=200`
-    : "?limit=200";
-  return request<Student[]>(`${STUDENTS_PATH}${search}`);
+export function getStudents(
+  teacherId?: string,
+  limit = 200,
+  offset = 0,
+): Promise<Student[]> {
+  return request<Student[]>(
+    `${STUDENTS_PATH}${query({ teacher_id: teacherId, limit, offset })}`,
+  );
 }
 
 export const studentsApi = {
@@ -51,7 +54,6 @@ export function studentName(student: Student): string {
   return `${student.first_name} ${student.last_name}`;
 }
 
-/** Whole years between the date of birth and today. */
 export function ageInYears(
   dateOfBirth: string | null | undefined,
 ): number | null {

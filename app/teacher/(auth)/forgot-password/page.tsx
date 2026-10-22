@@ -1,4 +1,4 @@
-import ForgotForm from "@/app/_components/auth/ForgotForm";
+import ForgotForm from "@/_components/auth/ForgotForm";
 import TeacherAuth from "../TeacherAuth";
 
 export const metadata = { title: "Forgot password · Mirai" };

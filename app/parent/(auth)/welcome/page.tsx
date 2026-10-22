@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import LoginForm from "@/app/_components/auth/LoginForm";
+import LoginForm from "@/_components/auth/LoginForm";
 import ResendHelp from "./ResendHelp";
 import ParentAuth from "../ParentAuth";
 
