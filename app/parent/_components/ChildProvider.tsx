@@ -8,8 +8,8 @@ import {
   type ReactNode,
 } from "react";
 
-import { useUser } from "@/_components/SessionProvider";
-import { useLoad } from "@/_components/useLoad";
+import { useUser } from "@/app/_components/SessionProvider";
+import { useLoad } from "@/app/_components/useLoad";
 import { casesApi, latestCase } from "@/lib/cases";
 import { studentsApi, type Student } from "@/lib/lookups";
 import type { Case } from "@/lib/types";

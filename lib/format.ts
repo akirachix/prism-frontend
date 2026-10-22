@@ -11,6 +11,7 @@ export function formatDate(value: string | null): string {
   });
 }
 
+/** "3 Oct" style dates for compact cards. */
 export function formatDay(value: string | null | undefined): string {
   if (!value) return "—";
   return new Date(value).toLocaleDateString("en-KE", {
@@ -19,6 +20,7 @@ export function formatDay(value: string | null | undefined): string {
   });
 }
 
+/** "Today", "Yesterday" or a short date. */
 export function relativeDay(value: string, now = new Date()): string {
   const date = new Date(value);
   const start = (d: Date) =>
@@ -50,6 +52,7 @@ export const AVATAR_COLOURS = [
   "#0a2a66",
 ];
 
+/** A stable colour per id, so a child keeps the same colour everywhere. */
 export function avatarColour(id: string): string {
   let hash = 0;
   for (const char of id) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;

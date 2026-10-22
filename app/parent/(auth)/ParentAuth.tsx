@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import AuthLayout from "@/_components/AuthLayout";
+import AuthLayout from "@/app/_components/AuthLayout";
 
 export default function ParentAuth({
   signup,

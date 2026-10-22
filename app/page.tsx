@@ -1,7 +1,7 @@
 import Image from "next/image";
 
-import HomeRedirect from "../_components/HomeRedirect";
-import { ButtonLink } from "../_components/ui/Button";
+import HomeRedirect from "./_components/HomeRedirect";
+import { ButtonLink } from "./_components/ui/Button";
 import "./home.css";
 
 export default function Home() {

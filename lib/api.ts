@@ -1,6 +1,6 @@
 import { clearSession, getSession, setSession } from "@/lib/session";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
 
 export class ApiError extends Error {
   status: number;
@@ -11,6 +11,7 @@ export class ApiError extends Error {
   }
 }
 
+/** Paths that must never send or refresh the access token. */
 const PUBLIC_AUTH_PATHS = [
   "/auth/login",
   "/auth/refresh",
@@ -52,6 +53,7 @@ async function exchangeRefreshToken(): Promise<boolean> {
   }
 }
 
+/** Swap the refresh token for a new pair. Calls made at the same time share one refresh. */
 function refreshSession(): Promise<boolean> {
   if (!refreshing) {
     refreshing = exchangeRefreshToken().finally(() => {
@@ -62,10 +64,6 @@ function refreshSession(): Promise<boolean> {
 }
 
 async function send(path: string, options: RequestInit): Promise<Response> {
-  if (!BASE_URL) {
-    throw new ApiError(0, "API URL is not configured.");
-  }
-
   const token = isPublic(path) ? null : getSession()?.access_token;
   try {
     return await fetch(`${BASE_URL}${path}`, {
@@ -112,6 +110,7 @@ export async function request<T>(
   return (await response.json()) as T;
 }
 
+/** Build a query string, leaving out empty values. */
 export function query(
   params: Record<string, string | number | boolean | null | undefined>,
 ): string {
@@ -124,30 +123,19 @@ export function query(
   return text ? `?${text}` : "";
 }
 
-export function errorMessage(
-  e: unknown,
-  fallback = "Something went wrong. Please try again.",
-): string {
-  return e instanceof Error ? e.message : fallback;
+/** Turn any thrown value into a message that is safe to show. */
+export function errorMessage(error: unknown): string {
+  return error instanceof ApiError
+    ? error.message
+    : "Something went wrong. Please try again.";
 }
 
+/** Resolve to null instead of failing on a 404 (nothing saved yet). */
 export async function orNull<T>(promise: Promise<T>): Promise<T | null> {
   try {
     return await promise;
   } catch (error) {
     if (error instanceof ApiError && error.status === 404) return null;
     throw error;
-  }
-}
-
-export async function fetchAll<T>(
-  page: (limit: number, offset: number) => Promise<T[]>,
-  pageSize = 200,
-): Promise<T[]> {
-  const all: T[] = [];
-  for (let offset = 0; ; offset += pageSize) {
-    const batch = await page(pageSize, offset);
-    all.push(...batch);
-    if (batch.length < pageSize) return all;
   }
 }

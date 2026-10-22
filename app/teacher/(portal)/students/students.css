@@ -1,0 +1,29 @@
+.students-top {
+  flex-wrap: wrap;
+}
+
+.students-search {
+  order: 3;
+  flex: 1 1 100%;
+}
+
+.students-foot {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+@media (min-width: 769px) {
+  .students-search {
+    order: 0;
+    flex: 0 1 420px;
+    margin-left: auto;
+  }
+
+  .students-add {
+    order: 4;
+  }
+
+  .students-top .ui-section-title {
+    font-size: 1.6rem;
+  }
+}

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 
-import LoginForm from "@/_components/auth/LoginForm";
+import LoginForm from "@/app/_components/auth/LoginForm";
 import ParentAuth from "../ParentAuth";
 
 export const metadata = { title: "Sign in · Mirai for parents" };

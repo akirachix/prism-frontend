@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import AuthLayout from "@/_components/AuthLayout";
+import AuthLayout from "@/app/_components/AuthLayout";
 
 /** The two teacher panels from the designs. */
 export default function TeacherAuth({

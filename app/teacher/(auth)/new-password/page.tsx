@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import NewPasswordForm from "@/_components/auth/NewPasswordForm";
+import NewPasswordForm from "@/app/_components/auth/NewPasswordForm";
 import TeacherAuth from "../TeacherAuth";
 
 export const metadata = { title: "Create a new password · Mirai" };

@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 
-import { useUser } from "@/_components/SessionProvider";
-import { Loading, PageHeader } from "@/_components/ui/bits";
+import { useUser } from "@/app/_components/SessionProvider";
+import { Loading, PageHeader } from "@/app/_components/ui/bits";
 import { studentName } from "@/lib/lookups";
 import { useChild } from "../_components/ChildProvider";
-import "@/_components/portal.css";
+import "@/app/_components/portal.css";
 
 /**
  * Where a parent lands after signing in.

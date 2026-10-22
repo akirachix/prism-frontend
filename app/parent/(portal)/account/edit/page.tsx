@@ -1,4 +1,4 @@
-import EditProfileForm from "@/_components/account/EditProfileForm";
+import EditProfileForm from "@/app/_components/account/EditProfileForm";
 
 export const metadata = { title: "Edit profile · Mirai" };
 

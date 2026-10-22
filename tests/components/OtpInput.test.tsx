@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
 
-import OtpInput from "@/_components/ui/OtpInput";
+import OtpInput from "@/app/_components/ui/OtpInput";
 
 function Harness({ onValue }: { onValue?: (v: string) => void }) {
   const [value, setValue] = useState("");
@@ -24,18 +24,14 @@ describe("OtpInput", () => {
 
   it("moves to the next box after a digit", () => {
     render(<Harness />);
-    fireEvent.change(screen.getByLabelText("Digit 1 of 6"), {
-      target: { value: "4" },
-    });
+    fireEvent.change(screen.getByLabelText("Digit 1 of 6"), { target: { value: "4" } });
     expect(screen.getByLabelText("Digit 2 of 6")).toHaveFocus();
   });
 
   it("ignores letters", () => {
     const onValue = jest.fn();
     render(<Harness onValue={onValue} />);
-    fireEvent.change(screen.getByLabelText("Digit 1 of 6"), {
-      target: { value: "a" },
-    });
+    fireEvent.change(screen.getByLabelText("Digit 1 of 6"), { target: { value: "a" } });
     expect(onValue).toHaveBeenLastCalledWith("");
   });
 

@@ -3,8 +3,8 @@
 import { Info } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
-import { ButtonLink } from "@/_components/ui/Button";
-import { MailBadge } from "@/_components/ui/bits";
+import { ButtonLink } from "@/app/_components/ui/Button";
+import { MailBadge } from "@/app/_components/ui/bits";
 
 export default function InviteCard() {
   const params = useSearchParams();

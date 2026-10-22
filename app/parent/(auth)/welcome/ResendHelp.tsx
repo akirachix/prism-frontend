@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 
-import Button from "@/_components/ui/Button";
-import { Alert } from "@/_components/ui/bits";
+import Button from "@/app/_components/ui/Button";
+import { Alert } from "@/app/_components/ui/bits";
 
 export default function ResendHelp() {
   const [open, setOpen] = useState(false);
