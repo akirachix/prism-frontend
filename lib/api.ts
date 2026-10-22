@@ -117,7 +117,8 @@ export function query(
 ): string {
   const search = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {
-    if (value !== undefined && value !== null) search.set(key, String(value));
+    if (value === undefined || value === null || value === "") continue;
+    search.set(key, String(value));
   }
   const text = search.toString();
   return text ? `?${text}` : "";
@@ -130,6 +131,23 @@ export function errorMessage(
   return e instanceof Error ? e.message : fallback;
 }
 
-export function orNull<T>(promise: Promise<T>): Promise<T | null> {
-  return promise.catch(() => null);
+export async function orNull<T>(promise: Promise<T>): Promise<T | null> {
+  try {
+    return await promise;
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) return null;
+    throw error;
+  }
+}
+
+export async function fetchAll<T>(
+  page: (limit: number, offset: number) => Promise<T[]>,
+  pageSize = 200,
+): Promise<T[]> {
+  const all: T[] = [];
+  for (let offset = 0; ; offset += pageSize) {
+    const batch = await page(pageSize, offset);
+    all.push(...batch);
+    if (batch.length < pageSize) return all;
+  }
 }

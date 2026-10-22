@@ -8,6 +8,9 @@ export interface Iep {
   case_id: string;
   version_number: number;
   status: IepStatus;
+  generated_content: string;
+  short_term_goals: string[];
+  strategies: string[];
   teacher_approved: boolean;
   admin_approved: boolean;
   rejection_reason: string | null;
@@ -16,5 +19,17 @@ export interface Iep {
 }
 
 export const iepsApi = {
-  list: () => request<Iep[]>("/ieps?limit=200"),
+  list: (limit = 200, offset = 0) =>
+    request<Iep[]>(`/ieps?limit=${limit}&offset=${offset}`),
+  get: (iepId: string) => request<Iep>(`/ieps/${iepId}`),
+  approve: (iepId: string, approvedBy: string) =>
+    request<Iep>(`/ieps/${iepId}/approve`, {
+      method: "POST",
+      body: JSON.stringify({ role: "TEACHER", approved_by: approvedBy }),
+    }),
+  reject: (iepId: string, reason: string) =>
+    request<Iep>(`/ieps/${iepId}/reject`, {
+      method: "POST",
+      body: JSON.stringify({ reason }),
+    }),
 };

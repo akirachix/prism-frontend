@@ -10,7 +10,8 @@ export function latestCase(cases: Case[] | null | undefined): Case | null {
 }
 
 export const casesApi = {
-  list: () => request<Case[]>("/cases"),
+  list: (limit = 200, offset = 0) =>
+    request<Case[]>(`/cases${query({ limit, offset })}`),
   listBy: (
     params: Record<string, string | number | boolean | null | undefined>,
   ) => request<Case[]>(`/cases${query(params)}`),
