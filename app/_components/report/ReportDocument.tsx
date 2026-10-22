@@ -5,19 +5,36 @@ import Image from "next/image";
 import { formatDay } from "@/lib/format";
 import { scaleLabel } from "@/lib/evaluations";
 import { studentName, type Student } from "@/lib/lookups";
-import { LEVEL_TEXT, screeningRows, type EvaluationReport } from "@/lib/report-data";
+import {
+  LEVEL_TEXT,
+  screeningRows,
+  type EvaluationReport,
+} from "@/lib/report-data";
 import type { Level } from "@/lib/scoring";
 import type { ScreeningContent } from "@/lib/screening";
 import { Disclaimer } from "../ui/bits";
 import "./report.css";
 
 function LevelTag({ level }: { level: Level | null }) {
-  if (!level) return <span className="report__level report__level--none">Not done yet</span>;
-  return <span className={`report__level report__level--${level.toLowerCase()}`}>{LEVEL_TEXT[level]}</span>;
+  if (!level)
+    return (
+      <span className="report__level report__level--none">Not done yet</span>
+    );
+  return (
+    <span className={`report__level report__level--${level.toLowerCase()}`}>
+      {LEVEL_TEXT[level]}
+    </span>
+  );
 }
 
 /** A printable report. "Download PDF" prints this page to PDF. */
-export function ScreeningReport({ child, content }: { child: Student; content: ScreeningContent }) {
+export function ScreeningReport({
+  child,
+  content,
+}: {
+  child: Student;
+  content: ScreeningContent;
+}) {
   const rows = screeningRows(content);
   const bothDone = Boolean(content.combined);
   return (
@@ -41,12 +58,18 @@ export function ScreeningReport({ child, content }: { child: Student; content: S
           {rows.map((row) => (
             <tr key={row.domain}>
               <th scope="row">{row.title}</th>
-              <td data-label="Teacher"><LevelTag level={row.teacher} /></td>
-              <td data-label="Parent"><LevelTag level={row.parent} /></td>
+              <td data-label="Teacher">
+                <LevelTag level={row.teacher} />
+              </td>
+              <td data-label="Parent">
+                <LevelTag level={row.parent} />
+              </td>
               <td data-label="Together">
                 <LevelTag level={row.overall} />
                 {row.disagreement && (
-                  <span className="report__flag">Teacher and parent saw this differently</span>
+                  <span className="report__flag">
+                    Teacher and parent saw this differently
+                  </span>
                 )}
               </td>
             </tr>
@@ -68,13 +91,19 @@ export function ScreeningReport({ child, content }: { child: Student; content: S
   );
 }
 
-export function EvaluationReportDoc({ child, report }: { child: Student; report: EvaluationReport }) {
+export function EvaluationReportDoc({
+  child,
+  report,
+}: {
+  child: Student;
+  report: EvaluationReport;
+}) {
   return (
     <article className="report">
       <ReportHead title="6-week evaluation" child={child} />
       <p className="report__intro">
-        Six weeks after the plan started on {formatDay(report.iep.approved_at)}, the
-        teacher and the parent each said how things have changed.
+        Six weeks after the plan started on {formatDay(report.iep.approved_at)},
+        the teacher and the parent each said how things have changed.
       </p>
       <table className="report__table">
         <thead>
@@ -88,13 +117,19 @@ export function EvaluationReportDoc({ child, report }: { child: Student; report:
           {report.rows.map(({ question, teacher, parent }) => (
             <tr key={question.eval_question_id}>
               <th scope="row">{question.question_text}</th>
-              <td data-label="Teacher">{teacher ? scaleLabel(teacher.score) : "Not answered"}</td>
-              <td data-label="Parent">{parent ? scaleLabel(parent.score) : "Not answered"}</td>
+              <td data-label="Teacher">
+                {teacher ? scaleLabel(teacher.score) : "Not answered"}
+              </td>
+              <td data-label="Parent">
+                {parent ? scaleLabel(parent.score) : "Not answered"}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <Disclaimer>Mirai is a screening tool. It never gives a diagnosis</Disclaimer>
+      <Disclaimer>
+        Mirai is a screening tool. It never gives a diagnosis
+      </Disclaimer>
     </article>
   );
 }
@@ -110,7 +145,13 @@ function ReportHead({ title, child }: { title: string; child: Student }) {
           {child.school_name ? ` · ${child.school_name}` : ""}
         </p>
       </div>
-      <Image src="/mirai-logo-navy.png" alt="" width={113} height={52} className="report__logo" />
+      <Image
+        src="/mirai-logo-navy.png"
+        alt=""
+        width={113}
+        height={52}
+        className="report__logo"
+      />
     </header>
   );
 }

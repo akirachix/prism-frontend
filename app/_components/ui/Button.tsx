@@ -3,7 +3,8 @@ import type { ComponentProps, ReactNode } from "react";
 
 import "./ui.css";
 
-export type ButtonVariant = "primary" | "outline" | "orange" | "danger-outline" | "link";
+export type ButtonVariant =
+  "primary" | "outline" | "orange" | "danger-outline" | "link";
 
 interface Common {
   variant?: ButtonVariant;
@@ -13,7 +14,10 @@ interface Common {
   children: ReactNode;
 }
 
-function classes({ variant = "primary", block, small }: Omit<Common, "children">, extra?: string) {
+function classes(
+  { variant = "primary", block, small }: Omit<Common, "children">,
+  extra?: string,
+) {
   return [
     "ui-btn",
     `ui-btn--${variant}`,
@@ -59,7 +63,11 @@ export function ButtonLink({
   ...rest
 }: Omit<Common, "loading"> & ComponentProps<typeof Link>) {
   return (
-    <Link href={href} className={classes({ variant, block, small }, className)} {...rest}>
+    <Link
+      href={href}
+      className={classes({ variant, block, small }, className)}
+      {...rest}
+    >
       {children}
     </Link>
   );

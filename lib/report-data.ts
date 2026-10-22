@@ -1,5 +1,9 @@
 import { orNull } from "@/lib/api";
-import { evaluationsApi, type EvaluationQuestion, type EvaluationResponse } from "@/lib/evaluations";
+import {
+  evaluationsApi,
+  type EvaluationQuestion,
+  type EvaluationResponse,
+} from "@/lib/evaluations";
 import { iepsApi, type IEP } from "@/lib/ieps";
 import { levelOf, type Level } from "@/lib/scoring";
 import { loadScreening, type ScreeningContent } from "@/lib/screening";
@@ -32,8 +36,12 @@ export function screeningRows(content: ScreeningContent): DomainRow[] {
   return order
     .filter((domain) => domains.includes(domain))
     .map((domain) => {
-      const t = content.teacher?.completed_at ? content.teacher.scores[domain] : undefined;
-      const p = content.parent?.completed_at ? content.parent.scores[domain] : undefined;
+      const t = content.teacher?.completed_at
+        ? content.teacher.scores[domain]
+        : undefined;
+      const p = content.parent?.completed_at
+        ? content.parent.scores[domain]
+        : undefined;
       return {
         domain,
         title: DOMAIN_TITLES[domain],
@@ -52,10 +60,16 @@ export async function loadScreeningReport(caseId: string) {
 
 export interface EvaluationReport {
   iep: IEP;
-  rows: { question: EvaluationQuestion; teacher: EvaluationResponse | null; parent: EvaluationResponse | null }[];
+  rows: {
+    question: EvaluationQuestion;
+    teacher: EvaluationResponse | null;
+    parent: EvaluationResponse | null;
+  }[];
 }
 
-export async function loadEvaluationReport(caseId: string): Promise<EvaluationReport | null> {
+export async function loadEvaluationReport(
+  caseId: string,
+): Promise<EvaluationReport | null> {
   const iep = await orNull(iepsApi.activeForCase(caseId));
   if (!iep) return null;
   const questions = await evaluationsApi.questions(iep.iep_id);
@@ -63,10 +77,13 @@ export async function loadEvaluationReport(caseId: string): Promise<EvaluationRe
     [...questions]
       .sort((a, b) => a.position - b.position)
       .map(async (question) => {
-        const responses = await evaluationsApi.responses({ eval_question_id: question.eval_question_id });
+        const responses = await evaluationsApi.responses({
+          eval_question_id: question.eval_question_id,
+        });
         return {
           question,
-          teacher: responses.find((r) => r.responder_role === "TEACHER") ?? null,
+          teacher:
+            responses.find((r) => r.responder_role === "TEACHER") ?? null,
           parent: responses.find((r) => r.responder_role === "PARENT") ?? null,
         };
       }),

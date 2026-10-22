@@ -1,7 +1,14 @@
 import { request } from "@/lib/api";
-import { saveAnswers, scaleLabel, type EvaluationResponse } from "@/lib/evaluations";
+import {
+  saveAnswers,
+  scaleLabel,
+  type EvaluationResponse,
+} from "@/lib/evaluations";
 
-jest.mock("@/lib/api", () => ({ request: jest.fn(), query: jest.requireActual("@/lib/api").query }));
+jest.mock("@/lib/api", () => ({
+  request: jest.fn(),
+  query: jest.requireActual("@/lib/api").query,
+}));
 
 const mockRequest = request as jest.Mock;
 

@@ -54,7 +54,9 @@ export default function NewPasswordForm({
   const hydrated = useHydrated();
   const stored = useStoredFlow();
   const flow =
-    stored && stored.portal === portal && stored.stage === "password_change_required"
+    stored &&
+    stored.portal === portal &&
+    stored.stage === "password_change_required"
       ? stored
       : null;
   // After a page refresh the temporary password is gone from memory.
@@ -62,7 +64,8 @@ export default function NewPasswordForm({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (mode === "change" && hydrated && !flow) router.replace(`/${portal}/login`);
+    if (mode === "change" && hydrated && !flow)
+      router.replace(`/${portal}/login`);
   }, [mode, hydrated, flow, portal, router]);
 
   const {
@@ -85,7 +88,10 @@ export default function NewPasswordForm({
   async function onSubmit(values: Values) {
     setError(null);
     const pendingName = askName
-      ? { first_name: values.first_name.trim(), last_name: values.last_name.trim() }
+      ? {
+          first_name: values.first_name.trim(),
+          last_name: values.last_name.trim(),
+        }
       : undefined;
     try {
       if (mode === "reset") {
@@ -95,7 +101,10 @@ export default function NewPasswordForm({
         return;
       }
       if (mode === "invite") {
-        const response = await authApi.acceptInvitation(token!, values.new_password);
+        const response = await authApi.acceptInvitation(
+          token!,
+          values.new_password,
+        );
         goToStage(router, portal, response, {
           extra: { pending_name: pendingName },
           next,
@@ -111,7 +120,11 @@ export default function NewPasswordForm({
       );
       goToStage(router, portal, response, {
         password: values.new_password,
-        extra: { email: flow.email, remember: flow.remember, pending_name: pendingName },
+        extra: {
+          email: flow.email,
+          remember: flow.remember,
+          pending_name: pendingName,
+        },
         next,
       });
     } catch (err) {
@@ -124,7 +137,8 @@ export default function NewPasswordForm({
   if (missingToken) {
     return (
       <Alert>
-        This link is missing its code. Open the link from your email again, or ask for a new one.
+        This link is missing its code. Open the link from your email again, or
+        ask for a new one.
       </Alert>
     );
   }
@@ -144,7 +158,10 @@ export default function NewPasswordForm({
             error={errors.first_name?.message}
             {...register("first_name", {
               required: "Enter your first name.",
-              maxLength: { value: 100, message: "Use 100 characters or fewer." },
+              maxLength: {
+                value: 100,
+                message: "Use 100 characters or fewer.",
+              },
             })}
           />
           <TextField
@@ -154,7 +171,10 @@ export default function NewPasswordForm({
             error={errors.last_name?.message}
             {...register("last_name", {
               required: "Enter your last name.",
-              maxLength: { value: 100, message: "Use 100 characters or fewer." },
+              maxLength: {
+                value: 100,
+                message: "Use 100 characters or fewer.",
+              },
             })}
           />
         </>
@@ -192,7 +212,8 @@ export default function NewPasswordForm({
         {...register("confirm_password", {
           required: "Type the new password again.",
           validate: (value) =>
-            value === getValues("new_password") || "The two passwords do not match.",
+            value === getValues("new_password") ||
+            "The two passwords do not match.",
         })}
       />
 

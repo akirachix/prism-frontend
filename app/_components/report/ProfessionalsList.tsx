@@ -7,7 +7,10 @@ import { useLoad } from "../useLoad";
 import { Alert, Empty, Loading } from "../ui/bits";
 import "./report.css";
 
-const SPECIALTY = { PSYCHOLOGIST: "Psychologist", PSYCHIATRIST: "Psychiatrist" } as const;
+const SPECIALTY = {
+  PSYCHOLOGIST: "Psychologist",
+  PSYCHIATRIST: "Psychiatrist",
+} as const;
 
 /**
  * Pro bono specialists the school works with. The family decides whether
@@ -38,7 +41,9 @@ export default function ProfessionalsList() {
               <p className="pros__name">
                 {pro.first_name} {pro.last_name}
               </p>
-              <p className="pros__specialty">{SPECIALTY[pro.specialty] ?? pro.specialty}</p>
+              <p className="pros__specialty">
+                {SPECIALTY[pro.specialty] ?? pro.specialty}
+              </p>
               <p className="pros__line">
                 <Phone size={16} aria-hidden="true" /> {pro.contact_details}
               </p>

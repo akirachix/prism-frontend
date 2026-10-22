@@ -54,7 +54,9 @@ export default function Sidebar({
   const home = links[0]?.href ?? "/";
 
   return (
-    <aside className={variant === "parent" ? "sidebar sidebar--parent" : "sidebar"}>
+    <aside
+      className={variant === "parent" ? "sidebar sidebar--parent" : "sidebar"}
+    >
       <Link href={home} className="sidebar__logo" aria-label="Mirai home">
         <Image
           src="/mirai-logo.png"
@@ -68,7 +70,9 @@ export default function Sidebar({
       <nav className="sidebar__nav" aria-label="Main">
         {links.map((link) => {
           const active =
-            (link.exact ? pathname === link.href : pathname.startsWith(link.href)) ||
+            (link.exact
+              ? pathname === link.href
+              : pathname.startsWith(link.href)) ||
             Boolean(link.also && pathname.startsWith(link.also));
           const Icon = link.icon ? ICONS[link.icon] : null;
           return (

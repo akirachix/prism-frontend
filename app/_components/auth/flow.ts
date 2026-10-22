@@ -28,14 +28,24 @@ export function goToStage(
   router: Router,
   portal: Portal,
   response: AuthStageResponse,
-  options: { password?: string; extra?: Partial<AuthFlow>; next?: string | null } = {},
+  options: {
+    password?: string;
+    extra?: Partial<AuthFlow>;
+    next?: string | null;
+  } = {},
 ) {
   saveFlow(flowFromStage(portal, response, options.extra), options.password);
   const path = routeForStage(portal, response.stage);
-  router.push(options.next ? `${path}?next=${encodeURIComponent(options.next)}` : path);
+  router.push(
+    options.next ? `${path}?next=${encodeURIComponent(options.next)}` : path,
+  );
 }
 
-export function landingFor(user: UserRead, portal: Portal, next: string | null) {
+export function landingFor(
+  user: UserRead,
+  portal: Portal,
+  next: string | null,
+) {
   const home = homeFor(user);
   // Only follow `next` when it belongs to the portal the user can open.
   if (home === `/${portal}`) return safeNext(next, home);

@@ -20,7 +20,11 @@ export default function TeacherReportPage() {
     <main className="ui-page">
       <PageHeader
         title="Reports"
-        back={{ href: data ? `/teacher/students/${data.student.student_id}` : "/teacher/students" }}
+        back={{
+          href: data
+            ? `/teacher/students/${data.student.student_id}`
+            : "/teacher/students",
+        }}
       />
       <div className="ui-body">
         {loading ? (
@@ -29,9 +33,17 @@ export default function TeacherReportPage() {
           <Alert>{error ?? "We could not load the report."}</Alert>
         ) : (
           <Suspense fallback={<Loading />}>
-            <ReportViewer kind="screening" child={data.student} caseId={caseId} />
+            <ReportViewer
+              kind="screening"
+              child={data.student}
+              caseId={caseId}
+            />
             {data.caseItem.status !== "NO_CONCERN_IDENTIFIED" && (
-              <ReportViewer kind="evaluation" child={data.student} caseId={caseId} />
+              <ReportViewer
+                kind="evaluation"
+                child={data.student}
+                caseId={caseId}
+              />
             )}
           </Suspense>
         )}

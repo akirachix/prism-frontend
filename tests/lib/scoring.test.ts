@@ -47,7 +47,10 @@ describe("combine", () => {
   });
 
   it("reports no concern when every domain is low", () => {
-    const result = combine({ AUTISM: 0.2, ADHD: 0.5 }, { AUTISM: 0.4, ADHD: 0.3 });
+    const result = combine(
+      { AUTISM: 0.2, ADHD: 0.5 },
+      { AUTISM: 0.4, ADHD: 0.3 },
+    );
     expect(result.concern).toBe(false);
     expect(result.primaryDomain).toBeNull();
     expect(result.densityScore).toBe(0);

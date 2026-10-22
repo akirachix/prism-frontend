@@ -27,7 +27,10 @@ export async function loadClassroom(teacherId: string): Promise<Classroom> {
   const caseByStudent = new Map<string, Case>();
   const byStudent = new Map<string, Case[]>();
   for (const item of cases) {
-    byStudent.set(item.student_id, [...(byStudent.get(item.student_id) ?? []), item]);
+    byStudent.set(item.student_id, [
+      ...(byStudent.get(item.student_id) ?? []),
+      item,
+    ]);
   }
   for (const [studentId, list] of byStudent) {
     const latest = latestCase(list);
@@ -57,8 +60,16 @@ export interface StudentStatus {
 }
 
 /** The pill shown next to a student in the class list. */
-export function studentStatus(caseItem: Case | undefined, iep: IEP | undefined): StudentStatus {
-  const status = (label: string, tone: PillTone, needsAction = false, activePlan = false) => ({
+export function studentStatus(
+  caseItem: Case | undefined,
+  iep: IEP | undefined,
+): StudentStatus {
+  const status = (
+    label: string,
+    tone: PillTone,
+    needsAction = false,
+    activePlan = false,
+  ) => ({
     label,
     tone,
     needsAction,
@@ -74,8 +85,10 @@ export function studentStatus(caseItem: Case | undefined, iep: IEP | undefined):
   if (iep?.status === "PENDING_APPROVAL" && !iep.teacher_approved) {
     return status("Approve plan", "blush", true);
   }
-  if (iep?.status === "PENDING_APPROVAL") return status("Waiting for admin", "outline");
-  if (iep?.status === "REJECTED") return status("Plan sent back", "blush", true);
+  if (iep?.status === "PENDING_APPROVAL")
+    return status("Waiting for admin", "outline");
+  if (iep?.status === "REJECTED")
+    return status("Plan sent back", "blush", true);
 
   switch (caseItem.status) {
     case "INITIATED":
@@ -112,13 +125,18 @@ export interface AttentionItem {
 }
 
 /** "Needs your attention" on Home and the IEP / evaluation groups in To do. */
-export function attentionItems(room: Classroom, now = new Date()): AttentionItem[] {
+export function attentionItems(
+  room: Classroom,
+  now = new Date(),
+): AttentionItem[] {
   const items: AttentionItem[] = [];
   const studentsById = new Map(room.students.map((s) => [s.student_id, s]));
 
   for (const [caseId, iep] of room.iepByCase) {
     const caseItem = room.cases.find((item) => item.case_id === caseId);
-    const student = caseItem ? studentsById.get(caseItem.student_id) : undefined;
+    const student = caseItem
+      ? studentsById.get(caseItem.student_id)
+      : undefined;
     const name = student ? studentName(student) : "A student";
     if (iep.status === "PENDING_APPROVAL" && !iep.teacher_approved) {
       items.push({

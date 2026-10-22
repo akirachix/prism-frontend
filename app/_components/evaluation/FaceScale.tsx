@@ -45,7 +45,9 @@ export default function FaceScale({
               <Icon size={30} aria-hidden="true" />
               <span className="ui-face__radio" aria-hidden="true" />
               <span className="ui-face__score">{item.score}</span>
-              <span className={showLabels ? "ui-face__label" : "visually-hidden"}>
+              <span
+                className={showLabels ? "ui-face__label" : "visually-hidden"}
+              >
                 {item.label}
               </span>
             </label>

@@ -39,7 +39,9 @@ export default function VerifyForm({ portal }: { portal: Portal }) {
   const [override, setFlow] = useState<AuthFlow | null>(null);
   const flow = override ?? stored;
   const usable =
-    flow !== null && flow.portal === portal && flow.stage !== "password_change_required";
+    flow !== null &&
+    flow.portal === portal &&
+    flow.stage !== "password_change_required";
   const [enroll, setEnroll] = useState<MfaEnrollInfo | null>(null);
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -109,7 +111,9 @@ export default function VerifyForm({ portal }: { portal: Portal }) {
       } else {
         const password = flowPasswordInMemory();
         if (!flow.email || !password) {
-          router.replace(`/${portal}/login?email=${encodeURIComponent(flow.email ?? "")}`);
+          router.replace(
+            `/${portal}/login?email=${encodeURIComponent(flow.email ?? "")}`,
+          );
           return;
         }
         const response = await authApi.login(flow.email, password);
@@ -135,7 +139,9 @@ export default function VerifyForm({ portal }: { portal: Portal }) {
     <form className="auth-center" onSubmit={handleSubmit} noValidate>
       <MailBadge />
       <h1 className="auth-title">Verify your email</h1>
-      <p className="auth-lead">We&apos;ve sent a verification code to your email address.</p>
+      <p className="auth-lead">
+        We&apos;ve sent a verification code to your email address.
+      </p>
 
       <OtpInput
         value={code}
@@ -163,7 +169,12 @@ export default function VerifyForm({ portal }: { portal: Portal }) {
         <Button type="submit" block loading={busy} className="auth-verify-btn">
           {busy ? "Checking…" : "Verify"}
         </Button>
-        <Button variant="link" onClick={resend} loading={resending} className="auth-resend">
+        <Button
+          variant="link"
+          onClick={resend}
+          loading={resending}
+          className="auth-resend"
+        >
           {resending ? "Sending…" : "Resend code"}
         </Button>
       </div>

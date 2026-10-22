@@ -15,7 +15,10 @@
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s, transform 0.05s;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    transform 0.05s;
 }
 
 .ui-btn:active:not(:disabled) {
@@ -865,7 +868,6 @@
 }
 
 @media (max-width: 420px) {
-
   .ui-btn {
     padding: 12px 22px;
   }

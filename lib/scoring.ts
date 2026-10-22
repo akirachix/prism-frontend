@@ -73,7 +73,9 @@ export function combine(teacher: Scores, parent: Scores): Combined {
     const best = Math.max(t ?? 0, p ?? 0);
     scores[domain] = best;
     const gap =
-      t !== undefined && p !== undefined ? Math.abs(t - p) >= DISCREPANCY_AT : false;
+      t !== undefined && p !== undefined
+        ? Math.abs(t - p) >= DISCREPANCY_AT
+        : false;
     if (gap) discrepancies.push(domain);
     levels[domain] = gap ? "ELEVATED" : levelOf(best);
   }

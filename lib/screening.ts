@@ -1,7 +1,13 @@
 import { ApiError } from "@/lib/api";
 import { casesApi } from "@/lib/cases";
 import { reportsApi } from "@/lib/reports";
-import { combine, isComplete, scoreAnswers, type Combined, type Scores } from "@/lib/scoring";
+import {
+  combine,
+  isComplete,
+  scoreAnswers,
+  type Combined,
+  type Scores,
+} from "@/lib/scoring";
 import type { Informant, QuestionSet } from "@/lib/screening-questions";
 import type { Case, CaseUpdate } from "@/lib/types";
 
@@ -86,7 +92,9 @@ export async function saveScreening(params: {
   };
   const next: ScreeningContent = { ...content, [key(role)]: mine };
 
-  const bothDone = Boolean(next.teacher?.completed_at && next.parent?.completed_at);
+  const bothDone = Boolean(
+    next.teacher?.completed_at && next.parent?.completed_at,
+  );
   if (bothDone && next.teacher && next.parent) {
     next.combined = {
       ...combine(next.teacher.scores, next.parent.scores),

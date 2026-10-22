@@ -77,7 +77,10 @@ export default function OtpInput({
   }
 
   return (
-    <fieldset className={framed ? "ui-otp ui-otp--framed" : "ui-otp"} disabled={disabled}>
+    <fieldset
+      className={framed ? "ui-otp ui-otp--framed" : "ui-otp"}
+      disabled={disabled}
+    >
       <legend className="visually-hidden">{label}</legend>
       <div className="ui-otp__boxes">
         {digits.map((digit, index) => (
@@ -86,7 +89,9 @@ export default function OtpInput({
             ref={(element) => {
               refs.current[index] = element;
             }}
-            className={invalid ? "ui-otp__box ui-otp__box--invalid" : "ui-otp__box"}
+            className={
+              invalid ? "ui-otp__box ui-otp__box--invalid" : "ui-otp__box"
+            }
             inputMode="numeric"
             autoComplete={index === 0 ? "one-time-code" : "off"}
             pattern="[0-9]*"

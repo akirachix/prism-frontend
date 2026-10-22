@@ -56,7 +56,9 @@ export default function SessionProvider({ children }: { children: ReactNode }) {
     [ready, user, refreshUser],
   );
 
-  return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
+  return (
+    <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
+  );
 }
 
 export function useSession(): SessionValue {

@@ -10,7 +10,11 @@ describe("questionSetFor (age gate)", () => {
   it("adds reading and language from age 6", () => {
     const set = questionSetFor(6);
     expect(set.ageGate).toBe("6-9");
-    expect(set.parts.map((p) => p.domain)).toEqual(["AUTISM", "ADHD", "DYSLEXIA"]);
+    expect(set.parts.map((p) => p.domain)).toEqual([
+      "AUTISM",
+      "ADHD",
+      "DYSLEXIA",
+    ]);
   });
 
   it("uses the 6-9 set when the age is unknown", () => {
@@ -34,8 +38,13 @@ describe("questionSetFor (age gate)", () => {
   });
 
   it("scores reverse-worded items the other way round", () => {
-    const first = allQuestions(questionSetFor(7)).find((q) => q.id === "aut-1")!;
+    const first = allQuestions(questionSetFor(7)).find(
+      (q) => q.id === "aut-1",
+    )!;
     expect(first.options[0]).toEqual({ label: "Always", value: 0 });
-    expect(first.options[first.options.length - 1]).toEqual({ label: "Never", value: 3 });
+    expect(first.options[first.options.length - 1]).toEqual({
+      label: "Never",
+      value: 3,
+    });
   });
 });

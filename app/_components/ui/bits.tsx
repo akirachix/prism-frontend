@@ -39,7 +39,13 @@ export function Disclaimer({ children }: { children: ReactNode }) {
 
 export type { PillTone };
 
-export function Pill({ tone = "outline", children }: { tone?: PillTone; children: ReactNode }) {
+export function Pill({
+  tone = "outline",
+  children,
+}: {
+  tone?: PillTone;
+  children: ReactNode;
+}) {
   return <span className={`ui-pill ui-pill--${tone}`}>{children}</span>;
 }
 
@@ -97,17 +103,27 @@ export function PageHeader({
     <header className={tall ? "ui-header ui-header--tall" : "ui-header"}>
       <div className="ui-header__row">
         {back && (
-          <Link href={back.href} className="ui-header__back" aria-label={back.label ?? "Back"}>
+          <Link
+            href={back.href}
+            className="ui-header__back"
+            aria-label={back.label ?? "Back"}
+          >
             <ArrowLeft size={22} aria-hidden="true" />
             {eyebrow && <span className="ui-header__eyebrow">{eyebrow}</span>}
           </Link>
         )}
         {close && (
-          <Link href={close.href} className="ui-header__back" aria-label={close.label ?? "Close"}>
+          <Link
+            href={close.href}
+            className="ui-header__back"
+            aria-label={close.label ?? "Close"}
+          >
             <X size={24} aria-hidden="true" />
           </Link>
         )}
-        {!back && eyebrow && <span className="ui-header__eyebrow">{eyebrow}</span>}
+        {!back && eyebrow && (
+          <span className="ui-header__eyebrow">{eyebrow}</span>
+        )}
         {actions && <div className="ui-header__actions">{actions}</div>}
       </div>
       <div className="ui-header__title-row">
@@ -196,7 +212,12 @@ export function LockedCard({
       <p className="ui-locked__text">{text}</p>
       {week !== undefined && total !== undefined && (
         <>
-          <ProgressBar value={week} max={total} tone="orange" label="Weeks passed" />
+          <ProgressBar
+            value={week}
+            max={total}
+            tone="orange"
+            label="Weeks passed"
+          />
           <p className="ui-locked__week">
             Week {week} of {total}
           </p>

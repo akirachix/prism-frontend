@@ -19,7 +19,11 @@ interface Values {
   phone: string;
 }
 
-export default function EditProfileForm({ portal }: { portal: "teacher" | "parent" }) {
+export default function EditProfileForm({
+  portal,
+}: {
+  portal: "teacher" | "parent";
+}) {
   const user = useUser();
   const { setUser } = useSession();
   const router = useRouter();
@@ -54,16 +58,26 @@ export default function EditProfileForm({ portal }: { portal: "teacher" | "paren
 
   return (
     <main className="ui-page">
-      <PageHeader title="Edit profile" back={{ href: back, label: "Back to account" }} />
+      <PageHeader
+        title="Edit profile"
+        back={{ href: back, label: "Back to account" }}
+      />
       <div className="ui-body ui-body--narrow">
-        <form className="ui-form ui-card" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <form
+          className="ui-form ui-card"
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
+        >
           <TextField
             label="First name"
             autoComplete="given-name"
             error={errors.first_name?.message}
             {...register("first_name", {
               required: "Enter your first name.",
-              maxLength: { value: 100, message: "Use 100 characters or fewer." },
+              maxLength: {
+                value: 100,
+                message: "Use 100 characters or fewer.",
+              },
             })}
           />
           <TextField
@@ -72,7 +86,10 @@ export default function EditProfileForm({ portal }: { portal: "teacher" | "paren
             error={errors.last_name?.message}
             {...register("last_name", {
               required: "Enter your last name.",
-              maxLength: { value: 100, message: "Use 100 characters or fewer." },
+              maxLength: {
+                value: 100,
+                message: "Use 100 characters or fewer.",
+              },
             })}
           />
           <TextField
@@ -84,7 +101,10 @@ export default function EditProfileForm({ portal }: { portal: "teacher" | "paren
             error={errors.phone?.message}
             {...register("phone", {
               maxLength: { value: 30, message: "Use 30 characters or fewer." },
-              pattern: { value: /^\+?[\d\s-]{7,}$/, message: "Enter a valid phone number." },
+              pattern: {
+                value: /^\+?[\d\s-]{7,}$/,
+                message: "Enter a valid phone number.",
+              },
             })}
           />
           <p className="ui-field__hint">

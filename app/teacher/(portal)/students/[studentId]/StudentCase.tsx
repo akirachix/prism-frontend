@@ -9,7 +9,13 @@ import { orNull, useLoad } from "@/app/_components/useLoad";
 import { useUser } from "@/app/_components/SessionProvider";
 import Button, { ButtonLink } from "@/app/_components/ui/Button";
 import Journey from "@/app/_components/journey/Journey";
-import { Alert, Avatar, Loading, PageHeader, Pill } from "@/app/_components/ui/bits";
+import {
+  Alert,
+  Avatar,
+  Loading,
+  PageHeader,
+  Pill,
+} from "@/app/_components/ui/bits";
 import { errorMessage } from "@/lib/api";
 import { logAudit } from "@/lib/audit";
 import { casesApi, latestCase } from "@/lib/cases";
@@ -50,11 +56,17 @@ function nextStep(
   if (FINISHED_STATUSES.includes(caseItem.status)) return null;
   if (!screening?.teacher?.completed_at) {
     return {
-      label: screening?.teacher ? "Continue my screening" : "Start my screening",
+      label: screening?.teacher
+        ? "Continue my screening"
+        : "Start my screening",
       href: `${base}/screening`,
     };
   }
-  if (iep?.status === "PENDING_APPROVAL" || iep?.status === "DRAFT" || iep?.status === "REJECTED") {
+  if (
+    iep?.status === "PENDING_APPROVAL" ||
+    iep?.status === "DRAFT" ||
+    iep?.status === "REJECTED"
+  ) {
     return { label: "Review the plan", href: `${base}/plan` };
   }
   if (iep?.status === "ACTIVE") {
@@ -79,7 +91,10 @@ export default function StudentCase() {
   if (loading && !data) {
     return (
       <main className="ui-page">
-        <PageHeader title="Student" back={{ href: "/teacher/students", label: "My students" }} />
+        <PageHeader
+          title="Student"
+          back={{ href: "/teacher/students", label: "My students" }}
+        />
         <Loading />
       </main>
     );
@@ -88,7 +103,10 @@ export default function StudentCase() {
   if (error || !data) {
     return (
       <main className="ui-page">
-        <PageHeader title="Student" back={{ href: "/teacher/students", label: "My students" }} />
+        <PageHeader
+          title="Student"
+          back={{ href: "/teacher/students", label: "My students" }}
+        />
         <div className="ui-body">
           <Alert>{error ?? "We could not find this student."}</Alert>
         </div>
@@ -137,7 +155,9 @@ export default function StudentCase() {
     ? [
         {
           label: "Case status",
-          value: open ? `Started ${formatDay(caseItem.created_at)}` : labelOf(caseItem.status),
+          value: open
+            ? `Started ${formatDay(caseItem.created_at)}`
+            : labelOf(caseItem.status),
         },
         { label: "Your screening", value: steps[1]?.note ?? "—" },
         { label: "Parent’s screening", value: steps[2]?.note ?? "—" },
@@ -153,7 +173,10 @@ export default function StudentCase() {
         eyebrow="Back"
         actions={
           open ? (
-            <Link href={`/teacher/cases/${caseItem.case_id}/close`} className="ui-header-pill">
+            <Link
+              href={`/teacher/cases/${caseItem.case_id}/close`}
+              className="ui-header-pill"
+            >
               Close case
             </Link>
           ) : undefined
@@ -161,7 +184,10 @@ export default function StudentCase() {
       />
 
       <div className="ui-body student-case">
-        <section className="ui-card ui-lift student-case__parent" aria-label="Parent">
+        <section
+          className="ui-card ui-lift student-case__parent"
+          aria-label="Parent"
+        >
           <Avatar name={name} id={student.student_id} size={56} />
           <div className="student-case__parent-text">
             <span className="student-case__parent-name">
@@ -174,7 +200,12 @@ export default function StudentCase() {
             )}
           </div>
           {parent && !hasSignedIn(parent) && (
-            <Button variant="outline" small onClick={resendInvite} loading={busy === "invite"}>
+            <Button
+              variant="outline"
+              small
+              onClick={resendInvite}
+              loading={busy === "invite"}
+            >
               {invited ? "Invite sent" : "Resend invite"}
             </Button>
           )}
@@ -204,7 +235,10 @@ export default function StudentCase() {
               ))}
             </div>
 
-            <section className="ui-card student-case__journey" aria-labelledby="journey-title">
+            <section
+              className="ui-card student-case__journey"
+              aria-labelledby="journey-title"
+            >
               <h2 id="journey-title" className="ui-section-title">
                 {student.first_name}&apos;s journey
               </h2>
@@ -230,7 +264,11 @@ export default function StudentCase() {
             <div className="ui-actions student-case__cta">
               {step && <ButtonLink href={step.href}>{step.label}</ButtonLink>}
               {!open && (
-                <Button variant="outline" onClick={startCase} loading={busy === "start"}>
+                <Button
+                  variant="outline"
+                  onClick={startCase}
+                  loading={busy === "start"}
+                >
                   Start a new case
                 </Button>
               )}

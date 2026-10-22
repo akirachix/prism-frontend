@@ -17,5 +17,9 @@ export default function CaseRedirect() {
     if (data) router.replace(`/teacher/students/${data.student_id}`);
   }, [data, router]);
 
-  return <div className="ui-body">{error ? <Alert>{error}</Alert> : <Loading />}</div>;
+  return (
+    <div className="ui-body">
+      {error ? <Alert>{error}</Alert> : <Loading />}
+    </div>
+  );
 }

@@ -5,10 +5,20 @@ import { useState } from "react";
 
 import { useUser } from "@/app/_components/SessionProvider";
 import Button, { ButtonLink } from "@/app/_components/ui/Button";
-import { Alert, Avatar, Empty, Loading, PageHeader } from "@/app/_components/ui/bits";
+import {
+  Alert,
+  Avatar,
+  Empty,
+  Loading,
+  PageHeader,
+} from "@/app/_components/ui/bits";
 import { useLoad } from "@/app/_components/useLoad";
 import { errorMessage } from "@/lib/api";
-import { attentionItems, loadClassroom, type AttentionItem } from "@/lib/classroom";
+import {
+  attentionItems,
+  loadClassroom,
+  type AttentionItem,
+} from "@/lib/classroom";
 import { studentName } from "@/lib/lookups";
 import { fullName, usersApi, type UserRead } from "@/lib/users";
 import "@/app/_components/portal.css";
@@ -29,12 +39,19 @@ interface ParentTodo {
 async function loadTodo(teacherId: string) {
   const room = await loadClassroom(teacherId);
   const parentIds = Array.from(
-    new Set(room.students.map((s) => s.parent_id).filter((id): id is string => Boolean(id))),
+    new Set(
+      room.students
+        .map((s) => s.parent_id)
+        .filter((id): id is string => Boolean(id)),
+    ),
   );
-  const results = await Promise.allSettled(parentIds.map((id) => usersApi.get(id)));
+  const results = await Promise.allSettled(
+    parentIds.map((id) => usersApi.get(id)),
+  );
   const parents: ParentTodo[] = [];
   results.forEach((result) => {
-    if (result.status !== "fulfilled" || !result.value.must_change_password) return;
+    if (result.status !== "fulfilled" || !result.value.must_change_password)
+      return;
     const parent = result.value;
     const child = room.students.find((s) => s.parent_id === parent.user_id);
     parents.push({ parent, childName: child ? studentName(child) : "" });
@@ -54,7 +71,11 @@ function Group({ title, items }: { title: string; items: AttentionItem[] }) {
               <span className="portal-group__name">{item.name}</span>
               <span className="portal-group__text">{item.text}</span>
             </span>
-            <ButtonLink href={item.href} small variant={item.urgent ? "primary" : "outline"}>
+            <ButtonLink
+              href={item.href}
+              small
+              variant={item.urgent ? "primary" : "outline"}
+            >
               {item.action}
             </ButtonLink>
           </li>
@@ -69,8 +90,13 @@ export default function TodoView() {
   const router = useRouter();
   const params = useSearchParams();
   const tab = (params.get("tab") as Tab | null) ?? "all";
-  const { data, error, loading } = useLoad(() => loadTodo(user.user_id), [user.user_id]);
-  const [sent, setSent] = useState<Record<string, "sending" | "sent" | string>>({});
+  const { data, error, loading } = useLoad(
+    () => loadTodo(user.user_id),
+    [user.user_id],
+  );
+  const [sent, setSent] = useState<Record<string, "sending" | "sent" | string>>(
+    {},
+  );
 
   async function resend(parent: UserRead) {
     setSent((s) => ({ ...s, [parent.user_id]: "sending" }));
@@ -97,7 +123,14 @@ export default function TodoView() {
     <main className="ui-page">
       <PageHeader
         title="To do"
-        avatar={<Avatar name={fullName(user)} id={user.user_id} colour="#d62839" size={44} />}
+        avatar={
+          <Avatar
+            name={fullName(user)}
+            id={user.user_id}
+            colour="#d62839"
+            size={44}
+          />
+        }
       />
       <div className="ui-body">
         <div className="portal-chips" role="group" aria-label="Show">
@@ -107,7 +140,13 @@ export default function TodoView() {
               type="button"
               className="portal-chip"
               aria-pressed={tab === item.key}
-              onClick={() => router.replace(item.key === "all" ? "/teacher/todo" : `/teacher/todo?tab=${item.key}`)}
+              onClick={() =>
+                router.replace(
+                  item.key === "all"
+                    ? "/teacher/todo"
+                    : `/teacher/todo?tab=${item.key}`,
+                )
+              }
             >
               {item.label}
             </button>
@@ -132,10 +171,14 @@ export default function TodoView() {
                         <li key={parent.user_id}>
                           <span>
                             <span className="portal-group__name">
-                              {childName ? `${childName.split(" ")[0]}’s parent` : fullName(parent)}
+                              {childName
+                                ? `${childName.split(" ")[0]}’s parent`
+                                : fullName(parent)}
                             </span>
                             <span className="portal-group__text">
-                              {state && state !== "sending" && state !== "sent" ? state : "Has not signed in yet"}
+                              {state && state !== "sending" && state !== "sent"
+                                ? state
+                                : "Has not signed in yet"}
                             </span>
                           </span>
                           <Button
@@ -154,7 +197,9 @@ export default function TodoView() {
                 </section>
               )}
             </div>
-            {show("evaluation") && <Group title="Evaluations and Cases" items={evalItems} />}
+            {show("evaluation") && (
+              <Group title="Evaluations and Cases" items={evalItems} />
+            )}
           </div>
         )}
       </div>

@@ -48,13 +48,20 @@ export default function LoginForm({
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<Values>({
-    defaultValues: { email: params.get("email") ?? "", password: "", remember: true },
+    defaultValues: {
+      email: params.get("email") ?? "",
+      password: "",
+      remember: true,
+    },
   });
 
   async function onSubmit(values: Values) {
     setError(null);
     try {
-      const response = await authApi.login(values.email.trim(), values.password);
+      const response = await authApi.login(
+        values.email.trim(),
+        values.password,
+      );
       goToStage(router, portal, response, {
         password: values.password,
         extra: { email: values.email.trim(), remember: values.remember },
@@ -72,9 +79,13 @@ export default function LoginForm({
       noValidate
     >
       {notice === "password-reset" && (
-        <Alert tone="success">Your password was changed. Sign in with the new one.</Alert>
+        <Alert tone="success">
+          Your password was changed. Sign in with the new one.
+        </Alert>
       )}
-      {notice === "signed-out" && <Alert tone="info">You have signed out.</Alert>}
+      {notice === "signed-out" && (
+        <Alert tone="info">You have signed out.</Alert>
+      )}
 
       <TextField
         label={portal === "parent" ? "Email address" : "Email"}
@@ -101,7 +112,9 @@ export default function LoginForm({
         }
         error={errors.password?.message}
         {...register("password", {
-          required: temporary ? "Enter the temporary password from your email." : "Enter your password.",
+          required: temporary
+            ? "Enter the temporary password from your email."
+            : "Enter your password.",
         })}
       />
 
@@ -116,7 +129,11 @@ export default function LoginForm({
           )}
           <Link
             href={`/${portal}/forgot-password`}
-            className={portal === "parent" ? "auth-forgot auth-forgot--red" : "auth-forgot"}
+            className={
+              portal === "parent"
+                ? "auth-forgot auth-forgot--red"
+                : "auth-forgot"
+            }
           >
             Forgot password?
           </Link>

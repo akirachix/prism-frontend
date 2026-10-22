@@ -29,7 +29,12 @@ export default function RequireRole({
   useEffect(() => {
     // Redirect once. During navigation this layout can briefly see the
     // sign-in page's path, and must not send people to "login?next=login".
-    if (ready && !user && !redirected.current && !pathname.startsWith(loginPath)) {
+    if (
+      ready &&
+      !user &&
+      !redirected.current &&
+      !pathname.startsWith(loginPath)
+    ) {
       redirected.current = true;
       // Right after signing out, do not bring the person back to sign-out.
       router.replace(

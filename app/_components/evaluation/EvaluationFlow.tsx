@@ -36,13 +36,17 @@ export default function EvaluationFlow({
   reviewHref?: string;
 }) {
   const desktop = useMediaQuery("(min-width: 1000px)");
-  const already = data.mine.length > 0 && data.mine.length >= data.questions.length;
+  const already =
+    data.mine.length > 0 && data.mine.length >= data.questions.length;
   const initial = useMemo(
-    () => Object.fromEntries(data.mine.map((r) => [r.eval_question_id, r.score])),
+    () =>
+      Object.fromEntries(data.mine.map((r) => [r.eval_question_id, r.score])),
     [data.mine],
   );
   const [answers, setAnswers] = useState<Record<string, number>>(initial);
-  const [step, setStep] = useState<Step>(already ? "done" : role === "PARENT" ? "intro" : "questions");
+  const [step, setStep] = useState<Step>(
+    already ? "done" : role === "PARENT" ? "intro" : "questions",
+  );
   const [index, setIndex] = useState(0);
   const [missing, setMissing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -53,7 +57,11 @@ export default function EvaluationFlow({
     const { week, total } = weeksElapsed(iep);
     return (
       <LockedCard
-        title={iep.evaluation_unlock_date ? `Opens on ${formatDay(iep.evaluation_unlock_date)}` : "Not open yet"}
+        title={
+          iep.evaluation_unlock_date
+            ? `Opens on ${formatDay(iep.evaluation_unlock_date)}`
+            : "Not open yet"
+        }
         text={
           iep.status === "ACTIVE"
             ? "The questions unlock six weeks after the plan was approved."
@@ -66,7 +74,11 @@ export default function EvaluationFlow({
   }
 
   if (data.questions.length === 0) {
-    return <Empty>The questions for this check are not ready yet. Please come back later.</Empty>;
+    return (
+      <Empty>
+        The questions for this check are not ready yet. Please come back later.
+      </Empty>
+    );
   }
 
   const perPage = desktop ? 2 : 1;
@@ -114,9 +126,17 @@ export default function EvaluationFlow({
           <ClipboardList size={36} strokeWidth={1.6} />
         </IconBadge>
         <h2 className="evaluation__title">Your evaluation</h2>
-        <p>Help us understand your child&apos;s progress and development at home.</p>
-        <p className="evaluation__red">Your answers go straight to your child&apos;s teacher.</p>
-        <Button onClick={() => setStep("questions")} block className="evaluation__wide">
+        <p>
+          Help us understand your child&apos;s progress and development at home.
+        </p>
+        <p className="evaluation__red">
+          Your answers go straight to your child&apos;s teacher.
+        </p>
+        <Button
+          onClick={() => setStep("questions")}
+          block
+          className="evaluation__wide"
+        >
           Start evaluation
         </Button>
       </section>
@@ -128,12 +148,16 @@ export default function EvaluationFlow({
       <section className="evaluation__center">
         <h2 className="evaluation__title">Confirm your submission</h2>
         <p>
-          You have answered all {data.questions.length} questions. Press Submit to
-          send your answers{role === "PARENT" ? " to the teacher" : ""}.
+          You have answered all {data.questions.length} questions. Press Submit
+          to send your answers{role === "PARENT" ? " to the teacher" : ""}.
         </p>
         {error && <Alert>{error}</Alert>}
         <div className="ui-actions">
-          <Button variant="outline" onClick={() => setStep("questions")} disabled={saving}>
+          <Button
+            variant="outline"
+            onClick={() => setStep("questions")}
+            disabled={saving}
+          >
             ← Back
           </Button>
           <Button onClick={submit} loading={saving}>
@@ -157,11 +181,18 @@ export default function EvaluationFlow({
         </h2>
         <p>
           Your responses have been saved successfully.
-          {bothDone ? " Both of you are done, so this case is now complete." : ""}
+          {bothDone
+            ? " Both of you are done, so this case is now complete."
+            : ""}
         </p>
         <div className="ui-actions evaluation__done-actions">
           {reviewHref && (
-            <Button onClick={() => { setIndex(0); setStep("questions"); }}>
+            <Button
+              onClick={() => {
+                setIndex(0);
+                setStep("questions");
+              }}
+            >
               View evaluation
             </Button>
           )}
@@ -186,7 +217,11 @@ export default function EvaluationFlow({
                 key={q.eval_question_id}
                 className={`evaluation__dot${answered ? " evaluation__dot--done" : ""}${current ? " evaluation__dot--current" : ""}`}
               >
-                {answered && !current ? <Check size={12} strokeWidth={3} /> : i + 1}
+                {answered && !current ? (
+                  <Check size={12} strokeWidth={3} />
+                ) : (
+                  i + 1
+                )}
               </li>
             );
           })}
@@ -205,7 +240,10 @@ export default function EvaluationFlow({
             value={answers[question.eval_question_id]}
             showLabels={desktop}
             onChange={(score) => {
-              setAnswers((current) => ({ ...current, [question.eval_question_id]: score }));
+              setAnswers((current) => ({
+                ...current,
+                [question.eval_question_id]: score,
+              }));
               setMissing(false);
             }}
           />
@@ -216,13 +254,20 @@ export default function EvaluationFlow({
       ))}
 
       {role === "TEACHER" && (
-        <Note>The parent answers the same questions. The case finishes when you are both done.</Note>
+        <Note>
+          The parent answers the same questions. The case finishes when you are
+          both done.
+        </Note>
       )}
 
       <div className="ui-actions ui-actions--split">
         <Button
           variant="outline"
-          onClick={() => (start === 0 ? setStep(role === "PARENT" ? "intro" : "questions") : setIndex(start - perPage))}
+          onClick={() =>
+            start === 0
+              ? setStep(role === "PARENT" ? "intro" : "questions")
+              : setIndex(start - perPage)
+          }
           disabled={start === 0 && role === "TEACHER"}
         >
           ← Back

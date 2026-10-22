@@ -35,8 +35,7 @@ export function getStudents(teacherId?: string): Promise<Student[]> {
 }
 
 export const studentsApi = {
-  get: (studentId: string) =>
-    request<Student>(`${STUDENTS_PATH}/${studentId}`),
+  get: (studentId: string) => request<Student>(`${STUDENTS_PATH}/${studentId}`),
   forParent: (parentId: string) =>
     request<Student[]>(
       `${STUDENTS_PATH}${query({ parent_id: parentId, limit: 50 })}`,
@@ -53,7 +52,9 @@ export function studentName(student: Student): string {
 }
 
 /** Whole years between the date of birth and today. */
-export function ageInYears(dateOfBirth: string | null | undefined): number | null {
+export function ageInYears(
+  dateOfBirth: string | null | undefined,
+): number | null {
   if (!dateOfBirth) return null;
   const born = new Date(dateOfBirth);
   if (Number.isNaN(born.getTime())) return null;

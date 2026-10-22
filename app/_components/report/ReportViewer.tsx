@@ -41,8 +41,14 @@ export default function ReportViewer({
   }>(
     () =>
       kind === "screening"
-        ? loadScreeningReport(caseId).then((content) => ({ content, evaluation: null }))
-        : loadEvaluationReport(caseId).then((evaluation) => ({ content: null, evaluation })),
+        ? loadScreeningReport(caseId).then((content) => ({
+            content,
+            evaluation: null,
+          }))
+        : loadEvaluationReport(caseId).then((evaluation) => ({
+            content: null,
+            evaluation,
+          })),
     [kind, caseId],
   );
   const ready = Boolean(data?.content || data?.evaluation);
@@ -74,8 +80,12 @@ export default function ReportViewer({
           <Download size={18} aria-hidden="true" /> Download PDF
         </Button>
       </div>
-      {data?.content && <ScreeningReport child={child} content={data.content} />}
-      {data?.evaluation && <EvaluationReportDoc child={child} report={data.evaluation} />}
+      {data?.content && (
+        <ScreeningReport child={child} content={data.content} />
+      )}
+      {data?.evaluation && (
+        <EvaluationReportDoc child={child} report={data.evaluation} />
+      )}
     </>
   );
 }

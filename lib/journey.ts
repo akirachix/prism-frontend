@@ -85,7 +85,12 @@ export function journeyFor(
       title: you ? "Parent's screening" : "Your screening",
       ...screeningStep(parentDone, parentStarted, !you),
     },
-    { key: "plan", title: "Plan made and approved", note: planNote, state: planState },
+    {
+      key: "plan",
+      title: "Plan made and approved",
+      note: planNote,
+      state: planState,
+    },
     { key: "check", title: "6-week check", note: checkNote, state: checkState },
   ];
 }

@@ -4,7 +4,12 @@ import { CircleCheck, Hourglass, Sparkles } from "lucide-react";
 import { useParams } from "next/navigation";
 
 import { ButtonLink } from "@/app/_components/ui/Button";
-import { Alert, Disclaimer, Loading, PageHeader } from "@/app/_components/ui/bits";
+import {
+  Alert,
+  Disclaimer,
+  Loading,
+  PageHeader,
+} from "@/app/_components/ui/bits";
 import { useLoad } from "@/app/_components/useLoad";
 import { casesApi } from "@/lib/cases";
 import { studentName, studentsApi } from "@/lib/lookups";
@@ -33,7 +38,13 @@ export default function ScreeningDonePage() {
     />
   );
 
-  if (loading) return <main className="ui-page">{header}<Loading /></main>;
+  if (loading)
+    return (
+      <main className="ui-page">
+        {header}
+        <Loading />
+      </main>
+    );
   if (error || !data) {
     return (
       <main className="ui-page">
@@ -65,8 +76,8 @@ export default function ScreeningDonePage() {
               <h2 className="portal-result__title">No concern identified</h2>
               <p>The screening raised no concern, no IEP is needed now.</p>
               <p>
-                The case is closed. If you notice something later, you can
-                start a new case.
+                The case is closed. If you notice something later, you can start
+                a new case.
               </p>
             </>
           ) : bothDone ? (
@@ -82,10 +93,12 @@ export default function ScreeningDonePage() {
           ) : (
             <>
               <Hourglass size={48} aria-hidden="true" />
-              <h2 className="portal-result__title">Thank you, your part is done</h2>
+              <h2 className="portal-result__title">
+                Thank you, your part is done
+              </h2>
               <p>
-                We are waiting for the parent&apos;s screening. When both are in,
-                you will see the result here.
+                We are waiting for the parent&apos;s screening. When both are
+                in, you will see the result here.
               </p>
             </>
           )}

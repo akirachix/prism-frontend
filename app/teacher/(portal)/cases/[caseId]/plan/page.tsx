@@ -9,7 +9,13 @@ import PlanContent from "@/app/_components/plan/PlanContent";
 import "@/app/_components/plan/plan.css";
 import { useUser } from "@/app/_components/SessionProvider";
 import Button, { ButtonLink } from "@/app/_components/ui/Button";
-import { Alert, Empty, Loading, PageHeader, Pill } from "@/app/_components/ui/bits";
+import {
+  Alert,
+  Empty,
+  Loading,
+  PageHeader,
+  Pill,
+} from "@/app/_components/ui/bits";
 import { TextAreaField } from "@/app/_components/ui/Field";
 import { useLoad } from "@/app/_components/useLoad";
 import { errorMessage } from "@/lib/api";
@@ -32,14 +38,18 @@ async function load(caseId: string) {
 function statusPill(iep: IEP) {
   if (iep.status === "ACTIVE") return <Pill tone="sky">Approved</Pill>;
   if (iep.status === "REJECTED") return <Pill tone="blush">Sent back</Pill>;
-  if (!iep.teacher_approved) return <Pill tone="blush">Waiting for your approval</Pill>;
+  if (!iep.teacher_approved)
+    return <Pill tone="blush">Waiting for your approval</Pill>;
   return <Pill tone="outline">Waiting for the admin</Pill>;
 }
 
 export default function TeacherPlanPage() {
   const { caseId } = useParams<{ caseId: string }>();
   const user = useUser();
-  const { data, error, loading, setData } = useLoad(() => load(caseId), [caseId]);
+  const { data, error, loading, setData } = useLoad(
+    () => load(caseId),
+    [caseId],
+  );
   const [busy, setBusy] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
   const [rejecting, setRejecting] = useState(false);
@@ -53,13 +63,23 @@ export default function TeacherPlanPage() {
   const header = (subtitle?: string) => (
     <PageHeader
       title="Education Plan (IEP)"
-      back={{ href: data ? `/teacher/students/${data.student.student_id}` : "/teacher/students" }}
+      back={{
+        href: data
+          ? `/teacher/students/${data.student.student_id}`
+          : "/teacher/students",
+      }}
     >
       {subtitle && <p className="plan-page__sub">{subtitle}</p>}
     </PageHeader>
   );
 
-  if (loading) return <main className="ui-page">{header()}<Loading /></main>;
+  if (loading)
+    return (
+      <main className="ui-page">
+        {header()}
+        <Loading />
+      </main>
+    );
   if (error || !data) {
     return (
       <main className="ui-page">
@@ -118,7 +138,8 @@ export default function TeacherPlanPage() {
     );
   }
 
-  const waitingForMe = iep.status === "PENDING_APPROVAL" || iep.status === "DRAFT";
+  const waitingForMe =
+    iep.status === "PENDING_APPROVAL" || iep.status === "DRAFT";
   const canApprove = waitingForMe && !iep.teacher_approved;
 
   return (
@@ -126,11 +147,15 @@ export default function TeacherPlanPage() {
       {header(subtitle)}
       <div className="ui-body">
         <div className="ui-row-between">
-          <span className="plan-page__version">Version {iep.version_number}</span>
+          <span className="plan-page__version">
+            Version {iep.version_number}
+          </span>
           {statusPill(iep)}
         </div>
 
-        <Alert tone="warning">This is a draft made by AI. Read it with care. It is not a diagnosis.</Alert>
+        <Alert tone="warning">
+          This is a draft made by AI. Read it with care. It is not a diagnosis.
+        </Alert>
 
         <div className="plan-page__grid">
           <section className="ui-card">
@@ -179,8 +204,14 @@ export default function TeacherPlanPage() {
                   error={errors.reason?.message}
                   {...register("reason", {
                     required: "Tell us what should change.",
-                    minLength: { value: 3, message: "Write at least 3 characters." },
-                    maxLength: { value: 1000, message: "Use 1000 characters or fewer." },
+                    minLength: {
+                      value: 3,
+                      message: "Write at least 3 characters.",
+                    },
+                    maxLength: {
+                      value: 1000,
+                      message: "Use 1000 characters or fewer.",
+                    },
                   })}
                 />
                 <div className="ui-actions ui-actions--end">
@@ -200,16 +231,28 @@ export default function TeacherPlanPage() {
                   </Button>
                 )}
                 {waitingForMe && (
-                  <Button variant="outline" onClick={() => setRejecting(true)} disabled={busy}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setRejecting(true)}
+                    disabled={busy}
+                  >
                     Regenerate the plan
                   </Button>
                 )}
                 {iep.status === "ACTIVE" && (
-                  <ButtonLink href={`/teacher/cases/${caseId}/check`} variant={evaluationIsOpen(iep) ? "primary" : "outline"}>
-                    {evaluationIsOpen(iep) ? "Start the 6-week check" : "View the 6-week check"}
+                  <ButtonLink
+                    href={`/teacher/cases/${caseId}/check`}
+                    variant={evaluationIsOpen(iep) ? "primary" : "outline"}
+                  >
+                    {evaluationIsOpen(iep)
+                      ? "Start the 6-week check"
+                      : "View the 6-week check"}
                   </ButtonLink>
                 )}
-                <Link href={`/teacher/cases/${caseId}/report`} className="plan-page__report">
+                <Link
+                  href={`/teacher/cases/${caseId}/report`}
+                  className="plan-page__report"
+                >
                   See the screening report
                 </Link>
               </div>

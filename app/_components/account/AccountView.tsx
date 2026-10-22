@@ -12,10 +12,17 @@ import { fullName } from "@/lib/users";
 import "../portal.css";
 import "./account.css";
 
-export default function AccountView({ portal }: { portal: "teacher" | "parent" }) {
+export default function AccountView({
+  portal,
+}: {
+  portal: "teacher" | "parent";
+}) {
   const user = useUser();
   const school = useLoad(
-    () => (user.school_id ? orNull(schoolsApi.get(user.school_id)) : Promise.resolve(null)),
+    () =>
+      user.school_id
+        ? orNull(schoolsApi.get(user.school_id))
+        : Promise.resolve(null),
     [user.school_id],
   );
   const base = `/${portal}/account`;
@@ -26,7 +33,12 @@ export default function AccountView({ portal }: { portal: "teacher" | "parent" }
       <PageHeader title={portal === "teacher" ? "Account" : "Profile"} />
       <div className="ui-body ui-body--narrow account">
         <section className="ui-card account__card ui-lift">
-          <Avatar name={fullName(user)} id={user.user_id} colour="#d62839" size={64} />
+          <Avatar
+            name={fullName(user)}
+            id={user.user_id}
+            colour="#d62839"
+            size={64}
+          />
           <div>
             <p className="account__name">{fullName(user)}</p>
             <p className="account__meta">{role}</p>
@@ -35,7 +47,9 @@ export default function AccountView({ portal }: { portal: "teacher" | "parent" }
         </section>
 
         <section aria-labelledby="profile-title" className="account__section">
-          <h2 id="profile-title" className="ui-section-title">Profile</h2>
+          <h2 id="profile-title" className="ui-section-title">
+            Profile
+          </h2>
           <dl className="ui-card portal-kv">
             <div className="portal-kv__row">
               <dt>Name</dt>
@@ -53,7 +67,9 @@ export default function AccountView({ portal }: { portal: "teacher" | "parent" }
         </section>
 
         <section aria-labelledby="security-title" className="account__section">
-          <h2 id="security-title" className="ui-section-title">Security</h2>
+          <h2 id="security-title" className="ui-section-title">
+            Security
+          </h2>
           <ul className="portal-menu">
             <li>
               <Link href={`${base}/password`}>
@@ -75,7 +91,11 @@ export default function AccountView({ portal }: { portal: "teacher" | "parent" }
         </section>
 
         <div className="ui-actions">
-          <ButtonLink href={`${base}/sign-out`} variant="danger-outline" className="account__signout">
+          <ButtonLink
+            href={`${base}/sign-out`}
+            variant="danger-outline"
+            className="account__signout"
+          >
             <LogOut size={18} aria-hidden="true" /> Sign out
           </ButtonLink>
         </div>

@@ -18,24 +18,46 @@ beforeEach(() => {
 
 describe("request with a session", () => {
   it("sends the access token", async () => {
-    setSession({ access_token: "A1", refresh_token: "R1", expires_at: 0, user });
+    setSession({
+      access_token: "A1",
+      refresh_token: "R1",
+      expires_at: 0,
+      user,
+    });
     fetchMock.mockResolvedValue(reply(200, []));
     await request("/cases");
     expect(fetchMock.mock.calls[0][1].headers.Authorization).toBe("Bearer A1");
   });
 
   it("never sends the token to sign-in endpoints", async () => {
-    setSession({ access_token: "A1", refresh_token: "R1", expires_at: 0, user });
+    setSession({
+      access_token: "A1",
+      refresh_token: "R1",
+      expires_at: 0,
+      user,
+    });
     fetchMock.mockResolvedValue(reply(200, {}));
     await request("/auth/login", { method: "POST", body: "{}" });
     expect(fetchMock.mock.calls[0][1].headers.Authorization).toBeUndefined();
   });
 
   it("refreshes once on 401 and retries with the new token", async () => {
-    setSession({ access_token: "OLD", refresh_token: "R1", expires_at: 0, user });
+    setSession({
+      access_token: "OLD",
+      refresh_token: "R1",
+      expires_at: 0,
+      user,
+    });
     fetchMock
       .mockResolvedValueOnce(reply(401, { detail: "expired" }))
-      .mockResolvedValueOnce(reply(200, { access_token: "NEW", refresh_token: "R2", expires_in: 60, user }))
+      .mockResolvedValueOnce(
+        reply(200, {
+          access_token: "NEW",
+          refresh_token: "R2",
+          expires_in: 60,
+          user,
+        }),
+      )
       .mockResolvedValueOnce(reply(200, [1]));
     await expect(request("/cases")).resolves.toEqual([1]);
     expect(fetchMock.mock.calls[1][0]).toMatch(/\/auth\/refresh$/);
@@ -44,7 +66,12 @@ describe("request with a session", () => {
   });
 
   it("signs out when the refresh fails", async () => {
-    setSession({ access_token: "OLD", refresh_token: "R1", expires_at: 0, user });
+    setSession({
+      access_token: "OLD",
+      refresh_token: "R1",
+      expires_at: 0,
+      user,
+    });
     fetchMock
       .mockResolvedValueOnce(reply(401, { detail: "expired" }))
       .mockResolvedValueOnce(reply(401, { detail: "revoked" }));

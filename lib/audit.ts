@@ -2,13 +2,7 @@ import { request } from "@/lib/api";
 import { getSession } from "@/lib/session";
 
 export type AuditAction =
-  | "VIEW"
-  | "CREATE"
-  | "UPDATE"
-  | "SUBMIT"
-  | "APPROVE"
-  | "REJECT"
-  | "EXPORT";
+  "VIEW" | "CREATE" | "UPDATE" | "SUBMIT" | "APPROVE" | "REJECT" | "EXPORT";
 
 /**
  * Record what someone did with a child's record. This never blocks the

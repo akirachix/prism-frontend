@@ -15,27 +15,57 @@ import "@/app/_components/portal.css";
 export default function TeacherHomePage() {
   const user = useUser();
   const room = useLoad(() => loadClassroom(user.user_id), [user.user_id]);
-  const news = useLoad(() => notificationsApi.list(user.user_id, 6), [user.user_id]);
+  const news = useLoad(
+    () => notificationsApi.list(user.user_id, 6),
+    [user.user_id],
+  );
 
   const data = room.data;
   const openCases = data?.cases.filter((item) => !item.closed_at).length ?? 0;
   const ieps = data ? Array.from(data.iepByCase.values()) : [];
   const active = ieps.filter((iep) => iep.status === "ACTIVE").length;
-  const unapproved = ieps.filter((iep) => iep.status === "PENDING_APPROVAL").length;
+  const unapproved = ieps.filter(
+    (iep) => iep.status === "PENDING_APPROVAL",
+  ).length;
   const attention = data ? attentionItems(data).slice(0, 3) : [];
 
   const tiles = [
-    { label: data?.students.length === 1 ? "Student" : "Students", value: data?.students.length, tone: "peach", href: "/teacher/students" },
-    { label: "Open cases", value: openCases, tone: "sky", href: "/teacher/cases" },
-    { label: "Active IEP", value: active, tone: "pink", href: "/teacher/students?filter=active" },
-    { label: "Unapproved IEP", value: unapproved, tone: "grey", href: "/teacher/todo?tab=iep" },
+    {
+      label: data?.students.length === 1 ? "Student" : "Students",
+      value: data?.students.length,
+      tone: "peach",
+      href: "/teacher/students",
+    },
+    {
+      label: "Open cases",
+      value: openCases,
+      tone: "sky",
+      href: "/teacher/cases",
+    },
+    {
+      label: "Active IEP",
+      value: active,
+      tone: "pink",
+      href: "/teacher/students?filter=active",
+    },
+    {
+      label: "Unapproved IEP",
+      value: unapproved,
+      tone: "grey",
+      href: "/teacher/todo?tab=iep",
+    },
   ];
 
   return (
     <main className="ui-page">
       <header className="ui-header portal-home__header">
         <div className="ui-header__title-row">
-          <Avatar name={fullName(user)} id={user.user_id} colour="#d62839" size={52} />
+          <Avatar
+            name={fullName(user)}
+            id={user.user_id}
+            colour="#d62839"
+            size={52}
+          />
           <h1 className="ui-header__title">
             <span className="portal-mobile-only">{greeting()}, </span>
             <span className="portal-desktop-only">Hello </span>
@@ -44,8 +74,14 @@ export default function TeacherHomePage() {
         </div>
         <div className="portal-tiles">
           {tiles.map((tile) => (
-            <Link key={tile.label} href={tile.href} className={`portal-tile portal-tile--${tile.tone}`}>
-              <span className="portal-tile__value">{room.loading ? "–" : (tile.value ?? 0)}</span>
+            <Link
+              key={tile.label}
+              href={tile.href}
+              className={`portal-tile portal-tile--${tile.tone}`}
+            >
+              <span className="portal-tile__value">
+                {room.loading ? "–" : (tile.value ?? 0)}
+              </span>
               <span className="portal-tile__label">{tile.label}</span>
             </Link>
           ))}
@@ -74,8 +110,12 @@ export default function TeacherHomePage() {
                 <li key={item.id}>
                   <Link href={item.href} className="portal-attention__item">
                     <span>
-                      <span className="portal-attention__name">{item.name}</span>
-                      <span className="portal-attention__text">{item.text}</span>
+                      <span className="portal-attention__name">
+                        {item.name}
+                      </span>
+                      <span className="portal-attention__text">
+                        {item.text}
+                      </span>
                     </span>
                     <ChevronRight size={22} aria-hidden="true" />
                   </Link>
@@ -98,13 +138,23 @@ export default function TeacherHomePage() {
           ) : (
             <ul className="portal-news">
               {news.data.map((item) => {
-                const href = item.case_id ? `/teacher/cases/${item.case_id}` : undefined;
+                const href = item.case_id
+                  ? `/teacher/cases/${item.case_id}`
+                  : undefined;
                 const body = (
                   <>
-                    <span className={item.is_read ? "portal-news__text" : "portal-news__text portal-news__text--unread"}>
+                    <span
+                      className={
+                        item.is_read
+                          ? "portal-news__text"
+                          : "portal-news__text portal-news__text--unread"
+                      }
+                    >
                       {item.message}
                     </span>
-                    <span className="portal-news__date">{relativeDay(item.created_at)}</span>
+                    <span className="portal-news__date">
+                      {relativeDay(item.created_at)}
+                    </span>
                   </>
                 );
                 return (
@@ -114,7 +164,10 @@ export default function TeacherHomePage() {
                         href={href}
                         className="portal-news__item"
                         onClick={() => {
-                          if (!item.is_read) notificationsApi.markRead(item.notification_id).catch(() => {});
+                          if (!item.is_read)
+                            notificationsApi
+                              .markRead(item.notification_id)
+                              .catch(() => {});
                         }}
                       >
                         {body}

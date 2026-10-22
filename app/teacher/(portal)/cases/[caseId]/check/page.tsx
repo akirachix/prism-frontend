@@ -20,21 +20,29 @@ async function load(caseId: string, teacherId: string) {
     iepsApi.list({ case_id: caseId }),
   ]);
   const iep = currentIep(ieps);
-  const evaluation = iep?.status === "ACTIVE" ? await loadEvaluation(iep, teacherId) : null;
+  const evaluation =
+    iep?.status === "ACTIVE" ? await loadEvaluation(iep, teacherId) : null;
   return { student, iep, evaluation };
 }
 
 export default function TeacherCheckPage() {
   const { caseId } = useParams<{ caseId: string }>();
   const user = useUser();
-  const { data, error, loading } = useLoad(() => load(caseId, user.user_id), [caseId, user.user_id]);
+  const { data, error, loading } = useLoad(
+    () => load(caseId, user.user_id),
+    [caseId, user.user_id],
+  );
 
   return (
     <main className="ui-page">
       <PageHeader
         title="6-week check"
         eyebrow="My students"
-        back={{ href: data ? `/teacher/students/${data.student.student_id}` : "/teacher/students" }}
+        back={{
+          href: data
+            ? `/teacher/students/${data.student.student_id}`
+            : "/teacher/students",
+        }}
         tall
       />
       <div className="ui-body ui-body--narrow">
@@ -47,7 +55,9 @@ export default function TeacherCheckPage() {
             <div className="portal-student-card ui-lift">
               <strong>{studentName(data.student)}</strong>
               <span>
-                {data.iep?.approved_at ? `Plan approved ${formatDay(data.iep.approved_at)}` : "Plan not approved yet"}
+                {data.iep?.approved_at
+                  ? `Plan approved ${formatDay(data.iep.approved_at)}`
+                  : "Plan not approved yet"}
               </span>
             </div>
             {data.iep && data.evaluation ? (

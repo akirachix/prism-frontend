@@ -8,7 +8,12 @@ import "./teacher-layout.css";
 const LINKS: NavLink[] = [
   { href: "/teacher", label: "Home", icon: "home", exact: true },
   // A case's own pages (screening, plan, check…) are reached from a student.
-  { href: "/teacher/students", label: "Students", icon: "students", also: "/teacher/cases/" },
+  {
+    href: "/teacher/students",
+    label: "Students",
+    icon: "students",
+    also: "/teacher/cases/",
+  },
   { href: "/teacher/cases", label: "Cases", icon: "cases", exact: true },
   { href: "/teacher/todo", label: "To do", icon: "todo" },
   { href: "/teacher/account", label: "Account", icon: "account" },

@@ -14,7 +14,11 @@ import "../portal.css";
  * emailed reset link, so a signed-in person gets a reset link sent to
  * the email on their account.
  */
-export default function ChangePassword({ portal }: { portal: "teacher" | "parent" }) {
+export default function ChangePassword({
+  portal,
+}: {
+  portal: "teacher" | "parent";
+}) {
   const user = useUser();
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -36,13 +40,16 @@ export default function ChangePassword({ portal }: { portal: "teacher" | "parent
 
   return (
     <main className="ui-page">
-      <PageHeader title="Change password" back={{ href: back, label: "Back to account" }} />
+      <PageHeader
+        title="Change password"
+        back={{ href: back, label: "Back to account" }}
+      />
       <div className="ui-body ui-body--narrow">
         <section className="ui-card ui-form">
           <p className="ui-text">
-            For your safety we send a link to <strong>{user.email}</strong>. Open
-            it on this device to choose a new password. The link works for a
-            short time.
+            For your safety we send a link to <strong>{user.email}</strong>.
+            Open it on this device to choose a new password. The link works for
+            a short time.
           </p>
           {sent && (
             <Alert tone="success">

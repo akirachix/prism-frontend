@@ -9,7 +9,11 @@ import Button, { ButtonLink } from "../ui/Button";
 import { IconBadge, PageHeader } from "../ui/bits";
 import "../portal.css";
 
-export default function SignOutConfirm({ portal }: { portal: "teacher" | "parent" }) {
+export default function SignOutConfirm({
+  portal,
+}: {
+  portal: "teacher" | "parent";
+}) {
   const { signOut } = useSession();
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -22,14 +26,23 @@ export default function SignOutConfirm({ portal }: { portal: "teacher" | "parent
 
   return (
     <main className="ui-page">
-      <PageHeader title="Sign out" back={{ href: `/${portal}/account`, label: "Back to account" }} />
+      <PageHeader
+        title="Sign out"
+        back={{ href: `/${portal}/account`, label: "Back to account" }}
+      />
       <div className="ui-body ui-body--narrow ui-body--center">
-        <section className="ui-card portal-result" style={{ background: "#fff" }}>
+        <section
+          className="ui-card portal-result"
+          style={{ background: "#fff" }}
+        >
           <IconBadge>
             <LogOut size={34} strokeWidth={1.6} />
           </IconBadge>
           <h2 className="portal-result__title">Sign out of Mirai?</h2>
-          <p>Are you sure you want to sign out? You can sign in again to open your account.</p>
+          <p>
+            Are you sure you want to sign out? You can sign in again to open
+            your account.
+          </p>
           <div className="ui-actions">
             <ButtonLink href={`/${portal}/account`} variant="outline">
               Cancel

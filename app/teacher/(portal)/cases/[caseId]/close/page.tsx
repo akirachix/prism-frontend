@@ -21,7 +21,9 @@ export default function CloseCasePage() {
     return { caseItem, student: await studentsApi.get(caseItem.student_id) };
   }, [caseId]);
 
-  const studentHref = data ? `/teacher/students/${data.student.student_id}` : "/teacher/students";
+  const studentHref = data
+    ? `/teacher/students/${data.student.student_id}`
+    : "/teacher/students";
 
   return (
     <main className="ui-page">
@@ -55,7 +57,9 @@ export default function CloseCasePage() {
                     router.push(studentHref);
                   }}
                 />
-                <Note>Closing ends this case. You can start a new case later.</Note>
+                <Note>
+                  Closing ends this case. You can start a new case later.
+                </Note>
               </div>
             )}
           </>

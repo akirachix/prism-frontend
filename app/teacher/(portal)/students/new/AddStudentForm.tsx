@@ -42,7 +42,9 @@ async function existingParent(email: string): Promise<UserRead | null> {
   const users = await usersApi.list(200);
   return (
     users.find(
-      (user) => user.role === "PARENT" && user.email.toLowerCase() === email.toLowerCase(),
+      (user) =>
+        user.role === "PARENT" &&
+        user.email.toLowerCase() === email.toLowerCase(),
     ) ?? null
   );
 }
@@ -77,7 +79,9 @@ export default function AddStudentForm() {
   async function onSubmit(values: Values) {
     setError(null);
     if (!user.school_id) {
-      setError("Your account is not linked to a school yet. Ask your school administrator.");
+      setError(
+        "Your account is not linked to a school yet. Ask your school administrator.",
+      );
       return;
     }
     try {
@@ -95,7 +99,10 @@ export default function AddStudentForm() {
             school_id: user.school_id,
           });
         } catch (err) {
-          if (err instanceof ApiError && (err.status === 409 || err.status === 400)) {
+          if (
+            err instanceof ApiError &&
+            (err.status === 409 || err.status === 400)
+          ) {
             parent = await existingParent(email);
           }
           if (!parent) throw err;
@@ -133,9 +140,17 @@ export default function AddStudentForm() {
 
   return (
     <main className="ui-page">
-      <PageHeader title="Add a student" back={{ href: "/teacher/students", label: "Back to students" }} />
+      <PageHeader
+        title="Add a student"
+        back={{ href: "/teacher/students", label: "Back to students" }}
+      />
       <div className="ui-body ui-body--narrow ui-body--center">
-        <form className="ui-form add-student" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <form
+          className="ui-form add-student"
+          // eslint-disable-next-line react-hooks/refs
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
+        >
           <fieldset className="add-student__group">
             <legend className="add-student__legend">Student</legend>
             <div className="ui-form__row">
@@ -186,7 +201,10 @@ export default function AddStudentForm() {
               error={errors.admission_number?.message}
               {...register("admission_number", {
                 required: "Enter the admission number.",
-                maxLength: { value: 40, message: "Use 40 characters or fewer." },
+                maxLength: {
+                  value: 40,
+                  message: "Use 40 characters or fewer.",
+                },
               })}
             />
           </fieldset>
@@ -213,7 +231,10 @@ export default function AddStudentForm() {
               inputMode="email"
               autoComplete="off"
               error={errors.email?.message}
-              {...register("email", { required: "Enter the parent’s email.", pattern: EMAIL_PATTERN })}
+              {...register("email", {
+                required: "Enter the parent’s email.",
+                pattern: EMAIL_PATTERN,
+              })}
             />
             <TextField
               label="Phone number"
@@ -223,13 +244,22 @@ export default function AddStudentForm() {
               optional
               error={errors.phone?.message}
               {...register("phone", {
-                maxLength: { value: 30, message: "Use 30 characters or fewer." },
-                pattern: { value: /^\+?[\d\s-]{7,}$/, message: "Enter a valid phone number." },
+                maxLength: {
+                  value: 30,
+                  message: "Use 30 characters or fewer.",
+                },
+                pattern: {
+                  value: /^\+?[\d\s-]{7,}$/,
+                  message: "Enter a valid phone number.",
+                },
               })}
             />
           </fieldset>
 
-          <Note>The parent will receive a temporary password, which they should change to proceed.</Note>
+          <Note>
+            The parent will receive a temporary password, which they should
+            change to proceed.
+          </Note>
 
           {error && <Alert>{error}</Alert>}
 

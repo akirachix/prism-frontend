@@ -7,7 +7,14 @@ import { useMemo, useState } from "react";
 
 import { useUser } from "@/app/_components/SessionProvider";
 import { ButtonLink } from "@/app/_components/ui/Button";
-import { Alert, Avatar, Empty, Loading, PageHeader, Pill } from "@/app/_components/ui/bits";
+import {
+  Alert,
+  Avatar,
+  Empty,
+  Loading,
+  PageHeader,
+  Pill,
+} from "@/app/_components/ui/bits";
 import { useLoad } from "@/app/_components/useLoad";
 import { loadClassroom, studentStatus } from "@/lib/classroom";
 import { studentName } from "@/lib/lookups";
@@ -36,7 +43,9 @@ export default function StudentsView() {
         const iep = caseItem ? data.iepByCase.get(caseItem.case_id) : undefined;
         return { student, status: studentStatus(caseItem, iep) };
       })
-      .sort((a, b) => studentName(a.student).localeCompare(studentName(b.student)));
+      .sort((a, b) =>
+        studentName(a.student).localeCompare(studentName(b.student)),
+      );
   }, [room.data]);
 
   const counts = {
@@ -58,7 +67,9 @@ export default function StudentsView() {
 
   function setFilter(next: Filter) {
     setPage(1);
-    router.replace(next === "all" ? "/teacher/students" : `/teacher/students?filter=${next}`);
+    router.replace(
+      next === "all" ? "/teacher/students" : `/teacher/students?filter=${next}`,
+    );
   }
 
   const chips: { key: Filter; label: string }[] = [
@@ -71,7 +82,14 @@ export default function StudentsView() {
     <main className="ui-page">
       <PageHeader
         title="Students"
-        avatar={<Avatar name={fullName(user)} id={user.user_id} colour="#d62839" size={44} />}
+        avatar={
+          <Avatar
+            name={fullName(user)}
+            id={user.user_id}
+            colour="#d62839"
+            size={44}
+          />
+        }
       />
       <div className="ui-body">
         <div className="ui-row-between students-top">
@@ -89,7 +107,12 @@ export default function StudentsView() {
               }}
             />
           </div>
-          <ButtonLink href="/teacher/students/new" variant="orange" small className="students-add">
+          <ButtonLink
+            href="/teacher/students/new"
+            variant="orange"
+            small
+            className="students-add"
+          >
             + Add student
           </ButtonLink>
         </div>
@@ -123,9 +146,17 @@ export default function StudentsView() {
             <ul className="portal-list portal-cards-only">
               {shown.map(({ student, status }) => (
                 <li key={student.student_id}>
-                  <Link href={`/teacher/students/${student.student_id}`} className="portal-person">
-                    <Avatar name={studentName(student)} id={student.student_id} />
-                    <span className="portal-person__name">{studentName(student)}</span>
+                  <Link
+                    href={`/teacher/students/${student.student_id}`}
+                    className="portal-person"
+                  >
+                    <Avatar
+                      name={studentName(student)}
+                      id={student.student_id}
+                    />
+                    <span className="portal-person__name">
+                      {studentName(student)}
+                    </span>
                     <Pill tone={status.tone}>{status.label}</Pill>
                   </Link>
                 </li>
@@ -161,10 +192,15 @@ export default function StudentsView() {
 
             <div className="ui-row-between students-foot">
               <span>
-                You only see children linked to you. Showing {shown.length} of {visible.length}
+                You only see children linked to you. Showing {shown.length} of{" "}
+                {visible.length}
               </span>
               {shown.length < visible.length && (
-                <button type="button" className="ui-btn ui-btn--link" onClick={() => setPage(page + 1)}>
+                <button
+                  type="button"
+                  className="ui-btn ui-btn--link"
+                  onClick={() => setPage(page + 1)}
+                >
                   Next
                 </button>
               )}

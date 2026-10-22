@@ -13,7 +13,10 @@ export interface EvaluationData {
   mine: EvaluationResponse[];
 }
 
-export async function loadEvaluation(iep: IEP, responderId: string): Promise<EvaluationData> {
+export async function loadEvaluation(
+  iep: IEP,
+  responderId: string,
+): Promise<EvaluationData> {
   const [questions, mine] = await Promise.all([
     evaluationsApi.questions(iep.iep_id),
     evaluationsApi.responses({ responder_id: responderId }),
@@ -43,12 +46,17 @@ export async function submitEvaluation(params: {
   const other: ResponderRole = role === "TEACHER" ? "PARENT" : "TEACHER";
   const theirs = await Promise.all(
     questions.map((q) =>
-      evaluationsApi.responses({ eval_question_id: q.eval_question_id, responder_role: other }),
+      evaluationsApi.responses({
+        eval_question_id: q.eval_question_id,
+        responder_role: other,
+      }),
     ),
   );
   const bothDone = theirs.every((list) => list.length > 0);
   try {
-    await casesApi.update(iep.case_id, { status: bothDone ? "COMPLETED" : "EVALUATION_PENDING" });
+    await casesApi.update(iep.case_id, {
+      status: bothDone ? "COMPLETED" : "EVALUATION_PENDING",
+    });
   } catch {
     // The answers are saved; the status can be fixed by the next person.
   }

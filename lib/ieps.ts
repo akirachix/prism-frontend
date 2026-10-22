@@ -1,11 +1,7 @@
 import { query, request } from "@/lib/api";
 
 export type IEPStatus =
-  | "DRAFT"
-  | "PENDING_APPROVAL"
-  | "ACTIVE"
-  | "REJECTED"
-  | "SUPERSEDED";
+  "DRAFT" | "PENDING_APPROVAL" | "ACTIVE" | "REJECTED" | "SUPERSEDED";
 
 export interface IEP {
   iep_id: string;

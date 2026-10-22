@@ -25,7 +25,10 @@ export default function PlanContent({ iep }: { iep: IEP }) {
           <ul className="plan__goals">
             {iep.short_term_goals.map((goal, i) => (
               <li key={i}>
-                <span className={`plan__dot plan__dot--${i % 2 === 0 ? "red" : "orange"}`} aria-hidden="true" />
+                <span
+                  className={`plan__dot plan__dot--${i % 2 === 0 ? "red" : "orange"}`}
+                  aria-hidden="true"
+                />
                 {goal}
               </li>
             ))}
@@ -45,7 +48,12 @@ export default function PlanContent({ iep }: { iep: IEP }) {
       )}
 
       {long && (
-        <button type="button" className="plan__toggle" onClick={() => setOpen(!open)} aria-expanded={open}>
+        <button
+          type="button"
+          className="plan__toggle"
+          onClick={() => setOpen(!open)}
+          aria-expanded={open}
+        >
           {open ? "Show less ↑" : "Read the whole plan →"}
         </button>
       )}

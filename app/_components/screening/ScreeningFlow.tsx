@@ -9,7 +9,11 @@ import { errorMessage } from "@/lib/api";
 import { logAudit } from "@/lib/audit";
 import { isComplete } from "@/lib/scoring";
 import { saveScreening, type ScreeningContent } from "@/lib/screening";
-import { allQuestions, type Informant, type QuestionSet } from "@/lib/screening-questions";
+import {
+  allQuestions,
+  type Informant,
+  type QuestionSet,
+} from "@/lib/screening-questions";
 import type { Case } from "@/lib/types";
 import { useMediaQuery } from "../hooks";
 import Button from "../ui/Button";
@@ -45,9 +49,13 @@ export default function ScreeningFlow({
   const desktop = useMediaQuery("(min-width: 1000px)");
   const questions = useMemo(() => allQuestions(set), [set]);
   const mine = role === "TEACHER" ? saved?.teacher : saved?.parent;
-  const [answers, setAnswers] = useState<Record<string, number>>(mine?.answers ?? {});
+  const [answers, setAnswers] = useState<Record<string, number>>(
+    mine?.answers ?? {},
+  );
   const [index, setIndex] = useState(() => {
-    const first = questions.findIndex((q) => typeof mine?.answers?.[q.id] !== "number");
+    const first = questions.findIndex(
+      (q) => typeof mine?.answers?.[q.id] !== "number",
+    );
     return first === -1 ? 0 : first;
   });
   const [saving, setSaving] = useState(false);
@@ -60,14 +68,25 @@ export default function ScreeningFlow({
   const page = questions.slice(start, start + perPage);
   const last = start + perPage >= questions.length;
   const partOf = (i: number) => questions[i]?.domain;
-  const partIndex = set.parts.findIndex((part) => part.domain === partOf(start));
-  const answeredCount = questions.filter((q) => typeof answers[q.id] === "number").length;
+  const partIndex = set.parts.findIndex(
+    (part) => part.domain === partOf(start),
+  );
+  const answeredCount = questions.filter(
+    (q) => typeof answers[q.id] === "number",
+  ).length;
 
   async function persist(finish: boolean) {
     setSaving(true);
     setError(null);
     try {
-      await saveScreening({ caseItem, role, responderId, set, answers, finish });
+      await saveScreening({
+        caseItem,
+        role,
+        responderId,
+        set,
+        answers,
+        finish,
+      });
       if (finish) logAudit("SUBMIT", "screening", caseItem.case_id, { role });
       return true;
     } catch (err) {
@@ -86,7 +105,9 @@ export default function ScreeningFlow({
     setMissing(false);
     if (last) {
       if (!isComplete(set, answers)) {
-        const gap = questions.findIndex((q) => typeof answers[q.id] !== "number");
+        const gap = questions.findIndex(
+          (q) => typeof answers[q.id] !== "number",
+        );
         setIndex(gap);
         setMissing(true);
         return;
@@ -121,14 +142,25 @@ export default function ScreeningFlow({
 
   return (
     <main className="ui-page screening">
-      <header className={`ui-header screening__header screening__header--${role.toLowerCase()}`}>
+      <header
+        className={`ui-header screening__header screening__header--${role.toLowerCase()}`}
+      >
         <div className="ui-header__row">
           {role === "TEACHER" ? (
             <>
-              <Link href={exitHref} className="ui-header__back screening__close" aria-label="Close">
+              <Link
+                href={exitHref}
+                className="ui-header__back screening__close"
+                aria-label="Close"
+              >
                 ✕
               </Link>
-              <button type="button" className="ui-header-pill screening__save" onClick={saveAndExit} disabled={saving}>
+              <button
+                type="button"
+                className="ui-header-pill screening__save"
+                onClick={saveAndExit}
+                disabled={saving}
+              >
                 {saving ? "Saving…" : "Save and exit"}
               </button>
             </>
@@ -139,17 +171,35 @@ export default function ScreeningFlow({
           )}
           <h1 className="ui-header__title screening__title">{title}</h1>
           <span className="screening__count screening__count--desktop">
-            Question {Math.min(start + perPage, questions.length)} of {questions.length}
-            <ProgressBar value={answeredCount} max={questions.length} label="Questions answered" />
+            Question {Math.min(start + perPage, questions.length)} of{" "}
+            {questions.length}
+            <ProgressBar
+              value={answeredCount}
+              max={questions.length}
+              label="Questions answered"
+            />
           </span>
         </div>
         {role === "TEACHER" && (
           <ol className="portal-parts" aria-label="Parts">
             {set.parts.map((part, i) => {
-              const done = part.questions.filter((q) => typeof answers[q.id] === "number").length;
+              const done = part.questions.filter(
+                (q) => typeof answers[q.id] === "number",
+              ).length;
               return (
-                <li key={part.domain} className={i === partIndex ? "portal-part portal-part--current" : "portal-part"}>
-                  <ProgressBar value={done} max={part.questions.length} label={`Part ${i + 1}`} />
+                <li
+                  key={part.domain}
+                  className={
+                    i === partIndex
+                      ? "portal-part portal-part--current"
+                      : "portal-part"
+                  }
+                >
+                  <ProgressBar
+                    value={done}
+                    max={part.questions.length}
+                    label={`Part ${i + 1}`}
+                  />
                   Part {i + 1}
                 </li>
               );
@@ -164,15 +214,26 @@ export default function ScreeningFlow({
             <h2 className="ui-section-title">Parts covered</h2>
             <ol className="portal-steps">
               {set.parts.map((part, i) => {
-                const state = i < partIndex ? "done" : i === partIndex ? "current" : "todo";
+                const state =
+                  i < partIndex ? "done" : i === partIndex ? "current" : "todo";
                 return (
                   <li key={part.domain}>
-                    <span className={`portal-steps__dot portal-steps__dot--${state}`}>
-                      {state === "done" ? <Check size={14} strokeWidth={3} /> : i + 1}
+                    <span
+                      className={`portal-steps__dot portal-steps__dot--${state}`}
+                    >
+                      {state === "done" ? (
+                        <Check size={14} strokeWidth={3} />
+                      ) : (
+                        i + 1
+                      )}
                     </span>
                     <span>
                       Part {i + 1}
-                      {state === "done" ? " – Done" : state === "current" ? " – Where you are" : ""}
+                      {state === "done"
+                        ? " – Done"
+                        : state === "current"
+                          ? " – Where you are"
+                          : ""}
                       <span className="screening__part-name">{part.title}</span>
                     </span>
                   </li>
@@ -190,8 +251,14 @@ export default function ScreeningFlow({
                   Question {start + 1} of {questions.length}
                 </span>
               )}
-              <ProgressBar value={answeredCount} max={questions.length} label="Questions answered" />
-              {role === "PARENT" && nearEnd && <span className="screening__almost">Almost there!!</span>}
+              <ProgressBar
+                value={answeredCount}
+                max={questions.length}
+                label="Questions answered"
+              />
+              {role === "PARENT" && nearEnd && (
+                <span className="screening__almost">Almost there!!</span>
+              )}
             </div>
 
             {page.map((question, offset) => {
@@ -199,27 +266,42 @@ export default function ScreeningFlow({
               const value = answers[question.id];
               const unanswered = missing && typeof value !== "number";
               return (
-                <fieldset key={question.id} className="portal-question screening__question">
+                <fieldset
+                  key={question.id}
+                  className="portal-question screening__question"
+                >
                   <legend className="portal-question__head">
                     {role === "TEACHER" ? (
                       <span className="portal-qtag">Q{number}</span>
                     ) : (
                       <span className="screening__num">{number}.</span>
                     )}
-                    <span>{parentWording ? question.parent : question.teacher}</span>
+                    <span>
+                      {parentWording ? question.parent : question.teacher}
+                    </span>
                   </legend>
                   <div className="ui-choices">
                     {question.options.map((option) => {
                       const checked = value === option.value;
                       return (
-                        <label key={option.label} className={checked ? "ui-choice ui-choice--checked" : "ui-choice"}>
+                        <label
+                          key={option.label}
+                          className={
+                            checked
+                              ? "ui-choice ui-choice--checked"
+                              : "ui-choice"
+                          }
+                        >
                           <input
                             type="radio"
                             name={question.id}
                             className="visually-hidden"
                             checked={checked}
                             onChange={() => {
-                              setAnswers((current) => ({ ...current, [question.id]: option.value }));
+                              setAnswers((current) => ({
+                                ...current,
+                                [question.id]: option.value,
+                              }));
                               setMissing(false);
                             }}
                           />
@@ -229,21 +311,42 @@ export default function ScreeningFlow({
                       );
                     })}
                   </div>
-                  {unanswered && <p className="ui-field__error">Choose an answer to continue.</p>}
+                  {unanswered && (
+                    <p className="ui-field__error">
+                      Choose an answer to continue.
+                    </p>
+                  )}
                 </fieldset>
               );
             })}
 
             {error && <Alert>{error}</Alert>}
 
-            <div className={role === "TEACHER" ? "ui-actions ui-actions--split" : "ui-actions"}>
+            <div
+              className={
+                role === "TEACHER"
+                  ? "ui-actions ui-actions--split"
+                  : "ui-actions"
+              }
+            >
               {role === "TEACHER" && (
                 <Button variant="outline" onClick={back} disabled={saving}>
                   ← Back
                 </Button>
               )}
-              <Button onClick={next} loading={saving} block={role === "PARENT"} className="screening__next">
-                {saving ? "Saving…" : last ? "Finish" : role === "TEACHER" ? "Next →" : "Next"}
+              <Button
+                onClick={next}
+                loading={saving}
+                block={role === "PARENT"}
+                className="screening__next"
+              >
+                {saving
+                  ? "Saving…"
+                  : last
+                    ? "Finish"
+                    : role === "TEACHER"
+                      ? "Next →"
+                      : "Next"}
               </Button>
             </div>
           </div>
