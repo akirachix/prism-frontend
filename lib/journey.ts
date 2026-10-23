@@ -12,11 +12,6 @@ export interface JourneyStep {
   state: StepState;
 }
 
-/**
- * The five steps of a case, worked out from the case, its screening
- * answers and its plan. Used by the teacher's student page and the
- * parent's home page.
- */
 export function journeyFor(
   caseItem: Case,
   screening: ScreeningContent | null,

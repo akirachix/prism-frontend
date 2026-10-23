@@ -196,7 +196,7 @@ export function attentionItems(
       kind: "case",
       name: studentName(student),
       text: "No case started yet",
-      href: `/teacher/students/${student.student_id}`,
+      href: `/teacher/cases`,
       action: "Start case",
       urgent: false,
     });

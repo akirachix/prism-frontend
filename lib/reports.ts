@@ -126,17 +126,11 @@ export async function loadParentReports(
   return { reports, errors };
 }
 
-/** The child a report belongs to. */
 export interface ReportChild {
   caseItem: Case;
   student: Student;
 }
 
-/**
- * The case and its child, read directly by id. Fails (instead of
- * returning no name) when either cannot be read, so a report is never
- * shown or printed without the child it belongs to.
- */
 export async function loadReportChild(caseId: string): Promise<ReportChild> {
   const caseItem = await casesApi.get(caseId);
   const student = await studentsApi.get(caseItem.student_id);

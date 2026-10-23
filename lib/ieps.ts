@@ -28,12 +28,12 @@ export interface IEP {
 export type Iep = IEP;
 export type IepStatus = IEPStatus;
 
-export interface IEPFilters {
+export type IEPFilters = {
   case_id?: string;
   status?: IEPStatus;
   limit?: number;
   offset?: number;
-}
+};
 
 type ApproverRole = "TEACHER" | "ADMIN";
 
@@ -53,9 +53,8 @@ function approveIep(iepId: string, first: string, second?: string) {
 }
 
 export const iepsApi = {
-  list: (filters: IEPFilters = {}) =>
-    request<IEP[]>(`/ieps${query({ limit: 200, ...filters })}`),
-  page: (limit = 200, offset = 0) =>
+  list: (filters: IEPFilters = {}) => request<IEP[]>(`/ieps${query(filters)}`),
+  page: (limit?: number, offset = 0) =>
     request<IEP[]>(`/ieps${query({ limit, offset })}`),
   activeForCase: (caseId: string) =>
     request<IEP>(`/ieps/case/${caseId}/active`),

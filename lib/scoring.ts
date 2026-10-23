@@ -4,23 +4,13 @@ import {
   type QuestionSet,
 } from "@/lib/screening-questions";
 
-/**
- * Deterministic scoring. A given set of answers always gives the same
- * result, and nothing here talks to an AI service.
- *
- * TODO(member 1, with the backend team): the thresholds below are
- * placeholders. Set them from each instrument's published cut-offs, or
- * move scoring to the backend and delete this file once it can score.
- */
 export const ELEVATED_AT = 2;
 export const MEDIUM_AT = 1;
-/** Teacher and parent this far apart in one domain count as a concern. */
 export const DISCREPANCY_AT = 1.5;
 
 export type Level = "LOW" | "MEDIUM" | "ELEVATED";
 export type Scores = Partial<Record<Domain, number>>;
 
-/** Each domain's average answer on a 0–3 scale, rounded to 2 places. */
 export function scoreAnswers(
   set: QuestionSet,
   answers: Record<string, number>,
@@ -48,17 +38,11 @@ export interface Combined {
   scores: Scores;
   levels: Partial<Record<Domain, Level>>;
   discrepancies: Domain[];
-  /** Any elevated domain, or any strong disagreement, raises a concern. */
   concern: boolean;
   primaryDomain: Domain | null;
-  /** How many domains reached medium or higher, on the 0–3 case scale. */
   densityScore: number;
 }
 
-/**
- * Join the teacher's and the parent's scores. Domains are never averaged
- * together, so a concern in one domain is not hidden by the others.
- */
 export function combine(teacher: Scores, parent: Scores): Combined {
   const domains = Array.from(
     new Set([...Object.keys(teacher), ...Object.keys(parent)]),

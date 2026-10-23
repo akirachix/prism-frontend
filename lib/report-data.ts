@@ -9,7 +9,6 @@ import { levelOf, type Level } from "@/lib/scoring";
 import { loadScreening, type ScreeningContent } from "@/lib/screening";
 import { DOMAIN_TITLES, type Domain } from "@/lib/screening-questions";
 
-/** Plain words for each level. No clinical labels, for anyone. */
 export const LEVEL_TEXT: Record<Level, string> = {
   LOW: "No concern seen",
   MEDIUM: "Some signs to watch",

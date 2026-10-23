@@ -1,20 +1,3 @@
-/**
- * Screening question sets, picked by the child's age (Age Gate Routing in
- * the PRD):
- *
- *   ages 4–5: Autism (CAST) + ADHD (ADHD Rating Scale IV, Preschool)
- *   ages 6–9: Autism (CAST) + ADHD (SNAP-IV) + Dyslexia (CLDQ-R subscale)
- *
- * TODO(member 1): the prompts below are plain-language DRAFTS so the flow
- * can be built and tested end to end. Replace each `text` with the exact
- * item from the licensed instrument (keep the `id`s stable once real
- * answers exist). The answer scales already follow each instrument.
- *
- * Each option carries a `value` from 0 to 3, where a higher value means
- * more of the behaviour the domain looks for. Reverse-worded items simply
- * list their options in the other order.
- */
-
 export type Domain = "AUTISM" | "ADHD" | "DYSLEXIA";
 export type Informant = "TEACHER" | "PARENT";
 
@@ -31,14 +14,12 @@ export interface Question {
   options: Option[];
 }
 
-/** Friendly names: Mirai never shows a clinical label on screen. */
 export const DOMAIN_TITLES: Record<Domain, string> = {
   AUTISM: "Social and communication",
   ADHD: "Attention and activity",
   DYSLEXIA: "Reading and language",
 };
 
-/** Same labels in the same order, scored the other way round. */
 function reversed(options: Option[]): Option[] {
   const values = options.map((option) => option.value).reverse();
   return options.map((option, index) => ({ ...option, value: values[index] }));
@@ -183,7 +164,6 @@ export interface QuestionSet {
   parts: { domain: Domain; title: string; questions: Question[] }[];
 }
 
-/** Children with no date of birth on file get the 6–9 set. */
 export function questionSetFor(age: number | null): QuestionSet {
   const young = age !== null && age <= 5;
   const domains: [Domain, Question[]][] = young

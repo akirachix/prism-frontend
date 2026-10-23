@@ -1,7 +1,7 @@
 import { query, request } from "@/lib/api";
 import type { Case, CaseCreate, CaseUpdate } from "@/lib/types";
 
-export interface CaseFilters {
+export type CaseFilters = {
   school_id?: string;
   student_id?: string;
   initiated_by?: string;
@@ -9,13 +9,20 @@ export interface CaseFilters {
   open_only?: boolean;
   limit?: number;
   offset?: number;
-}
+};
 
 export const casesApi = {
-  list: (limit = 200, offset = 0) =>
-    request<Case[]>(`/cases${query({ limit, offset })}`),
-  listBy: (filters: CaseFilters) =>
-    request<Case[]>(`/cases${query({ limit: 200, ...filters })}`),
+  list: (limit?: number, offset = 0) => {
+    const params: Record<string, string | number | boolean | null | undefined> =
+      {
+        offset,
+      };
+    if (limit !== undefined) {
+      params.limit = limit;
+    }
+    return request<Case[]>(`/cases${query(params)}`);
+  },
+  listBy: (filters: CaseFilters) => request<Case[]>(`/cases${query(filters)}`),
   get: (caseId: string) => request<Case>(`/cases/${caseId}`),
   create: (data: CaseCreate) =>
     request<Case>("/cases", { method: "POST", body: JSON.stringify(data) }),

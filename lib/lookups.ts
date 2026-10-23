@@ -29,7 +29,7 @@ const STUDENTS_PATH = "/students";
 
 export function getStudents(
   teacherId?: string,
-  limit = 200,
+  limit?: number,
   offset = 0,
 ): Promise<Student[]> {
   return request<Student[]>(
@@ -40,9 +40,7 @@ export function getStudents(
 export const studentsApi = {
   get: (studentId: string) => request<Student>(`${STUDENTS_PATH}/${studentId}`),
   forParent: (parentId: string) =>
-    request<Student[]>(
-      `${STUDENTS_PATH}${query({ parent_id: parentId, limit: 50 })}`,
-    ),
+    request<Student[]>(`${STUDENTS_PATH}${query({ parent_id: parentId })}`),
   create: (data: StudentCreate) =>
     request<Student>(STUDENTS_PATH, {
       method: "POST",
