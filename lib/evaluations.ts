@@ -22,7 +22,7 @@ export interface EvaluationResponse {
 export const evaluationsApi = {
   questions: (iepId: string) =>
     request<EvaluationQuestion[]>(
-      `/iep-evaluation-questions${query({ iep_id: iepId, limit: 100 })}`,
+      `/iep-evaluation-questions${query({ iep_id: iepId })}`,
     ),
   responses: (filters: {
     eval_question_id?: string;
@@ -30,7 +30,7 @@ export const evaluationsApi = {
     responder_role?: ResponderRole;
   }) =>
     request<EvaluationResponse[]>(
-      `/iep-evaluation-responses${query({ limit: 200, ...filters })}`,
+      `/iep-evaluation-responses${query({ ...filters })}`,
     ),
   respond: (data: {
     eval_question_id: string;

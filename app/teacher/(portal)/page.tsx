@@ -15,7 +15,7 @@ export default function TeacherHomePage() {
   const user = useUser();
   const room = useLoad(() => loadClassroom(user.user_id), [user.user_id]);
   const news = useLoad(
-    () => notificationsApi.list(user.user_id, 6),
+    () => notificationsApi.list(user.user_id),
     [user.user_id],
   );
 

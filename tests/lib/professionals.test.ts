@@ -17,9 +17,7 @@ beforeEach(() => {
 describe("professionalsApi", () => {
   it("asks only for active specialists", async () => {
     await professionalsApi.listActive();
-    expect(mockRequest).toHaveBeenCalledWith(
-      "/professionals?is_active=true&limit=100",
-    );
+    expect(mockRequest).toHaveBeenCalledWith("/professionals?is_active=true");
   });
 });
 

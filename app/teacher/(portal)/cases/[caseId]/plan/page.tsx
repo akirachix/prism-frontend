@@ -58,9 +58,7 @@ export default function TeacherPlanPage() {
     <PageHeader
       title="Education Plan (IEP)"
       back={{
-        href: data
-          ? `/teacher/students/${data.student.student_id}`
-          : "/teacher/students",
+        href: data ? `/teacher/cases` : "/teacher/cases",
       }}
     >
       {subtitle && <p className="plan-page__sub">{subtitle}</p>}

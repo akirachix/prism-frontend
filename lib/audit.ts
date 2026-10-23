@@ -4,10 +4,6 @@ import { getSession } from "@/lib/session";
 export type AuditAction =
   "VIEW" | "CREATE" | "UPDATE" | "SUBMIT" | "APPROVE" | "REJECT" | "EXPORT";
 
-/**
- * Record what someone did with a child's record. This never blocks the
- * screen: if the log call fails the person's action still counts.
- */
 export function logAudit(
   action: AuditAction,
   resourceType: string,
@@ -42,10 +38,9 @@ export interface AuditEntry {
 }
 
 export const auditApi = {
-  /** What happened to one record, newest first. */
   forResource: (resourceId: string) =>
     request<AuditEntry[]>(
-      `/audit-logs?resource_id=${encodeURIComponent(resourceId)}&limit=50`,
+      `/audit-logs?resource_id=${encodeURIComponent(resourceId)}`,
     ).then((entries) =>
       [...entries].sort((a, b) => b.created_at.localeCompare(a.created_at)),
     ),
@@ -80,7 +75,6 @@ const RESOURCE_WORDS: Record<string, string> = {
   user: "the parent account",
 };
 
-/** "Approved the plan (IEP) by the teacher" style text for the case history. */
 export function describeAudit(entry: AuditEntry): string {
   const action = ACTION_WORDS[entry.action] ?? entry.action.toLowerCase();
   const role = entry.actor_role

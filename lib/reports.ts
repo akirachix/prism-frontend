@@ -35,7 +35,6 @@ export interface Recommendation {
   created_at: string;
 }
 
-/** Resolve to null when nothing exists yet (404) instead of failing. */
 export async function orNull<T>(promise: Promise<T>): Promise<T | null> {
   try {
     return await promise;
@@ -47,9 +46,8 @@ export async function orNull<T>(promise: Promise<T>): Promise<T | null> {
 
 export const reportsApi = {
   list: (caseId?: string) =>
-    request<Report[]>(`/reports${query({ case_id: caseId, limit: 50 })}`),
-  /** Every report the API returns. Used only by the local-testing picker. */
-  listAll: () => request<Report[]>("/reports?limit=100"),
+    request<Report[]>(`/reports${query({ case_id: caseId })}`),
+  listAll: () => request<Report[]>("/reports"),
   forCase: <T extends object = Record<string, unknown>>(caseId: string) =>
     request<Report<T>>(`/reports/case/${caseId}`),
   create: (caseId: string, content: object) =>
@@ -85,7 +83,6 @@ export interface ParentReportsResult {
   errors: ParentReportErrors;
 }
 
-/** All three, where each one may not exist yet. */
 export async function loadParentReports(
   caseId: string,
 ): Promise<ParentReportsResult> {

@@ -12,10 +12,8 @@ export interface Notification {
 }
 
 export const notificationsApi = {
-  list: (userId: string, limit = 20) =>
-    request<Notification[]>(
-      `/notifications${query({ user_id: userId, limit })}`,
-    ),
+  list: (userId: string) =>
+    request<Notification[]>(`/notifications${query({ user_id: userId })}`),
   unreadCount: (userId: string) =>
     request<{ user_id: string; unread: number }>(
       `/notifications/unread-count${query({ user_id: userId })}`,

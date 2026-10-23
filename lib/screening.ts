@@ -11,18 +11,6 @@ import {
 import type { Informant, QuestionSet } from "@/lib/screening-questions";
 import type { Case, CaseUpdate } from "@/lib/types";
 
-/**
- * Where screening answers are kept.
- *
- * The API has no screening endpoint yet, so each case's answers live in
- * that case's report (`/reports/case/{case_id}`), whose `content` is free
- * JSON. The domain scores also go onto the case itself through
- * `PATCH /cases/{id}`, which is where the rest of the app reads them.
- *
- * TODO(member 1): when the backend adds screening endpoints, swap the
- * bodies of `loadScreening` and `saveScreening` and nothing else changes.
- */
-
 export interface InformantScreening {
   responder_id: string;
   age_gate: QuestionSet["ageGate"];
@@ -45,7 +33,6 @@ function key(role: Informant): "teacher" | "parent" {
   return role === "TEACHER" ? "teacher" : "parent";
 }
 
-/** The saved screening for a case, or an empty one if nothing is saved. */
 export async function loadScreening(
   caseId: string,
 ): Promise<{ content: ScreeningContent; exists: boolean }> {
@@ -65,10 +52,6 @@ export interface SaveResult {
   case: Case | null;
 }
 
-/**
- * Save one person's answers. When `finish` is true and every question is
- * answered, the screening is marked complete and the case moves on.
- */
 export async function saveScreening(params: {
   caseItem: Case;
   role: Informant;
@@ -115,7 +98,6 @@ export async function saveScreening(params: {
 function caseUpdateFor(content: ScreeningContent, role: Informant): CaseUpdate {
   const combined = content.combined;
   if (!combined) {
-    // Only one side is done so far: record that side's scores and status.
     const scores = content[key(role)]?.scores ?? {};
     return {
       status:
@@ -128,8 +110,6 @@ function caseUpdateFor(content: ScreeningContent, role: Informant): CaseUpdate {
     };
   }
   return {
-    // With no concern the case ends here. With a concern it stays open so
-    // the plan (IEP) can be generated for it.
     status: combined.concern
       ? role === "TEACHER"
         ? "TEACHER_SCREENING_COMPLETED"

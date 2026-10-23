@@ -13,7 +13,7 @@ export default function CaseRedirect() {
   const { data, error } = useLoad(() => casesApi.get(caseId), [caseId]);
 
   useEffect(() => {
-    if (data) router.replace(`/teacher/students/${data.student_id}`);
+    if (data) router.replace("/teacher/cases");
   }, [data, router]);
 
   return (

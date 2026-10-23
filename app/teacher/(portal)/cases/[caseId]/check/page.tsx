@@ -39,9 +39,7 @@ export default function TeacherCheckPage() {
         title="6-week check"
         eyebrow="My students"
         back={{
-          href: data
-            ? `/teacher/students/${data.student.student_id}`
-            : "/teacher/students",
+          href: data ? `/teacher/cases` : "/teacher/cases",
         }}
         tall
       />
@@ -66,7 +64,7 @@ export default function TeacherCheckPage() {
                 iep={data.iep}
                 data={data.evaluation}
                 responderId={user.user_id}
-                doneHref="/teacher/students"
+                doneHref="/teacher/cases"
                 doneLabel="Back to my students"
                 reviewHref="."
               />

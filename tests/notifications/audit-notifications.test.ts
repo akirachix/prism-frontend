@@ -102,9 +102,7 @@ describe("case history", () => {
       entry({ audit_id: "new", created_at: "2026-10-02T00:00:00Z" }),
     ]);
     const list = await auditApi.forResource("c1");
-    expect(mockRequest).toHaveBeenCalledWith(
-      "/audit-logs?resource_id=c1&limit=50",
-    );
+    expect(mockRequest).toHaveBeenCalledWith("/audit-logs?resource_id=c1");
     expect(list.map((e) => e.audit_id)).toEqual(["new", "old"]);
   });
 
@@ -122,10 +120,8 @@ describe("case history", () => {
 
 describe("notificationsApi", () => {
   it("lists a person's latest notifications", async () => {
-    await notificationsApi.list("u1", 6);
-    expect(mockRequest).toHaveBeenCalledWith(
-      "/notifications?user_id=u1&limit=6",
-    );
+    await notificationsApi.list("u1");
+    expect(mockRequest).toHaveBeenCalledWith("/notifications?user_id=u1");
   });
 
   it("marks one as read", async () => {

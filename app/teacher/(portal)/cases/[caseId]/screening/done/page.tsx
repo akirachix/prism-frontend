@@ -28,7 +28,7 @@ export default function ScreeningDonePage() {
     <PageHeader
       title="Screening finished"
       eyebrow="My students"
-      back={{ href: "/teacher/students", label: "My students" }}
+      back={{ href: "/teacher/cases", label: "My students" }}
       tall
     />
   );
@@ -101,7 +101,7 @@ export default function ScreeningDonePage() {
         </section>
 
         <div className="ui-actions">
-          <ButtonLink href="/teacher/students" variant="orange">
+          <ButtonLink href="/teacher/cases" variant="orange">
             Back to my students
           </ButtonLink>
         </div>

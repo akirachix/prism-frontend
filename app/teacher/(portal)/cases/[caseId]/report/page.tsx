@@ -21,9 +21,7 @@ export default function TeacherReportPage() {
       <PageHeader
         title="Reports"
         back={{
-          href: data
-            ? `/teacher/students/${data.student.student_id}`
-            : "/teacher/students",
+          href: data ? `/teacher/cases` : "/teacher/cases",
         }}
       />
       <div className="ui-body">

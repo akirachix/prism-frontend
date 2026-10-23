@@ -36,7 +36,7 @@ export default function TeacherScreeningPage() {
   if (error || !data) {
     return (
       <main className="ui-page">
-        <PageHeader title="Screening" back={{ href: "/teacher/students" }} />
+        <PageHeader title="Screening" back={{ href: "/teacher/cases" }} />
         <div className="ui-body">
           <Alert>{error ?? "We could not open this screening."}</Alert>
         </div>
@@ -44,7 +44,7 @@ export default function TeacherScreeningPage() {
     );
   }
 
-  const exitHref = `/teacher/students/${data.student.student_id}`;
+  const exitHref = `/teacher/cases`;
   return (
     <ScreeningFlow
       role="TEACHER"

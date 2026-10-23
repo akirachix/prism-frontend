@@ -21,9 +21,7 @@ export default function CloseCasePage() {
     return { caseItem, student: await studentsApi.get(caseItem.student_id) };
   }, [caseId]);
 
-  const studentHref = data
-    ? `/teacher/students/${data.student.student_id}`
-    : "/teacher/students";
+  const studentHref = data ? `/teacher/cases` : "/teacher/cases";
 
   return (
     <main className="ui-page">
