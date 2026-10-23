@@ -1,7 +1,5 @@
 import type { UserRead } from "@/lib/users";
 
-export const TEACHER_ID = process.env.NEXT_PUBLIC_TEACHER_ID ?? "";
-
 export interface Session {
   access_token: string;
   refresh_token: string;

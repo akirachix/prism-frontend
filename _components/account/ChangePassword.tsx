@@ -9,6 +9,11 @@ import { errorMessage } from "@/lib/api";
 import { authApi } from "@/lib/auth";
 import "../portal.css";
 
+/**
+ * The API changes a password only inside the sign-in flow or through the
+ * emailed reset link, so a signed-in person gets a reset link sent to
+ * the email on their account.
+ */
 export default function ChangePassword({
   portal,
 }: {

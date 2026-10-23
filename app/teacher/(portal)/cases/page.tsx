@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import CaseDetailModal from "@/app/teacher/_components/CaseDetailModal";
-import CasesTable from "@/app/teacher/_components/CasesTable";
+import CaseDetailModal from "@/app/teacher/_components/cases/CaseDetailModal";
+import CasesTable from "@/app/teacher/_components/cases/CasesTable";
 import { ApiError } from "@/lib/api";
 import { casesApi } from "@/lib/cases";
 import { getStudents, type Student } from "@/lib/lookups";

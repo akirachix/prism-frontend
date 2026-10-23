@@ -1,7 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import CasesTable from "@/app/teacher/_components/CasesTable";
+import CasesTable from "@/app/teacher/_components/cases/CasesTable";
 import { makeCase, makeStudent } from "@/tests/helpers";
 
 const known = makeStudent();

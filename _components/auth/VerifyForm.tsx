@@ -25,6 +25,11 @@ import { landingFor } from "./flow";
 
 const CODE_LENGTH = 6;
 
+/**
+ * The 6-digit code step. Handles both first-time set-up
+ * (mfa_enrollment_required → /auth/mfa/enroll/confirm) and later
+ * sign-ins (mfa_required → /auth/mfa/verify).
+ */
 export default function VerifyForm({ portal }: { portal: Portal }) {
   const router = useRouter();
   const params = useSearchParams();
@@ -33,19 +38,10 @@ export default function VerifyForm({ portal }: { portal: Portal }) {
   const stored = useStoredFlow();
   const [override, setFlow] = useState<AuthFlow | null>(null);
   const flow = override ?? stored;
-
-  useEffect(() => {
-    const isExpired = Boolean(flow && flow.expires_at <= Date.now());
-    if (isExpired) {
-      router.replace(`/${portal}/login`);
-    }
-  }, [flow, portal, router]);
-
   const usable =
     flow !== null &&
     flow.portal === portal &&
     flow.stage !== "password_change_required";
-
   const [enroll, setEnroll] = useState<MfaEnrollInfo | null>(null);
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -58,6 +54,8 @@ export default function VerifyForm({ portal }: { portal: Portal }) {
     if (hydrated && !usable) router.replace(`/${portal}/login`);
   }, [hydrated, usable, portal, router]);
 
+  // First-time set-up: ask the server to start enrolment (this sends the
+  // code). Guarded so React's dev double-run does not send two codes.
   const enrollToken =
     usable && flow.stage === "mfa_enrollment_required" ? flow.step_token : null;
   useEffect(() => {
@@ -89,7 +87,9 @@ export default function VerifyForm({ portal }: { portal: Portal }) {
         try {
           user = await usersApi.update(user.user_id, flow.pending_name);
           startSession({ ...pair, user }, flow.remember !== false);
-        } catch {}
+        } catch {
+          // The name can be fixed later from the profile page.
+        }
       }
       clearFlow();
       router.replace(landingFor(user, portal, next));

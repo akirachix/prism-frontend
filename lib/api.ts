@@ -1,6 +1,6 @@
 import { clearSession, getSession, setSession } from "@/lib/session";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
 
 export class ApiError extends Error {
   status: number;
@@ -62,10 +62,6 @@ function refreshSession(): Promise<boolean> {
 }
 
 async function send(path: string, options: RequestInit): Promise<Response> {
-  if (!BASE_URL) {
-    throw new ApiError(0, "API URL is not configured.");
-  }
-
   const token = isPublic(path) ? null : getSession()?.access_token;
   try {
     return await fetch(`${BASE_URL}${path}`, {
@@ -124,11 +120,10 @@ export function query(
   return text ? `?${text}` : "";
 }
 
-export function errorMessage(
-  e: unknown,
-  fallback = "Something went wrong. Please try again.",
-): string {
-  return e instanceof Error ? e.message : fallback;
+export function errorMessage(error: unknown): string {
+  return error instanceof ApiError
+    ? error.message
+    : "Something went wrong. Please try again.";
 }
 
 export async function orNull<T>(promise: Promise<T>): Promise<T | null> {
@@ -137,17 +132,5 @@ export async function orNull<T>(promise: Promise<T>): Promise<T | null> {
   } catch (error) {
     if (error instanceof ApiError && error.status === 404) return null;
     throw error;
-  }
-}
-
-export async function fetchAll<T>(
-  page: (limit: number, offset: number) => Promise<T[]>,
-  pageSize = 200,
-): Promise<T[]> {
-  const all: T[] = [];
-  for (let offset = 0; ; offset += pageSize) {
-    const batch = await page(pageSize, offset);
-    all.push(...batch);
-    if (batch.length < pageSize) return all;
   }
 }

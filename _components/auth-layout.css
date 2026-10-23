@@ -9,6 +9,7 @@
   grid-template-columns: minmax(360px, 36%) 1fr;
 }
 
+/* ---------- Desktop panel ---------- */
 .auth__panel {
   position: sticky;
   top: 0;
@@ -55,6 +56,7 @@
 }
 
 .auth--parent .auth__panel-copy {
+  /* Keep the words clear of the star on the right of the artwork. */
   max-width: 68%;
 }
 
@@ -73,6 +75,7 @@
   font-size: clamp(0.95rem, 1.1vw, 1.1rem);
 }
 
+/* ---------- Main column ---------- */
 .auth__main {
   display: flex;
   flex-direction: column;
@@ -111,6 +114,7 @@
   display: none;
 }
 
+/* ---------- Shared auth content ---------- */
 .auth-title {
   margin: 0 0 12px;
   font-size: clamp(1.9rem, 3.4vw, 3rem);
@@ -212,6 +216,7 @@
   color: var(--muted);
 }
 
+/* ---------- Mobile ---------- */
 @media (max-width: 900px) {
   .auth,
   .auth--parent {
@@ -305,6 +310,7 @@
   }
 }
 
+/* ---------- Small auth pieces ---------- */
 .auth-remember {
   display: inline-flex;
   align-items: center;
@@ -363,6 +369,7 @@
     display: block;
   }
 
+  /* Mobile verify: "Resend code" sits above the Verify button. */
   .auth-actions--verify {
     flex-direction: column-reverse;
     margin-top: 80px;
@@ -384,6 +391,7 @@
   font-weight: 600;
 }
 
+/* Parent forms on desktop sit on the cream page, not in a card. */
 .auth--parent .ui-input {
   min-height: 60px;
 }

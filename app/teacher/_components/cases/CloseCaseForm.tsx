@@ -19,10 +19,12 @@ export default function CloseCaseForm({
   caseId,
   onClosed,
   onCancel,
+  cancelLabel = "Keep it",
 }: {
   caseId: string;
   onClosed: (updated: Case) => void;
   onCancel: () => void;
+  cancelLabel?: string;
 }) {
   const [reason, setReason] = useState("");
   const [note, setNote] = useState("");
@@ -95,7 +97,7 @@ export default function CloseCaseForm({
           onClick={onCancel}
           disabled={saving}
         >
-          Keep it
+          {cancelLabel}
         </button>
         <button type="submit" className="close-form__close" disabled={saving}>
           {saving ? "Closing…" : "Close case"}

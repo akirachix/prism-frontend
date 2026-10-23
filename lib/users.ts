@@ -50,7 +50,6 @@ export function fullName(user: Pick<UserRead, "first_name" | "last_name">) {
   return `${user.first_name} ${user.last_name}`.trim();
 }
 
-/** A parent has signed in once they have swapped the temporary password. */
 export function hasSignedIn(user: UserRead): boolean {
   return !user.must_change_password;
 }
