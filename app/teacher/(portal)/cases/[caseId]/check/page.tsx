@@ -11,7 +11,7 @@ import { loadEvaluation } from "@/lib/evaluation-flow";
 import { formatDay } from "@/lib/format";
 import { currentIep, iepsApi } from "@/lib/ieps";
 import { studentName, studentsApi } from "@/lib/lookups";
-import "@/app/_components/portal.css";
+import "@/_components/portal.css";
 
 async function load(caseId: string, teacherId: string) {
   const caseItem = await casesApi.get(caseId);

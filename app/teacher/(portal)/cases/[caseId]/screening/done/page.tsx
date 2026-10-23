@@ -9,7 +9,7 @@ import { useLoad } from "@/_components/useLoad";
 import { casesApi } from "@/lib/cases";
 import { studentName, studentsApi } from "@/lib/lookups";
 import { loadScreening } from "@/lib/screening";
-import "@/app/_components/portal.css";
+import "@/_components/portal.css";
 
 async function load(caseId: string) {
   const caseItem = await casesApi.get(caseId);

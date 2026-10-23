@@ -17,7 +17,10 @@ const SPECIALTY = {
  * to contact anyone; Mirai never books or refers on their behalf.
  */
 export default function ProfessionalsList() {
-  const { data, error, loading } = useLoad(() => professionalsApi.list(), []);
+  const { data, error, loading } = useLoad(
+    () => professionalsApi.listActive(),
+    [],
+  );
 
   return (
     <section className="pros" aria-labelledby="pros-title">

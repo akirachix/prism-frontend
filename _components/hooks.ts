@@ -32,6 +32,7 @@ export function useStoredFlow(): AuthFlow | null {
     if (!raw) return null;
     try {
       const flow = JSON.parse(raw) as AuthFlow;
+      // eslint-disable-next-line react-hooks/purity
       return flow.expires_at > Date.now() ? flow : null;
     } catch {
       return null;

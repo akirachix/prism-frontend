@@ -16,7 +16,7 @@ export function useLoad<T>(loader: () => Promise<T>, deps: DependencyList) {
   const [loading, setLoading] = useState(true);
   const [version, setVersion] = useState(0);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/use-memo
   const load = useCallback(loader, deps);
 
   useEffect(() => {

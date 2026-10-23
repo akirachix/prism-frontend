@@ -10,7 +10,7 @@ import { casesApi } from "@/lib/cases";
 import { formatDay } from "@/lib/format";
 import { studentName, studentsApi } from "@/lib/lookups";
 import { FINISHED_STATUSES } from "@/lib/types";
-import "@/app/_components/portal.css";
+import "@/_components/portal.css";
 import "./close.css";
 
 export default function CloseCasePage() {
