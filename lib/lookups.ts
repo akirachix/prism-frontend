@@ -1,4 +1,5 @@
-import { query, request } from "@/lib/api";
+import { request } from "@/lib/api";
+import { query } from "@/lib/query";
 
 export interface Student {
   student_id: string;
@@ -33,7 +34,7 @@ export function getStudents(
   offset = 0,
 ): Promise<Student[]> {
   return request<Student[]>(
-    `${STUDENTS_PATH}${query({ teacher_id: teacherId, limit, offset })}`,
+    `${STUDENTS_PATH}${query({ teacher_id: teacherId, limit, offset: offset || undefined })}`,
   );
 }
 

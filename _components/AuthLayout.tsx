@@ -19,6 +19,7 @@ export default function AuthLayout({
   mobileHeader = "hero",
   mobileTitle,
   mobileText,
+  showTopbar = false,
   children,
 }: {
   portal: "teacher" | "parent";
@@ -28,6 +29,7 @@ export default function AuthLayout({
   mobileHeader?: "hero" | "bar" | "plain";
   mobileTitle?: ReactNode;
   mobileText?: ReactNode;
+  showTopbar?: boolean;
   children: ReactNode;
 }) {
   return (
@@ -78,7 +80,7 @@ export default function AuthLayout({
       </header>
 
       <main className="auth__main">
-        {portal === "parent" && (
+        {showTopbar && portal === "parent" && (
           <div className="auth__topbar">
             <span>Parent portal</span>
             <span className="auth__topbar-account">

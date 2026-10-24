@@ -12,6 +12,7 @@ export default function ParentAuth({
   return (
     <AuthLayout
       portal="parent"
+      showTopbar
       mobileHeader="bar"
       mobileTitle={
         signup

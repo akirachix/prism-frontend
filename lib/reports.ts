@@ -1,4 +1,5 @@
-import { ApiError, errorMessage, query, request } from "@/lib/api";
+import { ApiError, errorMessage, request } from "@/lib/api";
+import { query } from "@/lib/query";
 import { casesApi } from "@/lib/cases";
 import { studentsApi, type Student } from "@/lib/lookups";
 import type { Case } from "@/lib/types";
