@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { ApiError } from "@/lib/api";
+import { errorMessage } from "@/lib/api";
 import { casesApi } from "@/lib/cases";
 import { labelOf } from "@/lib/format";
 import type { Case, CaseUpdate } from "@/lib/types";
@@ -71,11 +71,7 @@ export default function EditCaseForm({ item, onBack, onSaved }: Props) {
     try {
       onSaved(await casesApi.update(item.case_id, changes));
     } catch (err) {
-      setError(
-        err instanceof ApiError
-          ? err.message
-          : "Something went wrong. Please try again.",
-      );
+      setError(errorMessage(err));
       setSaving(false);
     }
   }

@@ -1,3 +1,4 @@
+import { fetchAll } from "@/lib/api";
 import { casesApi, latestCase } from "@/lib/cases";
 import { currentIep, evaluationIsOpen, iepsApi, type IEP } from "@/lib/ieps";
 import { getStudents, studentName, type Student } from "@/lib/lookups";
@@ -12,12 +13,17 @@ export interface Classroom {
 }
 
 export async function loadClassroom(teacherId: string): Promise<Classroom> {
+  // Every list is fetched page by page; one call only returns the first page.
+  const iepsWith = (status: IEP["status"]) =>
+    fetchAll((limit, offset) => iepsApi.list({ status, limit, offset }));
   const [students, cases, pending, active, rejected] = await Promise.all([
-    getStudents(teacherId),
-    casesApi.listBy({ initiated_by: teacherId }),
-    iepsApi.list({ status: "PENDING_APPROVAL" }),
-    iepsApi.list({ status: "ACTIVE" }),
-    iepsApi.list({ status: "REJECTED" }),
+    fetchAll((limit, offset) => getStudents(teacherId, limit, offset)),
+    fetchAll((limit, offset) =>
+      casesApi.listBy({ initiated_by: teacherId, limit, offset }),
+    ),
+    iepsWith("PENDING_APPROVAL"),
+    iepsWith("ACTIVE"),
+    iepsWith("REJECTED"),
   ]);
 
   const caseByStudent = new Map<string, Case>();

@@ -39,7 +39,7 @@ export default function TeacherCheckPage() {
         title="6-week check"
         eyebrow="My students"
         back={{
-          href: data ? `/teacher/cases` : "/teacher/cases",
+          href: "/teacher/cases",
         }}
         tall
       />

@@ -12,16 +12,8 @@ export type CaseFilters = {
 };
 
 export const casesApi = {
-  list: (limit?: number, offset = 0) => {
-    const params: Record<string, string | number | boolean | null | undefined> =
-      {
-        offset,
-      };
-    if (limit !== undefined) {
-      params.limit = limit;
-    }
-    return request<Case[]>(`/cases${query(params)}`);
-  },
+  list: (limit?: number, offset?: number) =>
+    request<Case[]>(`/cases${query({ limit, offset })}`),
   listBy: (filters: CaseFilters) => request<Case[]>(`/cases${query(filters)}`),
   get: (caseId: string) => request<Case>(`/cases/${caseId}`),
   create: (data: CaseCreate) =>

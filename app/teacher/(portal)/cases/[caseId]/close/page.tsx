@@ -21,14 +21,14 @@ export default function CloseCasePage() {
     return { caseItem, student: await studentsApi.get(caseItem.student_id) };
   }, [caseId]);
 
-  const studentHref = data ? `/teacher/cases` : "/teacher/cases";
+  const studentHref = "/teacher/cases";
 
   return (
     <main className="ui-page">
       <PageHeader
         title="Close this case"
         eyebrow={data ? studentName(data.student) : undefined}
-        back={{ href: studentHref, label: "Back to the student" }}
+        back={{ href: studentHref, label: "Back to cases" }}
         tall
       />
       <div className="ui-body ui-body--narrow">

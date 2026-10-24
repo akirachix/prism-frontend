@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import CaseDetailModal from "@/app/teacher/_components/cases/CaseDetailModal";
 import CasesTable from "@/app/teacher/_components/cases/CasesTable";
-import { ApiError } from "@/lib/api";
+import { errorMessage, fetchAll } from "@/lib/api";
 import { casesApi } from "@/lib/cases";
 import { getStudents, type Student } from "@/lib/lookups";
 import type { Case } from "@/lib/types";
@@ -18,19 +18,13 @@ export default function CasesPage() {
   const [selected, setSelected] = useState<Case | null>(null);
 
   useEffect(() => {
-    getStudents()
+    // Students only fill in names, so the table still works without them.
+    fetchAll((limit, offset) => getStudents(undefined, limit, offset))
       .then(setStudents)
       .catch(() => setStudents([]));
-    casesApi
-      .list()
+    fetchAll((limit, offset) => casesApi.list(limit, offset))
       .then(setCases)
-      .catch((err) =>
-        setError(
-          err instanceof ApiError
-            ? err.message
-            : "Something went wrong. Please try again.",
-        ),
-      )
+      .catch((err) => setError(errorMessage(err)))
       .finally(() => setLoading(false));
   }, []);
 

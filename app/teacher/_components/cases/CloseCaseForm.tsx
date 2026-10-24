@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 
-import { ApiError } from "@/lib/api";
+import { errorMessage } from "@/lib/api";
 import { casesApi } from "@/lib/cases";
 import type { Case } from "@/lib/types";
 import "./close-case-form.css";
@@ -43,11 +43,7 @@ export default function CloseCaseForm({
       const text = note.trim() ? `${reason}: ${note.trim()}` : reason;
       onClosed(await casesApi.close(caseId, text));
     } catch (err) {
-      setError(
-        err instanceof ApiError
-          ? err.message
-          : "Something went wrong. Please try again.",
-      );
+      setError(errorMessage(err));
     } finally {
       setSaving(false);
     }

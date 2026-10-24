@@ -25,9 +25,6 @@ export interface IEP {
   superseded_at: string | null;
 }
 
-export type Iep = IEP;
-export type IepStatus = IEPStatus;
-
 export type IEPFilters = {
   case_id?: string;
   status?: IEPStatus;
@@ -37,31 +34,18 @@ export type IEPFilters = {
 
 type ApproverRole = "TEACHER" | "ADMIN";
 
-function approveIep(iepId: string, approvedBy: string): Promise<IEP>;
-function approveIep(
-  iepId: string,
-  role: ApproverRole,
-  approvedBy: string,
-): Promise<IEP>;
-function approveIep(iepId: string, first: string, second?: string) {
-  const role = second === undefined ? "TEACHER" : (first as ApproverRole);
-  const approvedBy = second === undefined ? first : second;
-  return request<IEP>(`/ieps/${iepId}/approve`, {
-    method: "POST",
-    body: JSON.stringify({ role, approved_by: approvedBy }),
-  });
-}
-
 export const iepsApi = {
   list: (filters: IEPFilters = {}) => request<IEP[]>(`/ieps${query(filters)}`),
-  page: (limit?: number, offset = 0) =>
-    request<IEP[]>(`/ieps${query({ limit, offset })}`),
   activeForCase: (caseId: string) =>
     request<IEP>(`/ieps/case/${caseId}/active`),
   get: (iepId: string) => request<IEP>(`/ieps/${iepId}`),
   submit: (iepId: string) =>
     request<IEP>(`/ieps/${iepId}/submit`, { method: "POST" }),
-  approve: approveIep,
+  approve: (iepId: string, role: ApproverRole, approvedBy: string) =>
+    request<IEP>(`/ieps/${iepId}/approve`, {
+      method: "POST",
+      body: JSON.stringify({ role, approved_by: approvedBy }),
+    }),
   reject: (iepId: string, reason: string) =>
     request<IEP>(`/ieps/${iepId}/reject`, {
       method: "POST",
