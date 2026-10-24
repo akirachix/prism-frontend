@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 
-import { ApiError } from "@/lib/api";
+import { errorMessage } from "@/lib/api";
 import { casesApi } from "@/lib/cases";
 import { getStudents, studentName, type Student } from "@/lib/lookups";
 import type { Case } from "@/lib/types";
@@ -55,11 +55,7 @@ export default function StartCaseModal({
         }),
       );
     } catch (err) {
-      setError(
-        err instanceof ApiError
-          ? err.message
-          : "Something went wrong. Please try again.",
-      );
+      setError(errorMessage(err));
     } finally {
       setSaving(false);
     }

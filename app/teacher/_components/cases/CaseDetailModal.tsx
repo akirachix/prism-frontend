@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { ApiError } from "@/lib/api";
+import { errorMessage } from "@/lib/api";
 import { casesApi } from "@/lib/cases";
 import { formatDate, labelOf } from "@/lib/format";
 import { FINISHED_STATUSES, type Case } from "@/lib/types";
@@ -101,11 +101,7 @@ export default function CaseDetailModal({
       await casesApi.remove(item.case_id);
       onDeleted(item.case_id);
     } catch (err) {
-      setDeleteError(
-        err instanceof ApiError
-          ? err.message
-          : "Something went wrong. Please try again.",
-      );
+      setDeleteError(errorMessage(err));
       setDeleting(false);
     }
   }

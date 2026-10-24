@@ -27,19 +27,20 @@ export interface StudentCreate {
 
 const STUDENTS_PATH = "/students";
 
-export function getStudents(teacherId?: string): Promise<Student[]> {
-  const search = teacherId
-    ? `?teacher_id=${teacherId}&limit=200`
-    : "?limit=200";
-  return request<Student[]>(`${STUDENTS_PATH}${search}`);
+export function getStudents(
+  teacherId?: string,
+  limit?: number,
+  offset = 0,
+): Promise<Student[]> {
+  return request<Student[]>(
+    `${STUDENTS_PATH}${query({ teacher_id: teacherId, limit, offset })}`,
+  );
 }
 
 export const studentsApi = {
   get: (studentId: string) => request<Student>(`${STUDENTS_PATH}/${studentId}`),
   forParent: (parentId: string) =>
-    request<Student[]>(
-      `${STUDENTS_PATH}${query({ parent_id: parentId, limit: 50 })}`,
-    ),
+    request<Student[]>(`${STUDENTS_PATH}${query({ parent_id: parentId })}`),
   create: (data: StudentCreate) =>
     request<Student>(STUDENTS_PATH, {
       method: "POST",

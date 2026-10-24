@@ -15,12 +15,9 @@ export function useLoad<T>(loader: () => Promise<T>, deps: DependencyList) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [version, setVersion] = useState(0);
-  const depKey = JSON.stringify(deps);
 
-  const load = useCallback(() => {
-    void depKey;
-    return loader();
-  }, [loader, depKey]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/use-memo
+  const load = useCallback(loader, deps);
 
   useEffect(() => {
     let active = true;

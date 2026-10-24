@@ -1,8 +1,17 @@
+import { CircleUserRound } from "lucide-react";
 import Image from "next/image";
 import type { ReactNode } from "react";
 
 import "./auth-layout.css";
 
+/**
+ * The split sign-in layout. Desktop: a navy panel with the background
+ * artwork on the left and the form on the right. Mobile: the artwork
+ * becomes a rounded header above the form.
+ *
+ * - teacher: "Hello, Teacher!" panel, big logo, hero header on mobile.
+ * - parent: "Supporting your child, together." panel with a top bar.
+ */
 export default function AuthLayout({
   portal,
   panelTitle,
@@ -15,6 +24,7 @@ export default function AuthLayout({
   portal: "teacher" | "parent";
   panelTitle: ReactNode;
   panelText: ReactNode;
+  /** hero: tall artwork header, bar: short navy header, plain: logo only. */
   mobileHeader?: "hero" | "bar" | "plain";
   mobileTitle?: ReactNode;
   mobileText?: ReactNode;
@@ -68,6 +78,15 @@ export default function AuthLayout({
       </header>
 
       <main className="auth__main">
+        {portal === "parent" && (
+          <div className="auth__topbar">
+            <span>Parent portal</span>
+            <span className="auth__topbar-account">
+              <CircleUserRound size={26} aria-hidden="true" />
+              Parent account
+            </span>
+          </div>
+        )}
         <div className="auth__content">{children}</div>
       </main>
     </div>

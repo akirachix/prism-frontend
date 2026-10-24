@@ -1,4 +1,4 @@
-import { query, request } from "@/lib/api";
+import { request } from "@/lib/api";
 
 export type Role = "SYSTEM_ADMIN" | "SCHOOL_ADMIN" | "TEACHER" | "PARENT";
 
@@ -32,8 +32,7 @@ export interface UserUpdate {
 }
 
 export const usersApi = {
-  list: (limit = 200, offset = 0) =>
-    request<UserRead[]>(`/users${query({ limit, offset })}`),
+  list: () => request<UserRead[]>("/users"),
   get: (userId: string) => request<UserRead>(`/users/${userId}`),
   create: (data: UserCreate) =>
     request<UserRead>("/users", { method: "POST", body: JSON.stringify(data) }),
@@ -50,7 +49,6 @@ export function fullName(user: Pick<UserRead, "first_name" | "last_name">) {
   return `${user.first_name} ${user.last_name}`.trim();
 }
 
-/** A parent has signed in once they have swapped the temporary password. */
 export function hasSignedIn(user: UserRead): boolean {
   return !user.must_change_password;
 }

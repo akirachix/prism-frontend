@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
-import EditCaseForm from "@/app/teacher/_components/EditCaseForm";
+import EditCaseForm from "@/app/teacher/_components/cases/EditCaseForm";
 import { casesApi } from "@/lib/cases";
 import type { Case } from "@/lib/types";
 

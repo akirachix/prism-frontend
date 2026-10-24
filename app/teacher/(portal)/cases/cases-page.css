@@ -8,23 +8,21 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  background: #0a2a66;
-  color: #ffffff;
-  padding: 40px 48px 44px;
-  border-radius: 0 0 32px 32px;
+  padding: 40px 48px 0;
+  color: #0a2a66;
 }
 
 .cases-page__title {
   margin: 0;
   font-size: 2.4rem;
-  color: #ffffff;
+  color: #0a2a66;
 }
 
 .cases-page__count {
   margin: 8px 0 0;
   font-size: 1.1rem;
-  color: #ffffff;
-  opacity: 0.85;
+  color: #0a2a66;
+  opacity: 0.7;
 }
 
 .cases-page__content {
@@ -47,11 +45,20 @@
 
 @media (max-width: 768px) {
   .cases-page__header {
+    background: #0a2a66;
+    color: #ffffff;
     padding: 28px 20px 32px;
+    border-radius: 0 0 32px 32px;
   }
 
   .cases-page__title {
     font-size: 1.9rem;
+    color: #ffffff;
+  }
+
+  .cases-page__count {
+    color: #ffffff;
+    opacity: 0.85;
   }
 
   .cases-page__content {

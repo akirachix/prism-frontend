@@ -68,23 +68,15 @@ export function startSession(pair: TokenPair, remember = true): void {
   });
 }
 
-/** Revoke the refresh token on the server, then forget the session here. */
 export async function signOut(): Promise<void> {
   const session = getSession();
   try {
     if (session) await authApi.logout(session.refresh_token);
   } catch {
-    // Signing out locally still matters if the server call fails.
   } finally {
     clearSession();
   }
 }
-
-/* ------------------------------------------------------------------ */
-/* The sign-in flow is several screens long (password → change password
- * → verify code). The step token is kept in sessionStorage so a page
- * refresh does not lose it. The password is kept in memory only, so
- * "Resend code" can log in again without asking for it. */
 
 export type Portal = "teacher" | "parent";
 
@@ -95,7 +87,6 @@ export interface AuthFlow {
   expires_at: number;
   email?: string;
   remember?: boolean;
-  /** Name the parent typed while creating their password. */
   pending_name?: { first_name: string; last_name: string };
 }
 
@@ -145,7 +136,6 @@ export function flowFromStage(
   };
 }
 
-/** The screen that handles each stage, per portal. */
 export function routeForStage(portal: Portal, stage: AuthStage): string {
   if (stage === "password_change_required") return `/${portal}/new-password`;
   return `/${portal}/verify`;

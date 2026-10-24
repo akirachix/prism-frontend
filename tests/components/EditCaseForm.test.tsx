@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import EditCaseForm from "@/app/teacher/_components/EditCaseForm";
+import EditCaseForm from "@/app/teacher/_components/cases/EditCaseForm";
 import { ApiError } from "@/lib/api";
 import { casesApi } from "@/lib/cases";
 import { makeCase } from "@/tests/helpers";

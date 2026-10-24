@@ -1,12 +1,12 @@
-import { ApiError, errorMessage, request } from "@/lib/api";
+import { ApiError, errorMessage, query, request } from "@/lib/api";
 import { casesApi } from "@/lib/cases";
 import { studentsApi, type Student } from "@/lib/lookups";
 import type { Case } from "@/lib/types";
 
-export interface Report {
+export interface Report<T extends object = Record<string, unknown>> {
   report_id: string;
   case_id: string;
-  content: Record<string, unknown>;
+  content: T;
   generated_at: string;
 }
 
@@ -35,7 +35,6 @@ export interface Recommendation {
   created_at: string;
 }
 
-/** Resolve to null when nothing exists yet (404) instead of failing. */
 export async function orNull<T>(promise: Promise<T>): Promise<T | null> {
   try {
     return await promise;
@@ -46,8 +45,21 @@ export async function orNull<T>(promise: Promise<T>): Promise<T | null> {
 }
 
 export const reportsApi = {
-  /** Every report the API returns. Used only by the local-testing picker. */
-  listAll: () => request<Report[]>("/reports?limit=100"),
+  list: (caseId?: string) =>
+    request<Report[]>(`/reports${query({ case_id: caseId })}`),
+  listAll: () => request<Report[]>("/reports"),
+  forCase: <T extends object = Record<string, unknown>>(caseId: string) =>
+    request<Report<T>>(`/reports/case/${caseId}`),
+  create: (caseId: string, content: object) =>
+    request<Report>("/reports", {
+      method: "POST",
+      body: JSON.stringify({ case_id: caseId, content }),
+    }),
+  replace: (caseId: string, content: object) =>
+    request<Report>(`/reports/case/${caseId}`, {
+      method: "PUT",
+      body: JSON.stringify({ content }),
+    }),
   screening: (caseId: string) => request<Report>(`/reports/case/${caseId}`),
   plan: (caseId: string) => request<Plan>(`/ieps/case/${caseId}/active`),
   recommendation: (caseId: string) =>
@@ -71,7 +83,6 @@ export interface ParentReportsResult {
   errors: ParentReportErrors;
 }
 
-/** All three, where each one may not exist yet. */
 export async function loadParentReports(
   caseId: string,
 ): Promise<ParentReportsResult> {
@@ -112,17 +123,11 @@ export async function loadParentReports(
   return { reports, errors };
 }
 
-/** The child a report belongs to. */
 export interface ReportChild {
   caseItem: Case;
   student: Student;
 }
 
-/**
- * The case and its child, read directly by id. Fails (instead of
- * returning no name) when either cannot be read, so a report is never
- * shown or printed without the child it belongs to.
- */
 export async function loadReportChild(caseId: string): Promise<ReportChild> {
   const caseItem = await casesApi.get(caseId);
   const student = await studentsApi.get(caseItem.student_id);

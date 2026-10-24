@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import CaseDetailModal from "@/app/teacher/_components/CaseDetailModal";
+import CaseDetailModal from "@/app/teacher/_components/cases/CaseDetailModal";
 import { ApiError } from "@/lib/api";
 import { casesApi } from "@/lib/cases";
 import { makeCase } from "@/tests/helpers";

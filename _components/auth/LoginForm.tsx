@@ -18,6 +18,11 @@ interface Values {
   remember: boolean;
 }
 
+/**
+ * Email + password sign-in.
+ * - "standard": teacher sign in and parent "Welcome back".
+ * - "temporary": the parent's first visit with the emailed temporary password.
+ */
 export default function LoginForm({
   portal,
   mode = "standard",

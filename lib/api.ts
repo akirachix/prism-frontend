@@ -63,9 +63,11 @@ function refreshSession(): Promise<boolean> {
 
 async function send(path: string, options: RequestInit): Promise<Response> {
   if (!BASE_URL) {
-    throw new ApiError(0, "API URL is not configured.");
+    throw new ApiError(
+      0,
+      "NEXT_PUBLIC_API_URL is not set. Add it to .env.local and restart npm run dev.",
+    );
   }
-
   const token = isPublic(path) ? null : getSession()?.access_token;
   try {
     return await fetch(`${BASE_URL}${path}`, {
@@ -122,6 +124,26 @@ export function query(
   }
   const text = search.toString();
   return text ? `?${text}` : "";
+}
+
+/** The largest page the backend allows (`limit` max on list endpoints). */
+export const MAX_PAGE_SIZE = 200;
+
+/**
+ * Fetch every page of a list endpoint. The backend returns at most `limit`
+ * rows per call (default 50), so a single call can silently drop records.
+ * Keeps asking for the next page until one comes back short.
+ */
+export async function fetchAll<T>(
+  fetchPage: (limit: number, offset: number) => Promise<T[]>,
+  pageSize = MAX_PAGE_SIZE,
+): Promise<T[]> {
+  const all: T[] = [];
+  for (let offset = 0; ; offset += pageSize) {
+    const page = await fetchPage(pageSize, offset);
+    all.push(...page);
+    if (page.length < pageSize) return all;
+  }
 }
 
 export function errorMessage(error: unknown): string {

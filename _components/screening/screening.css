@@ -1,0 +1,133 @@
+.screening__header {
+  padding-bottom: 24px;
+}
+
+.screening__header .ui-header__row {
+  flex-wrap: wrap;
+}
+
+.screening__close {
+  font-size: 1.3rem;
+}
+
+.screening__save {
+  display: none;
+}
+
+.screening__title {
+  flex-basis: 100%;
+  font-size: 1.4rem;
+}
+
+.screening__header--teacher .screening__title {
+  flex-basis: auto;
+}
+
+.screening__header--parent .screening__title {
+  display: none;
+}
+
+.screening__count {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.screening__count--mobile {
+  align-items: flex-end;
+}
+
+.screening__header--parent ~ .screening__body .screening__count--mobile {
+  align-items: stretch;
+}
+
+.screening__count--desktop {
+  display: none;
+}
+
+.screening__count .ui-progress {
+  width: 100%;
+}
+
+.screening__label {
+  color: var(--muted);
+}
+
+.screening__almost {
+  font-weight: 700;
+  color: var(--success);
+}
+
+.screening__body {
+  max-width: 1100px;
+}
+
+.screening__main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+.screening__question {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.screening__num {
+  flex-shrink: 0;
+}
+
+.screening__part-name {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+@media (min-width: 769px) {
+  .screening__header--teacher {
+    border-radius: 0;
+  }
+
+  .screening__save {
+    display: inline-block;
+  }
+
+  .screening__close {
+    display: none;
+  }
+
+  .screening__count--desktop {
+    display: flex;
+    min-width: 220px;
+    margin-left: auto;
+    align-items: flex-end;
+  }
+
+  .screening__header--teacher ~ .screening__body .screening__count--mobile {
+    display: none;
+  }
+
+  .screening__header--parent .screening__title {
+    display: none;
+  }
+
+  .screening__header--parent .screening__count--desktop {
+    display: none;
+  }
+
+  .screening__next {
+    min-width: 180px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .screening__header--teacher .portal-parts {
+    display: none;
+  }
+}

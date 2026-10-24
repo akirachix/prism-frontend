@@ -27,6 +27,13 @@ interface Values {
   confirm_password: string;
 }
 
+/**
+ * Create a new password. Three ways in:
+ * - "change": after signing in with a temporary password
+ *   (stage password_change_required → /auth/change-password)
+ * - "invite": from the invitation link (?token → /auth/accept-invitation)
+ * - "reset": from the forgot-password email (?token → /auth/reset-password)
+ */
 export default function NewPasswordForm({
   portal,
   mode,
@@ -52,6 +59,7 @@ export default function NewPasswordForm({
     stored.stage === "password_change_required"
       ? stored
       : null;
+  // After a page refresh the temporary password is gone from memory.
   const needsCurrent = mode === "change" && hydrated && !flowPasswordInMemory();
   const [error, setError] = useState<string | null>(null);
 

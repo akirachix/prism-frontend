@@ -3,7 +3,7 @@
 import { MapPin, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { ApiError } from "@/lib/api";
+import { errorMessage } from "@/lib/api";
 import {
   professionalName,
   professionalsApi,
@@ -21,13 +21,7 @@ export default function ProfessionalsList() {
     professionalsApi
       .listActive()
       .then((list) => setItems(list.filter((item) => item.is_active)))
-      .catch((err) =>
-        setError(
-          err instanceof ApiError
-            ? err.message
-            : "Something went wrong. Please try again.",
-        ),
-      )
+      .catch((err) => setError(errorMessage(err)))
       .finally(() => setLoading(false));
   }, []);
 

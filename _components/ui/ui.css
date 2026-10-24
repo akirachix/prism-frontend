@@ -443,7 +443,6 @@
   color: var(--navy);
 }
 
-/* ---------- Page header ---------- */
 .ui-header {
   position: relative;
   background: var(--navy-deep);
@@ -848,12 +847,27 @@
 }
 
 @media (min-width: 769px) {
-  .ui-header {
-    padding: 36px 48px 44px;
+  /* Desktop: no blue banner. The banner only shows on mobile (PWA). */
+  .ui-header,
+  .ui-header--tall {
+    background: transparent;
+    color: var(--navy);
+    padding: 36px 48px 0;
+    border-radius: 0;
   }
 
-  .ui-header--tall {
-    padding-bottom: 72px;
+  .ui-header__title,
+  .ui-header__back {
+    color: var(--navy);
+  }
+
+  .ui-header-pill {
+    border-color: var(--navy);
+    color: var(--navy);
+  }
+
+  .ui-lift {
+    margin-top: 0;
   }
 
   .ui-body {

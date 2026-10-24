@@ -22,13 +22,13 @@ describe("studentName", () => {
 describe("getStudents", () => {
   it("asks the backend for up to 200 students", async () => {
     await getStudents();
-    expect(mockRequest.mock.calls[0][0]).toBe("/students?limit=200");
+    expect(mockRequest.mock.calls[0][0]).toBe("/students");
   });
 
   it("can ask for one teacher's students", async () => {
     await getStudents("t1");
     const path = mockRequest.mock.calls[0][0] as string;
     expect(path).toMatch(/teacher_id=t1/);
-    expect(path).toMatch(/limit=200/);
+    expect(path).not.toMatch(/limit=/);
   });
 });

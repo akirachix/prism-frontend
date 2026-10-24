@@ -86,7 +86,7 @@ describe("loadParentReports", () => {
 describe("reportsApi.listAll", () => {
   it("asks for up to 100 reports", async () => {
     await reportsApi.listAll();
-    expect(mockRequest).toHaveBeenCalledWith("/reports?limit=100");
+    expect(mockRequest).toHaveBeenCalledWith("/reports");
   });
 });
 
@@ -102,7 +102,7 @@ describe("loadReportChild", () => {
       caseItem: { case_id: "c1", student_id: "s9" },
       student: { student_id: "s9", first_name: "Faith" },
     });
-    expect(mockRequest).not.toHaveBeenCalledWith("/students?limit=200");
+    expect(mockRequest).not.toHaveBeenCalledWith("/students");
   });
 
   it("fails when the child cannot be read, instead of returning no name", async () => {

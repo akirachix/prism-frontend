@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { ApiError } from "@/lib/api";
+import { errorMessage } from "@/lib/api";
 import { formatDate } from "@/lib/format";
 import { reportsApi, type Report } from "@/lib/reports";
 import { withCase } from "./useReportCase";
@@ -28,13 +28,7 @@ export default function DevReportPicker() {
           ),
         ),
       )
-      .catch((err) =>
-        setError(
-          err instanceof ApiError
-            ? err.message
-            : "Something went wrong. Please try again.",
-        ),
-      );
+      .catch((err) => setError(errorMessage(err)));
   }, []);
 
   return (

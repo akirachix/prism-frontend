@@ -1,0 +1,18 @@
+.todo-page__columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 56px;
+  align-items: start;
+}
+
+.todo-page__col {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 900px) {
+  .todo-page__columns {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

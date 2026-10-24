@@ -29,6 +29,5 @@ export function professionalName(
 }
 
 export const professionalsApi = {
-  listActive: () =>
-    request<Professional[]>("/professionals?is_active=true&limit=100"),
+  listActive: () => request<Professional[]>("/professionals?is_active=true"),
 };

@@ -16,12 +16,14 @@ type Router = { push: (href: string) => void; replace: (href: string) => void };
 const AUTH_PAGE =
   /^\/(teacher|parent)\/(login|verify|new-password|forgot-password|reset-password|welcome|invite|set-password)\b/;
 
+/** Only allow redirects to our own pages, never to another site or back into sign-in. */
 export function safeNext(next: string | null, fallback: string): string {
   if (!next || !next.startsWith("/") || next.startsWith("//")) return fallback;
   if (AUTH_PAGE.test(next)) return fallback;
   return next;
 }
 
+/** Remember where the flow is and open the screen for the next step. */
 export function goToStage(
   router: Router,
   portal: Portal,

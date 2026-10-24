@@ -1,13 +1,13 @@
 "use client";
 
 import {
-  BarChart3,
+  BookOpen,
   ClipboardCheck,
   ClipboardList,
+  FileText,
   GraduationCap,
   House,
   ListChecks,
-  School,
   User,
 } from "lucide-react";
 import Image from "next/image";
@@ -25,8 +25,8 @@ const ICONS = {
   cases: ClipboardList,
   todo: ListChecks,
   account: User,
-  reports: BarChart3,
-  school: School,
+  reports: FileText,
+  school: BookOpen,
   evaluation: ClipboardCheck,
 };
 
@@ -36,24 +36,28 @@ export interface NavLink {
   href: string;
   label: string;
   exact?: boolean;
-  also?: string;
   icon?: IconName;
+  /** Another path prefix that belongs to this section (plain string, so a
+   * server layout can pass it). */
+  also?: string;
 }
 
 export default function Sidebar({
   links,
-  variant,
+  variant = "teacher",
 }: {
   links: NavLink[];
-  variant?: "parent";
+  /** Parent nav highlights the active tab in red on mobile. */
+  variant?: "teacher" | "parent";
 }) {
   const pathname = usePathname();
+  const home = links[0]?.href ?? "/";
 
   return (
     <aside
       className={variant === "parent" ? "sidebar sidebar--parent" : "sidebar"}
     >
-      <Link href="/" className="sidebar__logo" aria-label="Mirai home">
+      <Link href={home} className="sidebar__logo" aria-label="Mirai home">
         <Image
           src="/mirai-logo.png"
           alt="Mirai"
@@ -65,10 +69,11 @@ export default function Sidebar({
       </Link>
       <nav className="sidebar__nav" aria-label="Main">
         {links.map((link) => {
-          const active = link.exact
-            ? pathname === link.href
-            : pathname.startsWith(link.href) ||
-              (link.also ? pathname.startsWith(link.also) : false);
+          const active =
+            (link.exact
+              ? pathname === link.href
+              : pathname.startsWith(link.href)) ||
+            Boolean(link.also && pathname.startsWith(link.also));
           const Icon = link.icon ? ICONS[link.icon] : null;
           return (
             <Link

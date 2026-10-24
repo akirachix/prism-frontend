@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 
-import CaseDetailModal from "@/app/teacher/_components/CaseDetailModal";
+import CaseDetailModal from "@/app/teacher/_components/cases/CaseDetailModal";
 import type { Case } from "@/lib/types";
 
 jest.mock("@/lib/cases", () => ({
