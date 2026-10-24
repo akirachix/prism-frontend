@@ -1,14 +1,17 @@
 "use client";
 
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 import { useUser } from "@/_components/SessionProvider";
+import { ButtonLink } from "@/_components/ui/Button";
 import { Alert, Avatar, Empty, Loading } from "@/_components/ui/bits";
 import { useLoad } from "@/_components/useLoad";
 import { attentionItems, loadClassroom } from "@/lib/classroom";
 import { greeting, relativeDay } from "@/lib/format";
 import { notificationsApi } from "@/lib/notifications";
 import { fullName } from "@/lib/users";
+import "@/_components/plan/plan.css";
 import "./page.module.css";
 
 export default function TeacherHomePage() {
@@ -38,6 +41,7 @@ export default function TeacherHomePage() {
       label: data?.students.length === 1 ? "Student" : "Students",
       value: data?.students.length,
       tone: "peach",
+      href: "/teacher/students",
     },
     {
       label: "Open cases",
@@ -45,7 +49,12 @@ export default function TeacherHomePage() {
       tone: "sky",
       href: "/teacher/cases",
     },
-    { label: "Active IEP", value: active, tone: "pink" },
+    {
+      label: "Active IEP",
+      value: active,
+      tone: "pink",
+      href: "/teacher/students?filter=plan",
+    },
     {
       label: "Unapproved IEP",
       value: unapproved,
@@ -96,6 +105,14 @@ export default function TeacherHomePage() {
 
       <div className="ui-body">
         {room.error && <Alert>{room.error}</Alert>}
+
+        <ButtonLink
+          href="/teacher/students?filter=plan"
+          className="portal-home__plans"
+        >
+          View education plans (IEPs)
+          <ArrowRight size={18} aria-hidden="true" />
+        </ButtonLink>
 
         <section className="portal-section" aria-labelledby="attention-title">
           <div className="ui-row-between">

@@ -1,4 +1,5 @@
-import { query, request } from "@/lib/api";
+import { request } from "@/lib/api";
+import { query } from "@/lib/query";
 import type { Case, CaseCreate, CaseUpdate } from "@/lib/types";
 
 export type CaseFilters = {

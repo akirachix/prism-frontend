@@ -1,4 +1,5 @@
-import { query, request } from "@/lib/api";
+import { request } from "@/lib/api";
+import { query } from "@/lib/query";
 
 export type ResponderRole = "TEACHER" | "PARENT";
 
