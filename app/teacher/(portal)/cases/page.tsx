@@ -18,7 +18,6 @@ export default function CasesPage() {
   const [selected, setSelected] = useState<Case | null>(null);
 
   useEffect(() => {
-    // Students only fill in names, so the table still works without them.
     fetchAll((limit, offset) => getStudents(undefined, limit, offset))
       .then(setStudents)
       .catch(() => setStudents([]));
