@@ -78,6 +78,11 @@ export default function LoginForm({
           Your password was changed. Sign in with the new one.
         </Alert>
       )}
+      {notice === "invite-accepted" && (
+        <Alert tone="success">
+          Your account is ready. Sign in with your email and new password.
+        </Alert>
+      )}
       {notice === "signed-out" && (
         <Alert tone="info">You have signed out.</Alert>
       )}
