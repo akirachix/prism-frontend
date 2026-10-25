@@ -1,4 +1,3 @@
-/* ---------- Buttons ---------- */
 .ui-btn {
   display: inline-flex;
   align-items: center;
@@ -90,7 +89,6 @@
   border-width: 1.5px;
 }
 
-/* ---------- Fields ---------- */
 .ui-field {
   display: flex;
   flex-direction: column;
@@ -210,7 +208,6 @@
   justify-content: center;
 }
 
-/* ---------- OTP ---------- */
 .ui-otp {
   margin: 0;
   border: 0;
@@ -268,7 +265,6 @@
   background: var(--cream-light);
 }
 
-/* ---------- Feedback ---------- */
 .ui-alert {
   display: flex;
   gap: 10px;
@@ -368,7 +364,6 @@
   font-weight: 600;
 }
 
-/* ---------- Pills & avatars ---------- */
 .ui-pill {
   display: inline-flex;
   align-items: center;
@@ -415,7 +410,6 @@
   letter-spacing: 0.02em;
 }
 
-/* ---------- Cards ---------- */
 .ui-card {
   border: 1.5px solid var(--navy);
   border-radius: var(--radius);
@@ -510,7 +504,6 @@
   cursor: pointer;
 }
 
-/* ---------- Badge illustration ---------- */
 .ui-badge {
   position: relative;
   width: 132px;
@@ -556,7 +549,6 @@
   background: var(--orange);
 }
 
-/* ---------- Progress ---------- */
 .ui-progress {
   position: relative;
   height: 14px;
@@ -578,7 +570,6 @@
   background: var(--orange);
 }
 
-/* ---------- Locked card ---------- */
 .ui-locked {
   display: flex;
   flex-direction: column;
@@ -611,7 +602,6 @@
   font-weight: 600;
 }
 
-/* ---------- Journey ---------- */
 .ui-journey {
   margin: 0;
   padding: 0;
@@ -677,7 +667,6 @@
   color: var(--muted);
 }
 
-/* ---------- Faces ---------- */
 .ui-faces {
   margin: 0;
   border: 0;
@@ -742,7 +731,6 @@
   font-size: 1.05rem;
 }
 
-/* ---------- Choice list (screening answers) ---------- */
 .ui-choices {
   display: flex;
   flex-direction: column;
@@ -789,7 +777,6 @@
   box-shadow: inset 0 0 0 3px var(--white);
 }
 
-/* ---------- Page body helpers ---------- */
 .ui-page {
   min-height: 100vh;
   background: var(--cream);
@@ -847,7 +834,6 @@
 }
 
 @media (min-width: 769px) {
-  /* Desktop: no blue banner. The banner only shows on mobile (PWA). */
   .ui-header,
   .ui-header--tall {
     background: transparent;

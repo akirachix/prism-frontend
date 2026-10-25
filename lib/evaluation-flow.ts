@@ -8,21 +8,15 @@ import {
   type EvaluationRound,
   type ResponderRole,
 } from "@/lib/evaluations";
-import { currentIep, iepsApi, type IEP } from "@/lib/ieps";
+import { currentIep, plansForCase, type IEP } from "@/lib/ieps";
 import { FINISHED_STATUSES } from "@/lib/types";
 
-/** The evaluation has at most five questions. */
 export const EVALUATION_QUESTION_COUNT = 5;
 
-/** After answers are sent, they stay locked for six weeks. */
 export const LOCK_DAYS = 42;
 
 const DAY = 24 * 60 * 60 * 1000;
 
-/**
- * The plan being evaluated: the ACTIVE plan, even while a newer version is
- * still a draft or waiting for approval. Otherwise the newest live plan.
- */
 export function evaluatedIep(ieps: IEP[]): IEP | null {
   const active = ieps.filter((plan) => plan.status === "ACTIVE");
   if (active.length > 0) {
@@ -31,15 +25,10 @@ export function evaluatedIep(ieps: IEP[]): IEP | null {
   return currentIep(ieps);
 }
 
-/** The case's plan for the 6-week check, if any. */
 export async function planForCase(caseId: string): Promise<IEP | null> {
-  return evaluatedIep(await iepsApi.list({ case_id: caseId, limit: 50 }));
+  return evaluatedIep(await plansForCase(caseId));
 }
 
-/**
- * The timer after answers are sent: whole days left until they can be
- * changed again, and how many of the 42 days have passed.
- */
 export function lockCountdown(lockedUntil: string, now = new Date()) {
   const remaining = new Date(lockedUntil).getTime() - now.getTime();
   const daysLeft = Math.max(0, Math.ceil(remaining / DAY));
@@ -53,10 +42,6 @@ export interface EvaluationData {
   mine: EvaluationResponse[];
 }
 
-/**
- * Load the evaluation for whoever is signed in. The server says whether it
- * is not open yet, open, or locked after an earlier submission.
- */
 export async function loadEvaluation(iep: IEP): Promise<EvaluationData> {
   const round = await evaluationsApi.current(iep.iep_id);
   const questions = [...round.questions]
@@ -74,12 +59,6 @@ export type CaseUpdateResult =
   | { ok: true; bothDone: boolean; changed: boolean }
   | { ok: false; message: string };
 
-/**
- * Move the case on after the teacher's answers: it is COMPLETED once the
- * teacher and the parent have both answered every question. Only teachers
- * may change a case, so a parent's submission never tries. This is separate
- * from saving the answers, so a failure is reported and can be tried again.
- */
 export async function updateCaseAfterSubmit(params: {
   iep: IEP;
   questions: EvaluationQuestion[];
@@ -110,13 +89,6 @@ export async function updateCaseAfterSubmit(params: {
   }
 }
 
-/**
- * Send this person's answers in one request (they are saved together, so a
- * retry never repeats answers), then update the case.
- * If sending the answers fails this throws and nothing was saved.
- * If only the case update fails, the answers are saved and `caseUpdate`
- * says what went wrong.
- */
 export async function submitEvaluation(params: {
   iep: IEP;
   questions: EvaluationQuestion[];
@@ -135,28 +107,43 @@ export async function submitEvaluation(params: {
   return { round, caseUpdate };
 }
 
-/** Each active plan's 6-week check state for the signed-in person. */
+export type CheckState = EvaluationRound["status"] | "UNAVAILABLE";
+
 export async function checkStates(
   iepIds: string[],
-): Promise<Map<string, EvaluationRound["status"]>> {
-  const rounds = await Promise.all(
-    iepIds.map((id) => evaluationsApi.current(id).catch(() => null)),
+): Promise<Map<string, CheckState>> {
+  const results = await Promise.allSettled(
+    iepIds.map((id) => evaluationsApi.current(id)),
   );
-  const states = new Map<string, EvaluationRound["status"]>();
-  rounds.forEach((round, i) => {
-    if (round) states.set(iepIds[i], round.status);
+  const states = new Map<string, CheckState>();
+  results.forEach((result, i) => {
+    states.set(
+      iepIds[i],
+      result.status === "fulfilled" ? result.value.status : "UNAVAILABLE",
+    );
   });
   return states;
 }
 
-/**
- * A student's status pill, corrected with the real 6-week check state: the
- * plan's unlock date alone cannot tell that the answers were already sent.
- */
+export function unavailableCount(
+  states: Map<string, CheckState> | null | undefined,
+): number {
+  if (!states) return 0;
+  return Array.from(states.values()).filter((s) => s === "UNAVAILABLE").length;
+}
+
 export function withCheckState(
   base: StudentStatus,
-  state: EvaluationRound["status"] | undefined,
+  state: CheckState | undefined,
 ): StudentStatus {
+  if (state === "UNAVAILABLE") {
+    return {
+      label: "Check status unavailable",
+      tone: "grey",
+      needsAction: false,
+      activePlan: true,
+    };
+  }
   if (state === "LOCKED") {
     return {
       label: "Answers sent",

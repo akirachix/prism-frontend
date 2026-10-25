@@ -20,11 +20,9 @@ export interface EvaluationResponse {
   submitted_at: string;
 }
 
-/** Where the 6-week evaluation stands for the signed-in teacher or parent. */
 export type EvaluationWindowStatus =
   "NOT_APPROVED" | "NOT_OPEN" | "OPEN" | "LOCKED";
 
-/** GET /iep-evaluation-questions/current: the signed-in person's round. */
 export interface EvaluationRound {
   iep_id: string;
   status: EvaluationWindowStatus;
@@ -45,16 +43,10 @@ export const evaluationsApi = {
     request<EvaluationQuestion[]>(
       `/iep-evaluation-questions${query({ iep_id: iepId })}`,
     ),
-  /** The evaluation round: questions, my answers, and whether it is open. */
   current: (iepId: string) =>
     request<EvaluationRound>(
       `/iep-evaluation-questions/current${query({ iep_id: iepId })}`,
     ),
-  /**
-   * Send every answer in one request. The server saves all of them or none,
-   * so a failed attempt can be repeated safely, and it locks the evaluation
-   * for six weeks.
-   */
   submit: (iepId: string, answers: EvaluationAnswer[]) =>
     request<EvaluationRound>("/iep-evaluation-responses/submit", {
       method: "POST",
@@ -85,7 +77,6 @@ export const evaluationsApi = {
     }),
 };
 
-/** The five faces on the 6-week check, from -2 to 2. */
 export const SCALE = [
   { score: -2, label: "Much worse", face: "😞" },
   { score: -1, label: "A little worse", face: "🙁" },

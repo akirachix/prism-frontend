@@ -135,7 +135,6 @@
   color: var(--muted);
 }
 
-/* "View all": a floating panel over the page. */
 .eval-overlay {
   position: fixed;
   inset: 0;
@@ -224,7 +223,6 @@
   }
 }
 
-/* The PDF: while one report prints, only that report is on the page. */
 .eval-print {
   display: none;
 }

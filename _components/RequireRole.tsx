@@ -8,10 +8,6 @@ import { useSession } from "./SessionProvider";
 import Button from "./ui/Button";
 import "./ui/ui.css";
 
-/**
- * Shows the page only to a signed-in user with the right role. Anyone
- * else is sent to that portal's sign-in screen, then brought back.
- */
 export default function RequireRole({
   role,
   loginPath,
@@ -27,8 +23,6 @@ export default function RequireRole({
   const redirected = useRef(false);
 
   useEffect(() => {
-    // Redirect once. During navigation this layout can briefly see the
-    // sign-in page's path, and must not send people to "login?next=login".
     if (
       ready &&
       !user &&
@@ -36,7 +30,6 @@ export default function RequireRole({
       !pathname.startsWith(loginPath)
     ) {
       redirected.current = true;
-      // Right after signing out, do not bring the person back to sign-out.
       router.replace(
         pathname.endsWith("/sign-out")
           ? `${loginPath}?notice=signed-out`

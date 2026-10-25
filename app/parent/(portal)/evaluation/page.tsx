@@ -15,7 +15,6 @@ async function load(caseId: string | null) {
   return { iep, evaluation: await loadEvaluation(iep) };
 }
 
-/** The parent's 6-week evaluation of their child. */
 export default function ParentEvaluationPage() {
   const { child, caseItem, loading: childLoading } = useChild();
   const caseId = caseItem?.case_id ?? null;

@@ -7,11 +7,6 @@ import "../ui/ui.css";
 
 const ICONS = [Frown, Annoyed, Meh, Smile, Laugh];
 
-/**
- * The five-face scale (-2 to 2) used by the 6-week check. The name of each
- * option is written under its card on every screen size. With `disabled`
- * the chosen answer is shown but cannot be changed.
- */
 export default function FaceScale({
   name,
   value,

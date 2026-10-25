@@ -16,7 +16,6 @@ import type { UserRead } from "@/lib/users";
 import { useHydrated } from "./hooks";
 
 interface SessionValue {
-  /** False until the stored session has been read on the client. */
   ready: boolean;
   user: UserRead | null;
   refreshUser: () => Promise<void>;
@@ -32,7 +31,6 @@ export default function SessionProvider({ children }: { children: ReactNode }) {
   const user = session?.user ?? null;
   const signedIn = Boolean(session);
 
-  // Check the stored token still works and pick up profile changes.
   useEffect(() => {
     if (!signedIn) return;
     authApi
@@ -67,7 +65,6 @@ export function useSession(): SessionValue {
   return value;
 }
 
-/** For pages behind RequireRole, where a user is always present. */
 export function useUser(): UserRead {
   const { user } = useSession();
   if (!user) throw new Error("useUser needs a signed-in user");

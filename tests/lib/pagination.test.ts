@@ -61,7 +61,6 @@ describe("loadClassroom pagination", () => {
     };
   }
 
-  /** A fake backend that honours limit/offset like the real one. */
   function serve(tables: Record<string, unknown[]>) {
     fetchMock.mockImplementation(async (input: string) => {
       const url = new URL(input, "http://api.test");
@@ -90,7 +89,6 @@ describe("loadClassroom pagination", () => {
     const cases = students.map((s, i) =>
       makeCase({ case_id: `c${i}`, student_id: s.student_id }),
     );
-    // Lots of other schools' IEPs first, so ours is on page 2.
     const others = Array.from({ length: 230 }, (_, i) =>
       makeIep({ iep_id: `other${i}`, case_id: `elsewhere${i}` }),
     );

@@ -17,7 +17,6 @@ export interface Student {
   created_at?: string;
 }
 
-/** The parent a teacher adds with a student. They are emailed an invitation. */
 export interface ParentIn {
   first_name: string;
   last_name: string;
@@ -25,11 +24,6 @@ export interface ParentIn {
   phone?: string | null;
 }
 
-/**
- * What POST /students accepts. The school and the teacher come from the
- * signed-in teacher. Send either `parent_id` (an existing parent) or
- * `parent` (a new parent, who receives the invitation link).
- */
 export interface StudentCreate {
   admission_number: string;
   first_name: string;
@@ -40,7 +34,6 @@ export interface StudentCreate {
   parent?: ParentIn | null;
 }
 
-/** GET /students/{id}/parent-invitation: has the parent joined yet? */
 export interface ParentInviteStatus {
   parent_email: string;
   accepted: boolean;
@@ -49,7 +42,6 @@ export interface ParentInviteStatus {
   max_resends: number;
 }
 
-/** POST /students/{id}/resend-parent-invitation. */
 export interface ParentResendResult {
   detail: string;
   resends_left: number;
@@ -81,7 +73,6 @@ export const studentsApi = {
     request<ParentInviteStatus>(
       `${STUDENTS_PATH}/${studentId}/parent-invitation`,
     ),
-  /** Emails the parent a new link. The server allows at most five resends. */
   resendParentInvitation: (studentId: string) =>
     request<ParentResendResult>(
       `${STUDENTS_PATH}/${studentId}/resend-parent-invitation`,
@@ -93,7 +84,6 @@ export function studentName(student: Student): string {
   return `${student.first_name} ${student.last_name}`;
 }
 
-/** "2019-05-10" is read as a local calendar day, never shifted by timezone. */
 function parseDay(value: string): Date {
   const day = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
   if (day) return new Date(Number(day[1]), Number(day[2]) - 1, Number(day[3]));
@@ -115,7 +105,6 @@ export function ageInYears(
   return age;
 }
 
-/** Mirai screens children from 4 to 9 years old. */
 export const MIN_STUDENT_AGE = 4;
 export const MAX_STUDENT_AGE = 9;
 
@@ -133,10 +122,6 @@ function isoDay(date: Date): string {
   return `${date.getFullYear()}-${month}-${pad(date.getDate())}`;
 }
 
-/**
- * The first and last birth dates the calendar offers: a child who is at
- * least 4 and not yet 10 years old today.
- */
 export function birthDateLimits(now = new Date()): {
   min: string;
   max: string;
@@ -147,4 +132,17 @@ export function birthDateLimits(now = new Date()): {
   oldest.setFullYear(oldest.getFullYear() - (MAX_STUDENT_AGE + 1));
   oldest.setDate(oldest.getDate() + 1);
   return { min: isoDay(oldest), max: isoDay(youngest) };
+}
+
+export function birthDateProblem(
+  value: string,
+  now = new Date(),
+): string | null {
+  if (!value) return "Choose the date of birth.";
+  if (isEligibleAge(value, now)) return null;
+  const age = ageInYears(value, now);
+  const range = `${MIN_STUDENT_AGE} to ${MAX_STUDENT_AGE}`;
+  return age === null
+    ? `Only children aged ${range} can be added.`
+    : `Only children aged ${range} can be added. This child is ${age}.`;
 }

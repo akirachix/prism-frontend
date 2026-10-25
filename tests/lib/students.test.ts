@@ -2,6 +2,7 @@ import { request } from "@/lib/api";
 import {
   ageInYears,
   birthDateLimits,
+  birthDateProblem,
   isEligibleAge,
   studentsApi,
 } from "@/lib/lookups";
@@ -12,7 +13,7 @@ jest.mock("@/lib/api", () => ({
 }));
 
 const mockRequest = request as jest.Mock;
-const TODAY = new Date(2026, 9, 24); // 24 Oct 2026
+const TODAY = new Date(2026, 9, 24);
 
 beforeEach(() => {
   mockRequest.mockReset();
@@ -27,10 +28,10 @@ describe("student ages", () => {
   });
 
   it("only children aged 4 to 9 are eligible", () => {
-    expect(isEligibleAge("2022-10-24", TODAY)).toBe(true); // 4 today
-    expect(isEligibleAge("2022-10-25", TODAY)).toBe(false); // 4 tomorrow
-    expect(isEligibleAge("2016-10-25", TODAY)).toBe(true); // 9
-    expect(isEligibleAge("2016-10-24", TODAY)).toBe(false); // 10 today
+    expect(isEligibleAge("2022-10-24", TODAY)).toBe(true);
+    expect(isEligibleAge("2022-10-25", TODAY)).toBe(false);
+    expect(isEligibleAge("2016-10-25", TODAY)).toBe(true);
+    expect(isEligibleAge("2016-10-24", TODAY)).toBe(false);
     expect(isEligibleAge("", TODAY)).toBe(false);
   });
 
@@ -39,6 +40,21 @@ describe("student ages", () => {
       min: "2016-10-25",
       max: "2022-10-24",
     });
+  });
+});
+
+describe("birthDateProblem", () => {
+  it("accepts an eligible child", () => {
+    expect(birthDateProblem("2020-10-24", TODAY)).toBeNull();
+  });
+
+  it("asks for a date when it is empty", () => {
+    expect(birthDateProblem("", TODAY)).toBe("Choose the date of birth.");
+  });
+
+  it("names the child's age when they are too old or too young", () => {
+    expect(birthDateProblem("2016-10-24", TODAY)).toMatch(/This child is 10/);
+    expect(birthDateProblem("2023-01-01", TODAY)).toMatch(/This child is 3/);
   });
 });
 

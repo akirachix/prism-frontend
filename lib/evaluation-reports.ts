@@ -9,9 +9,7 @@ import {
 } from "@/lib/evaluations";
 import { iepsApi, type IEP } from "@/lib/ieps";
 
-/** One person's answers to one plan's 6-week evaluation. */
 export interface EvaluationReport {
-  /** `${iep_id}:${role}` - unique in a list. */
   id: string;
   iepId: string;
   caseId: string;
@@ -19,14 +17,11 @@ export interface EvaluationReport {
   planApprovedAt: string | null;
   role: ResponderRole;
   responderId: string;
-  /** When the answers were last sent. */
   submittedAt: string;
   answers: { question: EvaluationQuestion; score: number | null }[];
-  /** Mean of the answered scores (-2 to 2), or null when none. */
   average: number | null;
 }
 
-/** How many reports show before "View all". */
 export const TOP_REPORTS = 5;
 
 const YEAR = 365 * 24 * 60 * 60 * 1000;
@@ -73,11 +68,6 @@ function reportFor(
   };
 }
 
-/**
- * Every 6-week evaluation sent for these cases, by the teacher and by the
- * parent, newest first. Only approved plans have an evaluation. The answers
- * are read per question, so the list is exact (no paging gaps).
- */
 export async function loadEvaluationReports(
   caseIds: string[],
 ): Promise<EvaluationReport[]> {
@@ -118,7 +108,6 @@ export function sortReports(reports: EvaluationReport[]): EvaluationReport[] {
   );
 }
 
-/** The newest reports, for the short list. */
 export function topReports(
   reports: EvaluationReport[],
   count = TOP_REPORTS,
@@ -126,7 +115,6 @@ export function topReports(
   return sortReports(reports).slice(0, count);
 }
 
-/** Everything sent in the past 12 months, newest first ("View all"). */
 export function reportsThisYear(
   reports: EvaluationReport[],
   now = new Date(),
@@ -137,7 +125,6 @@ export function reportsThisYear(
   );
 }
 
-/** "A little better" - the average answer, in words. */
 export function overallLabel(report: EvaluationReport): string {
   return report.average === null ? "—" : scaleLabel(Math.round(report.average));
 }

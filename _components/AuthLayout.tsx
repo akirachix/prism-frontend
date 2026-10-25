@@ -4,14 +4,6 @@ import type { ReactNode } from "react";
 
 import "./auth-layout.css";
 
-/**
- * The split sign-in layout. Desktop: a navy panel with the background
- * artwork on the left and the form on the right. Mobile: the artwork
- * becomes a rounded header above the form.
- *
- * - teacher: "Hello, Teacher!" panel, big logo, hero header on mobile.
- * - parent: "Supporting your child, together." panel with a top bar.
- */
 export default function AuthLayout({
   portal,
   panelTitle,
@@ -25,7 +17,6 @@ export default function AuthLayout({
   portal: "teacher" | "parent";
   panelTitle: ReactNode;
   panelText: ReactNode;
-  /** hero: tall artwork header, bar: short navy header, plain: logo only. */
   mobileHeader?: "hero" | "bar" | "plain";
   mobileTitle?: ReactNode;
   mobileText?: ReactNode;

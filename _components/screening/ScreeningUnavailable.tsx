@@ -1,11 +1,6 @@
 import { ButtonLink } from "../ui/Button";
 import { Alert, PageHeader } from "../ui/bits";
 
-/**
- * Screening is not available in this version. Every screening button and
- * link still exists, but it lands here: no screening questions are loaded
- * and nothing is saved.
- */
 export default function ScreeningUnavailable({
   backHref,
   backLabel,

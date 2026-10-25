@@ -4,32 +4,55 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { relativeDay } from "@/lib/format";
-import { sortUpdates, type UpdateItem } from "@/lib/evaluation-updates";
+import {
+  hasUnavailable,
+  sortUpdates,
+  type UpdateItem,
+} from "@/lib/evaluation-updates";
+import Button from "../ui/Button";
 import { Alert, Empty, Loading } from "../ui/bits";
 import "../portal.css";
 import "./latest-updates.css";
 
 const FIRST = 6;
 
-/** "Latest updates" on a home page: reminders first, then news by date. */
 export default function LatestUpdates({
   items,
   loading,
   error,
+  onRetry,
 }: {
   items: UpdateItem[];
   loading: boolean;
   error?: string | null;
+  onRetry?: () => void;
 }) {
   const [all, setAll] = useState(false);
+  const retry = onRetry && (
+    <Button variant="link" onClick={onRetry} loading={loading}>
+      Try again
+    </Button>
+  );
   if (loading && items.length === 0) return <Loading />;
-  if (error && items.length === 0) return <Alert>{error}</Alert>;
+  if (error && items.length === 0) {
+    return (
+      <Alert>
+        {error} {retry}
+      </Alert>
+    );
+  }
   if (items.length === 0) return <Empty>No updates yet.</Empty>;
 
   const sorted = sortUpdates(items);
   const shown = all ? sorted : sorted.slice(0, FIRST);
   return (
     <>
+      {hasUnavailable(items) && (
+        <Alert tone="warning">
+          Some 6-week check updates could not be loaded, so a reminder may be
+          missing. {retry}
+        </Alert>
+      )}
       <ul className="portal-news">
         {shown.map((item) => {
           const text = (

@@ -5,7 +5,6 @@ import { useState } from "react";
 import type { IEP } from "@/lib/ieps";
 import "./plan.css";
 
-/** The plan text, short-term goals and strategies, with "Read the whole plan". */
 export default function PlanContent({ iep }: { iep: IEP }) {
   const [open, setOpen] = useState(false);
   const text = iep.generated_content.trim();

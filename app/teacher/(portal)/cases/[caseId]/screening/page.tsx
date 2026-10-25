@@ -4,10 +4,12 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import ScreeningFlow from "@/_components/screening/ScreeningFlow";
+import ScreeningUnavailable from "@/_components/screening/ScreeningUnavailable";
 import { useUser } from "@/_components/SessionProvider";
 import { Alert, Loading, PageHeader } from "@/_components/ui/bits";
 import { useLoad } from "@/_components/useLoad";
 import { casesApi } from "@/lib/cases";
+import { SCREENING_ENABLED } from "@/lib/features";
 import { ageInYears, studentName, studentsApi } from "@/lib/lookups";
 import { loadScreening } from "@/lib/screening";
 import { questionSetFor } from "@/lib/screening-questions";
@@ -21,7 +23,7 @@ async function load(caseId: string) {
   return { caseItem, student, screening: screening.content };
 }
 
-export default function TeacherScreeningPage() {
+function TeacherScreening() {
   const { caseId } = useParams<{ caseId: string }>();
   const user = useUser();
   const router = useRouter();
@@ -57,4 +59,16 @@ export default function TeacherScreeningPage() {
       doneHref={`/teacher/cases/${caseId}/screening/done`}
     />
   );
+}
+
+export default function TeacherScreeningPage() {
+  if (!SCREENING_ENABLED) {
+    return (
+      <ScreeningUnavailable
+        backHref="/teacher/students"
+        backLabel="Back to my students"
+      />
+    );
+  }
+  return <TeacherScreening />;
 }

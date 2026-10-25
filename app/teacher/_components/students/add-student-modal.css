@@ -72,3 +72,14 @@
     gap: 6px;
   }
 }
+
+.add-student__error {
+  margin: 4px 0 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--red);
+}
+
+.add-student .close-form__field[aria-invalid="true"] {
+  border-color: var(--red);
+}

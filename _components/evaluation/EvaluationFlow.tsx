@@ -27,16 +27,10 @@ import LockNotice from "./LockNotice";
 import "../portal.css";
 import "./evaluation.css";
 
-/** "review" shows the answers that were already sent; nothing can be edited. */
 type Step = "intro" | "questions" | "confirm" | "done" | "review";
 
 const QUESTIONS_PER_SCREEN = 2;
 
-/**
- * The 6-week check, the same for the teacher and the parent: an intro, two
- * questions per screen, a confirmation, then the answers are locked for six
- * weeks. All answers are sent in one request.
- */
 export default function EvaluationFlow({
   role,
   iep,
@@ -49,11 +43,9 @@ export default function EvaluationFlow({
   role: ResponderRole;
   iep: IEP;
   data: EvaluationData;
-  /** The child's first name, for the teacher's wording. */
   childName?: string;
   doneHref: string;
   doneLabel: string;
-  /** Called once the answers are saved, so the page can refresh its data. */
   onSubmitted?: () => void;
 }) {
   const [round, setRound] = useState(data.round);
@@ -67,7 +59,6 @@ export default function EvaluationFlow({
   const [missing, setMissing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // Answers saved is one thing; the case being updated is another.
   const [caseProblem, setCaseProblem] = useState<string | null>(null);
   const [caseDone, setCaseDone] = useState(false);
   const [retryingCase, setRetryingCase] = useState(false);
@@ -160,7 +151,6 @@ export default function EvaluationFlow({
       setStep("done");
       onSubmitted?.();
     } catch (err) {
-      // Nothing was saved, so pressing Submit again is safe.
       setError(errorMessage(err));
     } finally {
       setSaving(false);

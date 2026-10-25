@@ -51,7 +51,6 @@ function ReportContent({
     (kind === "screening" && reports?.screening) ||
     (kind === "plan" && reports?.plan) ||
     (kind === "activities" && reports?.recommendation);
-  // Print only once this case's child and report are both loaded.
   const printReady = Boolean(
     ready &&
     child &&

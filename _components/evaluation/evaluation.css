@@ -4,7 +4,6 @@
   gap: 28px;
 }
 
-/* The page body for the evaluation is a wide, centred workspace. */
 .evaluation-page {
   width: 100%;
   max-width: 1200px;
@@ -96,7 +95,6 @@
   color: var(--red);
 }
 
-/* The start button fills the workspace, as in the design. */
 .evaluation__wide {
   width: 100%;
   max-width: none;
@@ -173,8 +171,6 @@
   color: var(--muted);
 }
 
-/* Face scale: every option is labelled under its card; a sent answer is
-   shown read-only. */
 .ui-faces__row {
   align-items: start;
 }
@@ -209,36 +205,4 @@
   .ui-faces__item .ui-face__radio {
     display: none;
   }
-}
-
-/* Numbered dots from the earlier progress row, kept for reuse. */
-.evaluation__dots {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.evaluation__dot {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border: 1.5px solid var(--navy);
-  border-radius: 50%;
-  background: var(--white);
-  font-size: 0.8rem;
-  font-weight: 700;
-}
-
-.evaluation__dot--done {
-  background: var(--navy);
-  color: var(--white);
-}
-
-.evaluation__dot--current {
-  background: var(--orange);
-  color: var(--navy);
 }

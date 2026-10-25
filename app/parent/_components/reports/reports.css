@@ -173,7 +173,6 @@
   color: #0a2a66;
 }
 
-/* Documents */
 .preports__doc {
   display: flex;
   flex-direction: column;
@@ -347,8 +346,6 @@
   }
 }
 
-/* Inside the parent portal on desktop, match the other parent pages:
-   a navy title on the cream page, under the "Parent portal" bar. */
 @media (min-width: 769px) {
   .parent-shell .preports__header {
     border-radius: 0;

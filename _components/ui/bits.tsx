@@ -23,7 +23,6 @@ export function Alert({
   );
 }
 
-/** The dashed blush box used for side notes in the designs. */
 export function Note({ children }: { children: ReactNode }) {
   return <div className="ui-note">{children}</div>;
 }
@@ -79,7 +78,6 @@ export function Avatar({
   );
 }
 
-/** The navy header with rounded bottom corners at the top of each page. */
 export function PageHeader({
   title,
   eyebrow,
@@ -148,7 +146,6 @@ export function Empty({ children }: { children: ReactNode }) {
   return <p className="ui-empty">{children}</p>;
 }
 
-/** The envelope / check / clipboard illustration with two dots. */
 export function IconBadge({ children }: { children: ReactNode }) {
   return (
     <div className="ui-badge" aria-hidden="true">

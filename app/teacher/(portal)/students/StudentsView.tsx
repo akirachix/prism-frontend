@@ -18,17 +18,20 @@ import {
 } from "@/_components/ui/bits";
 import { useLoad } from "@/_components/useLoad";
 import { loadClassroom, studentStatus } from "@/lib/classroom";
-import { checkStates, withCheckState } from "@/lib/evaluation-flow";
+import {
+  checkStates,
+  unavailableCount,
+  withCheckState,
+} from "@/lib/evaluation-flow";
 import { canDownload, planState, type IEP } from "@/lib/ieps";
 import { ageInYears, studentName } from "@/lib/lookups";
 import { fullName } from "@/lib/users";
 import "@/_components/portal.css";
 import "./students.css";
 
-type Filter = "all" | "action" | "plan";
+type Filter = "all" | "action" | "plan" | "active";
 const PAGE_SIZE = 12;
 
-/** "Review plan" / "View plan" and, for an active plan, its PDF. */
 function PlanActions({ caseId, iep }: { caseId: string; iep: IEP }) {
   const base = `/teacher/cases/${caseId}/plan`;
   const waiting = planState(iep).waitingForMe && iep.status !== "ACTIVE";
@@ -55,14 +58,11 @@ export default function StudentsView() {
   const user = useUser();
   const router = useRouter();
   const params = useSearchParams();
-  // "active" is the older name of the plan filter; keep links to it working.
   const asked = params.get("filter");
   const filter: Filter =
-    asked === "action"
-      ? "action"
-      : asked === "plan" || asked === "active"
-        ? "plan"
-        : "all";
+    asked === "action" || asked === "plan" || asked === "active"
+      ? asked
+      : "all";
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [adding, setAdding] = useState(false);
@@ -90,15 +90,19 @@ export default function StudentsView() {
       );
   }, [room.data, checks.data]);
 
+  const missingChecks = unavailableCount(checks.data);
+
   const counts = {
     all: rows.length,
     action: rows.filter((row) => row.status.needsAction).length,
     plan: rows.filter((row) => row.iep).length,
+    active: rows.filter((row) => row.status.activePlan).length,
   };
 
   const visible = rows.filter((row) => {
     if (filter === "action" && !row.status.needsAction) return false;
     if (filter === "plan" && !row.iep) return false;
+    if (filter === "active" && !row.status.activePlan) return false;
     const term = search.trim().toLowerCase();
     if (!term) return true;
     return `${studentName(row.student)} ${row.student.admission_number}`
@@ -118,6 +122,7 @@ export default function StudentsView() {
     { key: "all", label: `All (${counts.all})` },
     { key: "action", label: `Needs my action (${counts.action})` },
     { key: "plan", label: `Plans (IEP) (${counts.plan})` },
+    { key: "active", label: `Active IEP (${counts.active})` },
   ];
 
   return (
@@ -174,6 +179,20 @@ export default function StudentsView() {
         </div>
 
         {room.error && <Alert>{room.error}</Alert>}
+        {missingChecks > 0 && (
+          <Alert tone="warning">
+            We could not load the 6-week check status for {missingChecks}{" "}
+            {missingChecks === 1 ? "student" : "students"}. Their status shows
+            as unavailable.{" "}
+            <Button
+              variant="link"
+              onClick={() => checks.reload()}
+              loading={checks.loading}
+            >
+              Try again
+            </Button>
+          </Alert>
+        )}
         {room.loading && <Loading label="Loading your class…" />}
         {!room.loading && !room.error && visible.length === 0 && (
           <Empty>

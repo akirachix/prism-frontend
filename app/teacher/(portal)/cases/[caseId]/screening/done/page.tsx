@@ -3,10 +3,12 @@
 import { CircleCheck, Hourglass, Sparkles } from "lucide-react";
 import { useParams } from "next/navigation";
 
+import ScreeningUnavailable from "@/_components/screening/ScreeningUnavailable";
 import { ButtonLink } from "@/_components/ui/Button";
 import { Alert, Disclaimer, Loading, PageHeader } from "@/_components/ui/bits";
 import { useLoad } from "@/_components/useLoad";
 import { casesApi } from "@/lib/cases";
+import { SCREENING_ENABLED } from "@/lib/features";
 import { studentName, studentsApi } from "@/lib/lookups";
 import { loadScreening } from "@/lib/screening";
 import "@/_components/portal.css";
@@ -20,7 +22,7 @@ async function load(caseId: string) {
   return { caseItem, student, screening: screening.content };
 }
 
-export default function ScreeningDonePage() {
+function ScreeningDone() {
   const { caseId } = useParams<{ caseId: string }>();
   const { data, error, loading } = useLoad(() => load(caseId), [caseId]);
 
@@ -108,4 +110,16 @@ export default function ScreeningDonePage() {
       </div>
     </main>
   );
+}
+
+export default function ScreeningDonePage() {
+  if (!SCREENING_ENABLED) {
+    return (
+      <ScreeningUnavailable
+        backHref="/teacher/students"
+        backLabel="Back to my students"
+      />
+    );
+  }
+  return <ScreeningDone />;
 }

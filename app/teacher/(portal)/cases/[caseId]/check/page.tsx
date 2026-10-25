@@ -6,20 +6,18 @@ import EvaluationFlow from "@/_components/evaluation/EvaluationFlow";
 import { Alert, Empty, Loading, PageHeader } from "@/_components/ui/bits";
 import { useLoad } from "@/_components/useLoad";
 import { casesApi } from "@/lib/cases";
-import { evaluatedIep, loadEvaluation } from "@/lib/evaluation-flow";
+import { loadEvaluation, planForCase } from "@/lib/evaluation-flow";
 import { formatLongDay } from "@/lib/format";
-import { iepsApi } from "@/lib/ieps";
 import { studentName, studentsApi } from "@/lib/lookups";
 import "@/_components/portal.css";
 import "@/_components/evaluation/evaluation.css";
 
 async function load(caseId: string) {
   const caseItem = await casesApi.get(caseId);
-  const [student, ieps] = await Promise.all([
+  const [student, iep] = await Promise.all([
     studentsApi.get(caseItem.student_id),
-    iepsApi.list({ case_id: caseId, limit: 50 }),
+    planForCase(caseId),
   ]);
-  const iep = evaluatedIep(ieps);
   const evaluation =
     iep?.status === "ACTIVE" ? await loadEvaluation(iep) : null;
   return { student, iep, evaluation };

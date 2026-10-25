@@ -12,10 +12,6 @@ import { studentName } from "@/lib/lookups";
 import { useChild } from "../_components/ChildProvider";
 import "@/_components/portal.css";
 
-/**
- * Where a parent lands after signing in.
- * The parent Home feature (students and screening) replaces this page.
- */
 export default function ParentHomePage() {
   const user = useUser();
   const { child, caseItem, loading } = useChild();

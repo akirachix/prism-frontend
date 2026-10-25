@@ -44,7 +44,6 @@ async function loadFamily(parentId: string): Promise<Family> {
   return { children, casesByChild };
 }
 
-/** The parent's child (or children) and each child's current case. */
 export default function ChildProvider({
   children: content,
 }: {

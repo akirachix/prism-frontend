@@ -4,10 +4,6 @@ import { useRef, type ClipboardEvent, type KeyboardEvent } from "react";
 
 import "./ui.css";
 
-/**
- * Six one-digit boxes. Typing moves to the next box, Backspace moves
- * back, and pasting a whole code fills every box at once.
- */
 export default function OtpInput({
   value,
   onChange,
@@ -23,7 +19,6 @@ export default function OtpInput({
   invalid?: boolean;
   disabled?: boolean;
   label?: string;
-  /** Mobile design: boxes sit inside a white card with the label below. */
   framed?: boolean;
 }) {
   const refs = useRef<(HTMLInputElement | null)[]>([]);
@@ -46,7 +41,6 @@ export default function OtpInput({
       return;
     }
     if (clean.length > 1) {
-      // Some keyboards (and autofill) put the whole code in one box.
       const merged = (digits.slice(0, index).join("") + clean).slice(0, length);
       onChange(merged);
       focus(merged.length);

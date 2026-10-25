@@ -1,8 +1,11 @@
 import { request } from "@/lib/api";
 import {
+  checkStates,
   evaluatedIep,
   lockCountdown,
+  planForCase,
   submitEvaluation,
+  unavailableCount,
   withCheckState,
 } from "@/lib/evaluation-flow";
 import type { EvaluationQuestion } from "@/lib/evaluations";
@@ -202,5 +205,55 @@ describe("withCheckState", () => {
 
   it("keeps the status when the state is unknown", () => {
     expect(withCheckState(base, undefined)).toBe(base);
+  });
+});
+
+describe("planForCase", () => {
+  it("finds an active plan beyond the first page", async () => {
+    const drafts = Array.from({ length: 200 }, (_, i) =>
+      plan({ iep_id: `d${i}`, version_number: i + 2, status: "SUPERSEDED" }),
+    );
+    mockRequest.mockImplementation(async (path: string) =>
+      path.includes("offset=200")
+        ? [plan({ iep_id: "active", version_number: 1, status: "ACTIVE" })]
+        : drafts,
+    );
+    const chosen = await planForCase("c1");
+    expect(chosen?.iep_id).toBe("active");
+    expect(mockRequest).toHaveBeenCalledTimes(2);
+    expect(mockRequest.mock.calls[1][0]).toMatch(/offset=200/);
+  });
+});
+
+describe("checkStates", () => {
+  it("marks a state that failed to load as unavailable", async () => {
+    mockRequest.mockImplementation(async (path: string) => {
+      if (path.includes("iep_id=bad")) throw new Error("Down");
+      return { ...round, status: "OPEN" };
+    });
+    const states = await checkStates(["good", "bad"]);
+    expect(states.get("good")).toBe("OPEN");
+    expect(states.get("bad")).toBe("UNAVAILABLE");
+    expect(unavailableCount(states)).toBe(1);
+  });
+
+  it("counts nothing before the states have loaded", () => {
+    expect(unavailableCount(null)).toBe(0);
+  });
+});
+
+describe("withCheckState when the state is unavailable", () => {
+  it("says so instead of guessing from the plan dates", () => {
+    const base = {
+      label: "6-week check open",
+      tone: "orange" as const,
+      needsAction: true,
+      activePlan: true,
+    };
+    expect(withCheckState(base, "UNAVAILABLE")).toMatchObject({
+      label: "Check status unavailable",
+      needsAction: false,
+      activePlan: true,
+    });
   });
 });

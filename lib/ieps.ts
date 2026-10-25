@@ -1,5 +1,5 @@
 import { aiApi, waitForJob, type WaitOptions } from "@/lib/ai";
-import { request } from "@/lib/api";
+import { fetchAll, request } from "@/lib/api";
 import { query } from "@/lib/query";
 import type { PillTone } from "@/lib/format";
 
@@ -56,6 +56,12 @@ export const iepsApi = {
     }),
 };
 
+export function plansForCase(caseId: string): Promise<IEP[]> {
+  return fetchAll((limit, offset) =>
+    iepsApi.list({ case_id: caseId, limit, offset }),
+  );
+}
+
 export function currentIep(ieps: IEP[]): IEP | null {
   const live = ieps.filter((item) => item.status !== "SUPERSEDED");
   const pool = live.length > 0 ? live : ieps;
@@ -79,12 +85,10 @@ export function weeksElapsed(iep: IEP, now = new Date()) {
   return { week: Math.min(total, Math.max(0, passed)), total };
 }
 
-/** The week of the plan the class is in now: 1 in the first week, up to 6. */
 export function planWeek(iep: IEP, now = new Date()): number {
   return Math.min(6, weeksElapsed(iep, now).week + 1);
 }
 
-/** Where a plan is, in the teacher's words. */
 export function planState(iep: IEP): {
   label: string;
   tone: PillTone;
@@ -125,7 +129,6 @@ export interface ApprovalStep {
   current: boolean;
 }
 
-/** Ready → you approve → the school approves → active. */
 export function approvalSteps(iep: IEP): ApprovalStep[] {
   const done = [
     iep.status !== "DRAFT",
@@ -147,16 +150,10 @@ export function approvalSteps(iep: IEP): ApprovalStep[] {
   }));
 }
 
-/** Only an approved, active plan can be downloaded. */
 export function canDownload(iep: IEP | null | undefined): boolean {
   return iep?.status === "ACTIVE";
 }
 
-/**
- * The teacher asks the AI for a new version: the current plan is sent back
- * with the teacher's request as its reason, then the AI writes the next
- * version from it. Returns the new plan, ready for approval.
- */
 export async function regeneratePlan(
   iep: IEP,
   prompt: string,
@@ -169,7 +166,7 @@ export async function regeneratePlan(
   const done = await waitForJob(job.job_id, options);
   let next = done.result_id
     ? await iepsApi.get(done.result_id)
-    : currentIep(await iepsApi.list({ case_id: iep.case_id }));
+    : currentIep(await plansForCase(iep.case_id));
   if (!next || next.iep_id === iep.iep_id) {
     throw new Error("The new plan was not found. Open this page again.");
   }

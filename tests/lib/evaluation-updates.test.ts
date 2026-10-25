@@ -1,5 +1,22 @@
+import { request } from "@/lib/api";
+import type { Classroom } from "@/lib/classroom";
 import type { EvaluationRound } from "@/lib/evaluations";
-import { roundUpdates, sortUpdates } from "@/lib/evaluation-updates";
+import {
+  hasUnavailable,
+  parentEvaluationUpdates,
+  roundUpdates,
+  sortUpdates,
+  teacherEvaluationUpdates,
+} from "@/lib/evaluation-updates";
+import { makeCase, makeStudent } from "@/tests/helpers";
+import { makeIep } from "@/tests/iep-helpers";
+
+jest.mock("@/lib/api", () => ({
+  ...jest.requireActual("@/lib/api"),
+  request: jest.fn(),
+}));
+
+const mockRequest = request as jest.Mock;
 
 const NOW = new Date("2026-10-24T09:00:00Z");
 
@@ -88,5 +105,45 @@ describe("sortUpdates", () => {
       { id: "new", text: "", date: "2026-10-20T00:00:00Z" },
     ]);
     expect(sorted.map((item) => item.id)).toEqual(["todo", "new", "old"]);
+  });
+});
+
+describe("when the 6-week check cannot be loaded", () => {
+  beforeEach(() => {
+    mockRequest.mockReset();
+    mockRequest.mockRejectedValue(new Error("Down"));
+  });
+
+  it("tells the parent instead of hiding the reminder", async () => {
+    const items = await parentEvaluationUpdates(
+      makeStudent(),
+      makeIep({ status: "ACTIVE" }),
+      NOW,
+    );
+    expect(items).toHaveLength(1);
+    expect(items[0].unavailable).toBe(true);
+    expect(items[0].text).toContain("could not load");
+    expect(items[0].href).toBe("/parent/evaluation");
+    expect(hasUnavailable(items)).toBe(true);
+  });
+
+  it("tells the teacher which student it is about", async () => {
+    const student = makeStudent();
+    const caseItem = makeCase({ case_id: "c1" });
+    const room: Classroom = {
+      students: [student],
+      cases: [caseItem],
+      caseByStudent: new Map([[student.student_id, caseItem]]),
+      iepByCase: new Map([["c1", makeIep({ status: "ACTIVE" })]]),
+    };
+    const items = await teacherEvaluationUpdates(room, NOW);
+    expect(items).toHaveLength(1);
+    expect(items[0].unavailable).toBe(true);
+    expect(items[0].text).toContain("Amani Otieno");
+    expect(items[0].href).toBe("/teacher/cases/c1/check");
+  });
+
+  it("has nothing to report when every check loaded", () => {
+    expect(hasUnavailable([])).toBe(false);
   });
 });

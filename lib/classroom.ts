@@ -13,7 +13,6 @@ export interface Classroom {
 }
 
 export async function loadClassroom(teacherId: string): Promise<Classroom> {
-  // Every list is fetched page by page; one call only returns the first page.
   const iepsWith = (status: IEP["status"]) =>
     fetchAll((limit, offset) => iepsApi.list({ status, limit, offset }));
   const [students, cases, pending, active, rejected] = await Promise.all([

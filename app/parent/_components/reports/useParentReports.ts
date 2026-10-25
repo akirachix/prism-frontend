@@ -12,7 +12,6 @@ import {
 } from "@/lib/reports";
 
 interface ReportsState {
-  /** The case this state was loaded for. */
   caseId: string | null;
   child: ReportChild | null;
   childError: string | null;
@@ -32,19 +31,10 @@ function emptyState(caseId: string | null): ReportsState {
   };
 }
 
-/**
- * Everything the Reports pages show for one case: the child and the three
- * reports, loaded together, with one retry for both.
- *
- * When `caseId` changes, the previous case's child, reports and errors are
- * dropped straight away and `loading` is true again, so a page (or an
- * automatic print) can never show one case's report under another child.
- */
 export function useParentReports(caseId: string | null) {
   const [state, setState] = useState<ReportsState>(() => emptyState(caseId));
   const [attempt, setAttempt] = useState(0);
 
-  // State loaded for another case is never returned, not even for one render.
   const current = state.caseId === caseId ? state : emptyState(caseId);
 
   useEffect(() => {
@@ -80,7 +70,6 @@ export function useParentReports(caseId: string | null) {
     };
   }, [caseId, attempt]);
 
-  /** Load the child and all three reports again (shows loading meanwhile). */
   const retry = useCallback(() => {
     setState(emptyState(caseId));
     setAttempt((value) => value + 1);

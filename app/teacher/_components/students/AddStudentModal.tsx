@@ -1,11 +1,11 @@
-"use client";
-
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 
 import { errorMessage } from "@/lib/api";
 import {
   ageInYears,
   birthDateLimits,
+  birthDateProblem,
   isEligibleAge,
   MAX_STUDENT_AGE,
   MIN_STUDENT_AGE,
@@ -17,7 +17,7 @@ import "../cases/case-detail-modal.css";
 import "../cases/close-case-form.css";
 import "./add-student-modal.css";
 
-interface FormState {
+export interface AddStudentValues {
   first_name: string;
   last_name: string;
   admission_number: string;
@@ -29,7 +29,7 @@ interface FormState {
   parent_phone: string;
 }
 
-const EMPTY: FormState = {
+const EMPTY: AddStudentValues = {
   first_name: "",
   last_name: "",
   admission_number: "",
@@ -43,38 +43,42 @@ const EMPTY: FormState = {
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/** What is wrong with the form, or null when it can be sent. */
-export function formProblem(form: FormState, now = new Date()): string | null {
-  const required = [
-    form.first_name,
-    form.last_name,
-    form.admission_number,
-    form.date_of_birth,
-    form.gender,
-    form.parent_first_name,
-    form.parent_last_name,
-    form.parent_email,
-  ];
-  if (required.some((value) => !value.trim())) {
-    return "Please fill in the student's details and the parent's name and email.";
-  }
-  if (!isEligibleAge(form.date_of_birth, now)) {
-    const age = ageInYears(form.date_of_birth, now);
-    const range = `${MIN_STUDENT_AGE} to ${MAX_STUDENT_AGE}`;
-    return age === null
-      ? `Only children aged ${range} can be added.`
-      : `Only children aged ${range} can be added. This child is ${age}.`;
-  }
-  if (!EMAIL.test(form.parent_email.trim())) {
-    return "Enter a valid email address for the parent.";
-  }
-  return null;
+interface FieldRule {
+  required?: string;
+  validate?: (value: string) => true | string;
 }
 
-/**
- * Add a student and their parent. The parent is emailed an invitation link
- * as soon as the student is saved; it can be sent again from here.
- */
+function required(message: string): FieldRule {
+  return { validate: (value) => value.trim() !== "" || message };
+}
+
+const RULES: Record<keyof AddStudentValues, FieldRule> = {
+  first_name: required("Enter the student's first name."),
+  last_name: required("Enter the student's last name."),
+  admission_number: required("Enter the admission number."),
+  date_of_birth: { validate: (value) => birthDateProblem(value) ?? true },
+  gender: { required: "Choose the student's gender." },
+  parent_first_name: required("Enter the parent's first name."),
+  parent_last_name: required("Enter the parent's last name."),
+  parent_email: {
+    validate: (value) => {
+      const email = value.trim();
+      if (!email) return "Enter the parent's email.";
+      return EMAIL.test(email) || "Enter a valid email address.";
+    },
+  },
+  parent_phone: {},
+};
+
+function FieldError({ id, message }: { id: string; message?: string }) {
+  if (!message) return null;
+  return (
+    <p id={id} className="add-student__error" role="alert">
+      {message}
+    </p>
+  );
+}
+
 export default function AddStudentModal({
   onClose,
   onCreated,
@@ -82,14 +86,25 @@ export default function AddStudentModal({
   onClose: () => void;
   onCreated: (created: Student) => void;
 }) {
-  const [form, setForm] = useState<FormState>(EMPTY);
-  const [saving, setSaving] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    control,
+    getValues,
+    formState: { errors, isSubmitting },
+  } = useForm<AddStudentValues>({ defaultValues: EMPTY, mode: "onChange" });
+
   const [error, setError] = useState<string | null>(null);
   const [created, setCreated] = useState<Student | null>(null);
+
   const [resending, setResending] = useState(false);
   const [resendMessage, setResendMessage] = useState<string | null>(null);
   const limits = useMemo(() => birthDateLimits(), []);
-  const age = ageInYears(form.date_of_birth);
+  const dateOfBirth = useWatch({
+    control,
+    name: "date_of_birth",
+  });
+  const age = ageInYears(dateOfBirth);
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
@@ -99,39 +114,35 @@ export default function AddStudentModal({
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  function set<K extends keyof FormState>(key: K, value: FormState[K]) {
-    setForm((current) => ({ ...current, [key]: value }));
+  function field(name: keyof AddStudentValues) {
+    const invalid = Boolean(errors[name]);
+    return {
+      ...register(name, RULES[name]),
+      "aria-invalid": invalid || undefined,
+      "aria-describedby": invalid ? `${name}-error` : undefined,
+    };
   }
 
-  async function handleSubmit(event: FormEvent) {
-    event.preventDefault();
-    const problem = formProblem(form);
-    if (problem) {
-      setError(problem);
-      return;
-    }
-    setSaving(true);
+  async function onSubmit(values: AddStudentValues) {
     setError(null);
     try {
       const student = await studentsApi.create({
-        admission_number: form.admission_number.trim(),
-        first_name: form.first_name.trim(),
-        last_name: form.last_name.trim(),
-        date_of_birth: form.date_of_birth,
-        gender: form.gender as "MALE" | "FEMALE",
+        admission_number: values.admission_number.trim(),
+        first_name: values.first_name.trim(),
+        last_name: values.last_name.trim(),
+        date_of_birth: values.date_of_birth,
+        gender: values.gender as "MALE" | "FEMALE",
         parent: {
-          first_name: form.parent_first_name.trim(),
-          last_name: form.parent_last_name.trim(),
-          email: form.parent_email.trim(),
-          phone: form.parent_phone.trim() || null,
+          first_name: values.parent_first_name.trim(),
+          last_name: values.parent_last_name.trim(),
+          email: values.parent_email.trim(),
+          phone: values.parent_phone.trim() || null,
         },
       });
       setCreated(student);
       onCreated(student);
     } catch (err) {
       setError(errorMessage(err));
-    } finally {
-      setSaving(false);
     }
   }
 
@@ -152,6 +163,13 @@ export default function AddStudentModal({
       setResending(false);
     }
   }
+
+  const dobHint =
+    age === null
+      ? `Pick from the calendar. Children aged ${MIN_STUDENT_AGE}–${MAX_STUDENT_AGE}.`
+      : isEligibleAge(dateOfBirth)
+        ? `Age ${age}`
+        : `Age ${age}: not eligible (${MIN_STUDENT_AGE}–${MAX_STUDENT_AGE} only)`;
 
   return (
     <div
@@ -183,8 +201,9 @@ export default function AddStudentModal({
           <div className="add-student__done">
             <p className="add-student__ok">{studentName(created)} was added.</p>
             <p>
-              We emailed an invitation link to {form.parent_email.trim()} so the
-              parent can set up their account.
+              We emailed an invitation link to{" "}
+              {getValues("parent_email").trim()} so the parent can set up their
+              account.
             </p>
             {resendMessage && (
               <p className="add-student__hint" aria-live="polite">
@@ -212,7 +231,7 @@ export default function AddStudentModal({
         ) : (
           <form
             className="close-form add-student__body"
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
             noValidate
           >
             <div className="add-student__row">
@@ -223,9 +242,12 @@ export default function AddStudentModal({
                 <input
                   id="student-first"
                   className="close-form__field"
-                  value={form.first_name}
-                  onChange={(e) => set("first_name", e.target.value)}
                   autoComplete="off"
+                  {...field("first_name")}
+                />
+                <FieldError
+                  id="first_name-error"
+                  message={errors.first_name?.message}
                 />
               </div>
               <div>
@@ -235,9 +257,12 @@ export default function AddStudentModal({
                 <input
                   id="student-last"
                   className="close-form__field"
-                  value={form.last_name}
-                  onChange={(e) => set("last_name", e.target.value)}
                   autoComplete="off"
+                  {...field("last_name")}
+                />
+                <FieldError
+                  id="last_name-error"
+                  message={errors.last_name?.message}
                 />
               </div>
             </div>
@@ -248,9 +273,12 @@ export default function AddStudentModal({
             <input
               id="student-admission"
               className="close-form__field"
-              value={form.admission_number}
-              onChange={(e) => set("admission_number", e.target.value)}
               autoComplete="off"
+              {...field("admission_number")}
+            />
+            <FieldError
+              id="admission_number-error"
+              message={errors.admission_number?.message}
             />
 
             <div className="add-student__row">
@@ -264,24 +292,28 @@ export default function AddStudentModal({
                   min={limits.min}
                   max={limits.max}
                   className="close-form__field"
-                  value={form.date_of_birth}
-                  onChange={(e) => set("date_of_birth", e.target.value)}
-                  aria-describedby="student-dob-hint"
+                  {...register("date_of_birth", RULES.date_of_birth)}
+                  aria-invalid={Boolean(errors.date_of_birth) || undefined}
+                  aria-describedby={
+                    errors.date_of_birth
+                      ? "student-dob-hint date_of_birth-error"
+                      : "student-dob-hint"
+                  }
                 />
                 <p
                   id="student-dob-hint"
                   className={
-                    age !== null && !isEligibleAge(form.date_of_birth)
+                    age !== null && !isEligibleAge(dateOfBirth)
                       ? "add-student__hint add-student__hint--bad"
                       : "add-student__hint"
                   }
                 >
-                  {age === null
-                    ? `Pick from the calendar. Children aged ${MIN_STUDENT_AGE}–${MAX_STUDENT_AGE}.`
-                    : isEligibleAge(form.date_of_birth)
-                      ? `Age ${age}`
-                      : `Age ${age}: not eligible (${MIN_STUDENT_AGE}–${MAX_STUDENT_AGE} only)`}
+                  {dobHint}
                 </p>
+                <FieldError
+                  id="date_of_birth-error"
+                  message={errors.date_of_birth?.message}
+                />
               </div>
               <div>
                 <label className="close-form__label" htmlFor="student-gender">
@@ -290,15 +322,16 @@ export default function AddStudentModal({
                 <select
                   id="student-gender"
                   className="close-form__field"
-                  value={form.gender}
-                  onChange={(e) =>
-                    set("gender", e.target.value as FormState["gender"])
-                  }
+                  {...field("gender")}
                 >
                   <option value="">Choose</option>
                   <option value="FEMALE">Female</option>
                   <option value="MALE">Male</option>
                 </select>
+                <FieldError
+                  id="gender-error"
+                  message={errors.gender?.message}
+                />
               </div>
             </div>
 
@@ -315,9 +348,12 @@ export default function AddStudentModal({
                 <input
                   id="parent-first"
                   className="close-form__field"
-                  value={form.parent_first_name}
-                  onChange={(e) => set("parent_first_name", e.target.value)}
                   autoComplete="off"
+                  {...field("parent_first_name")}
+                />
+                <FieldError
+                  id="parent_first_name-error"
+                  message={errors.parent_first_name?.message}
                 />
               </div>
               <div>
@@ -327,9 +363,12 @@ export default function AddStudentModal({
                 <input
                   id="parent-last"
                   className="close-form__field"
-                  value={form.parent_last_name}
-                  onChange={(e) => set("parent_last_name", e.target.value)}
                   autoComplete="off"
+                  {...field("parent_last_name")}
+                />
+                <FieldError
+                  id="parent_last_name-error"
+                  message={errors.parent_last_name?.message}
                 />
               </div>
             </div>
@@ -343,22 +382,24 @@ export default function AddStudentModal({
                   id="parent-email"
                   type="email"
                   className="close-form__field"
-                  value={form.parent_email}
-                  onChange={(e) => set("parent_email", e.target.value)}
                   autoComplete="off"
+                  {...field("parent_email")}
+                />
+                <FieldError
+                  id="parent_email-error"
+                  message={errors.parent_email?.message}
                 />
               </div>
               <div>
                 <label className="close-form__label" htmlFor="parent-phone">
-                  Phone
+                  Phone (optional)
                 </label>
                 <input
                   id="parent-phone"
                   type="tel"
                   className="close-form__field"
-                  value={form.parent_phone}
-                  onChange={(e) => set("parent_phone", e.target.value)}
                   autoComplete="off"
+                  {...field("parent_phone")}
                 />
               </div>
             </div>
@@ -374,16 +415,16 @@ export default function AddStudentModal({
                 type="button"
                 className="close-form__keep"
                 onClick={onClose}
-                disabled={saving}
+                disabled={isSubmitting}
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 className="close-form__close"
-                disabled={saving}
+                disabled={isSubmitting}
               >
-                {saving ? "Adding…" : "Add student"}
+                {isSubmitting ? "Adding…" : "Add student"}
               </button>
             </div>
           </form>

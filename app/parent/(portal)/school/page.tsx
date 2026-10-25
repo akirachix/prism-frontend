@@ -17,7 +17,6 @@ import "./school.css";
 
 async function loadSchool(studentId: string, teacherId: string) {
   const [teacher, cases] = await Promise.all([
-    // A parent may only read their own child's teacher; null otherwise.
     usersApi.get(teacherId).catch((): UserRead | null => null),
     fetchAll((limit, offset) =>
       casesApi.listBy({ student_id: studentId, limit, offset }),
@@ -32,7 +31,6 @@ async function loadSchool(studentId: string, teacherId: string) {
   };
 }
 
-/** The teacher's 6-week evaluations of the child, and how to reach them. */
 export default function ParentSchoolPage() {
   const { child, loading: childLoading } = useChild();
   const studentId = child?.student_id ?? null;

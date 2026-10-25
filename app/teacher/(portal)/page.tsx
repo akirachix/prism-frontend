@@ -27,7 +27,6 @@ export default function TeacherHomePage() {
     [user.user_id],
   );
   const data = room.data;
-  // 6-week check reminders and the parents' evaluations, per active plan.
   const activePlans = data
     ? Array.from(data.iepByCase.values())
         .filter((iep) => iep.status === "ACTIVE")
@@ -72,7 +71,7 @@ export default function TeacherHomePage() {
       label: "Active IEP",
       value: active,
       tone: "pink",
-      href: "/teacher/students?filter=plan",
+      href: "/teacher/students?filter=active",
     },
     {
       label: "Unapproved IEP",
@@ -174,6 +173,10 @@ export default function TeacherHomePage() {
             items={updates}
             loading={news.loading || checks.loading || room.loading}
             error={news.error}
+            onRetry={() => {
+              news.reload();
+              checks.reload();
+            }}
           />
         </section>
       </div>

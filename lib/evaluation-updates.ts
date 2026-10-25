@@ -11,19 +11,16 @@ import type { IEP } from "@/lib/ieps";
 import { studentName, type Student } from "@/lib/lookups";
 import type { Notification } from "@/lib/notifications";
 
-/** One line in "Latest updates" on a home page. */
 export interface UpdateItem {
   id: string;
   text: string;
-  /** When it happened (ISO). Reminders use the time they were worked out. */
   date: string;
   href?: string;
-  /** Something to do now; shown first and highlighted. */
   urgent?: boolean;
   unread?: boolean;
+  unavailable?: boolean;
 }
 
-/** Upcoming checks are mentioned from two weeks before they open. */
 const SOON = 14 * 24 * 60 * 60 * 1000;
 
 function newest(list: EvaluationResponse[]): EvaluationResponse | null {
@@ -34,10 +31,6 @@ function newest(list: EvaluationResponse[]): EvaluationResponse | null {
   )[0];
 }
 
-/**
- * The other person's latest submission for this round. Answers are sent
- * all at once, so the first question tells when they last submitted.
- */
 async function otherSubmission(
   round: EvaluationRound,
   other: ResponderRole,
@@ -52,7 +45,6 @@ async function otherSubmission(
   );
 }
 
-/** What the signed-in person should know about one child's 6-week check. */
 export function roundUpdates(params: {
   round: EvaluationRound;
   other: EvaluationResponse | null;
@@ -113,15 +105,36 @@ export function roundUpdates(params: {
   return items;
 }
 
-async function safely<T>(promise: Promise<T>, fallback: T): Promise<T> {
+export function unavailableUpdate(
+  iepId: string,
+  name: string,
+  checkHref: string,
+  now = new Date(),
+): UpdateItem {
+  return {
+    id: `unavailable-${iepId}`,
+    text: `We could not load the 6-week check for ${name}. Its reminders may be missing.`,
+    date: now.toISOString(),
+    href: checkHref,
+    unavailable: true,
+  };
+}
+
+async function orUnavailable(
+  load: Promise<UpdateItem[]>,
+  unavailable: UpdateItem,
+): Promise<UpdateItem[]> {
   try {
-    return await promise;
+    return await load;
   } catch {
-    return fallback;
+    return [unavailable];
   }
 }
 
-/** Updates for every student of a teacher whose plan is active. */
+export function hasUnavailable(items: UpdateItem[]): boolean {
+  return items.some((item) => item.unavailable);
+}
+
 export async function teacherEvaluationUpdates(
   room: Classroom,
   now = new Date(),
@@ -137,7 +150,9 @@ export async function teacherEvaluationUpdates(
         ? studentsById.get(caseItem.student_id)
         : undefined;
       if (!student) return [];
-      return safely(
+      const name = studentName(student);
+      const checkHref = `/teacher/cases/${caseId}/check`;
+      return orUnavailable(
         (async () => {
           const round = await evaluationsApi.current(iep.iep_id);
           const other = await otherSubmission(round, "PARENT");
@@ -145,27 +160,26 @@ export async function teacherEvaluationUpdates(
             round,
             other,
             role: "TEACHER",
-            name: studentName(student),
-            checkHref: `/teacher/cases/${caseId}/check`,
+            name,
+            checkHref,
             reportHref: `/teacher/students/${student.student_id}#reports`,
             now,
           });
         })(),
-        [] as UpdateItem[],
+        unavailableUpdate(iep.iep_id, name, checkHref, now),
       );
     }),
   );
   return lists.flat();
 }
 
-/** Updates about a parent's child, from the plan being evaluated. */
 export async function parentEvaluationUpdates(
   child: Student,
   iep: IEP | null,
   now = new Date(),
 ): Promise<UpdateItem[]> {
   if (!iep || iep.status !== "ACTIVE") return [];
-  return safely(
+  return orUnavailable(
     (async () => {
       const round = await evaluationsApi.current(iep.iep_id);
       const other = await otherSubmission(round, "TEACHER");
@@ -179,7 +193,7 @@ export async function parentEvaluationUpdates(
         now,
       });
     })(),
-    [],
+    unavailableUpdate(iep.iep_id, child.first_name, "/parent/evaluation", now),
   );
 }
 
@@ -192,7 +206,6 @@ export function notificationUpdates(list: Notification[]): UpdateItem[] {
   }));
 }
 
-/** Things to do now first, then everything else, newest first. */
 export function sortUpdates(items: UpdateItem[]): UpdateItem[] {
   return [...items].sort((a, b) => {
     if (Boolean(a.urgent) !== Boolean(b.urgent)) return a.urgent ? -1 : 1;

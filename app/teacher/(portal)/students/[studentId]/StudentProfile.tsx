@@ -60,10 +60,15 @@ async function loadProfile(studentId: string) {
       )
     : [];
   const plan = evaluatedIep(ieps);
-  const round =
-    plan?.status === "ACTIVE"
-      ? await quietly(evaluationsApi.current(plan.iep_id))
-      : null;
+  let round: EvaluationRound | null = null;
+  let roundFailed = false;
+  if (plan?.status === "ACTIVE") {
+    try {
+      round = await evaluationsApi.current(plan.iep_id);
+    } catch {
+      roundFailed = true;
+    }
+  }
   const firstPlan = [...ieps].sort((a, b) =>
     a.created_at.localeCompare(b.created_at),
   )[0];
@@ -74,12 +79,12 @@ async function loadProfile(studentId: string) {
     plan,
     firstPlanAt: firstPlan?.created_at ?? null,
     round,
+    roundFailed,
     invite,
     parent,
   };
 }
 
-/** The teacher's next step for the case, worked out from its status. */
 function nextStep(
   caseItem: Case,
   plan: IEP | null,
@@ -118,13 +123,32 @@ function Fact({ label, children }: { label: string; children: ReactNode }) {
 function CheckStatus({
   plan,
   round,
+  failed,
+  onRetry,
+  retrying,
   caseId,
 }: {
   plan: IEP;
   round: EvaluationRound | null;
+  failed: boolean;
+  onRetry: () => void;
+  retrying: boolean;
   caseId: string;
 }) {
   const checkHref = `/teacher/cases/${caseId}/check`;
+  if (failed) {
+    return (
+      <div className="profile__check">
+        <Alert tone="warning">
+          We could not load the 6-week check status, so we cannot say whether it
+          is open.{" "}
+          <Button variant="link" onClick={onRetry} loading={retrying}>
+            Try again
+          </Button>
+        </Alert>
+      </div>
+    );
+  }
   if (!round || round.status === "NOT_APPROVED") {
     return (
       <p className="profile__muted">
@@ -228,12 +252,15 @@ export default function StudentProfile() {
     );
   }
 
-  const { student, caseItem, plan, round, invite, parent } = data;
+  const { student, caseItem, plan, round, roundFailed, invite, parent } = data;
   const name = studentName(student);
   const age = ageInYears(student.date_of_birth);
   const open = caseItem && !FINISHED_STATUSES.includes(caseItem.status);
   const status = caseItem
-    ? withCheckState(studentStatus(caseItem, plan ?? undefined), round?.status)
+    ? withCheckState(
+        studentStatus(caseItem, plan ?? undefined),
+        roundFailed ? "UNAVAILABLE" : round?.status,
+      )
     : null;
   const step = caseItem ? nextStep(caseItem, plan) : null;
   const parentName = parent ? fullName(parent) : null;
@@ -487,31 +514,27 @@ export default function StudentProfile() {
                         : "Not yet"}
                   </Fact>
                 </dl>
+                {caseItem && canDownload(plan) && (
+                  <div className="ui-actions">
+                    <ButtonLink
+                      href={`/teacher/cases/${caseItem.case_id}/plan/print`}
+                      variant="outline"
+                      small
+                    >
+                      <Download size={18} aria-hidden="true" /> Download PDF
+                    </ButtonLink>
+                  </div>
+                )}
                 <h3 className="profile__subheading">6-week check</h3>
                 {caseItem && (
                   <CheckStatus
                     plan={plan}
                     round={round}
+                    failed={roundFailed}
+                    onRetry={reload}
+                    retrying={loading}
                     caseId={caseItem.case_id}
                   />
-                )}
-                {caseItem && (
-                  <div className="ui-actions">
-                    <ButtonLink
-                      href={`/teacher/cases/${caseItem.case_id}/plan`}
-                      variant="outline"
-                    >
-                      Open the full plan
-                    </ButtonLink>
-                    {canDownload(plan) && (
-                      <ButtonLink
-                        href={`/teacher/cases/${caseItem.case_id}/plan/print`}
-                        variant="outline"
-                      >
-                        <Download size={18} aria-hidden="true" /> Download PDF
-                      </ButtonLink>
-                    )}
-                  </div>
                 )}
               </>
             )}

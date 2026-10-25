@@ -4,10 +4,6 @@ import { lockCountdown } from "@/lib/evaluation-flow";
 import { formatDate, formatLongDay } from "@/lib/format";
 import { ProgressBar } from "../ui/bits";
 
-/**
- * Shown after answers are sent: they are locked for six weeks, then the
- * evaluation opens again with these answers filled in.
- */
 export default function LockNotice({
   lockedUntil,
   lastSubmittedAt,

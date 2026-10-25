@@ -96,7 +96,6 @@ function ReportCard({
   );
 }
 
-/** The printable page for one report (only visible while printing). */
 function PrintDocument({
   report,
   name,
@@ -156,11 +155,6 @@ function PrintDocument({
   );
 }
 
-/**
- * The newest evaluation reports, with "View all" for the past 12 months in
- * a floating panel. Each report can be downloaded as a PDF (the browser's
- * print dialog, "Save as PDF").
- */
 export default function EvaluationReports({
   reports,
   childName,
@@ -169,7 +163,6 @@ export default function EvaluationReports({
 }: {
   reports: EvaluationReport[];
   childName: string;
-  /** Who sent this report, e.g. the teacher's or the parent's name. */
   nameFor: (report: EvaluationReport) => string;
   empty: string;
 }) {
@@ -192,7 +185,6 @@ export default function EvaluationReports({
     document.body.classList.add("eval-printing");
     const done = () => setPrinting(null);
     window.addEventListener("afterprint", done);
-    // Let the print page render before the dialog opens.
     const timer = window.setTimeout(() => window.print(), 60);
     return () => {
       window.clearTimeout(timer);

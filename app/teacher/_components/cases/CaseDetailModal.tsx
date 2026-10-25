@@ -43,19 +43,15 @@ export default function CaseDetailModal({
   const finished = FINISHED_STATUSES.includes(item.status);
   const dialogRef = useRef<HTMLDivElement>(null);
 
-  // Remember what had focus before the modal opened and give it back on close.
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
     return () => previous?.focus?.();
   }, []);
 
-  // Move focus into the modal when it opens, and again whenever the view
-  // changes (the button that had focus disappears when the view switches).
   useEffect(() => {
     dialogRef.current?.focus();
   }, [view]);
 
-  // Escape closes the modal; Tab and Shift+Tab stay inside it.
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
       if (event.key === "Escape") {
