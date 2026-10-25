@@ -25,19 +25,21 @@ describe("CasesTable with student names", () => {
   });
 
   it("finds a case by the student's name", async () => {
+    const user = userEvent.setup();
     render(
       <CasesTable cases={CASES} studentsById={STUDENTS} onSelect={jest.fn()} />,
     );
-    await userEvent.type(screen.getByLabelText("Search students"), "otieno");
+    await user.type(screen.getByLabelText("Search students"), "otieno");
     expect(screen.getAllByRole("row")).toHaveLength(2);
     expect(screen.getByText("Amani Otieno")).toBeInTheDocument();
   });
 
   it("finds a case by admission number", async () => {
+    const user = userEvent.setup();
     render(
       <CasesTable cases={CASES} studentsById={STUDENTS} onSelect={jest.fn()} />,
     );
-    await userEvent.type(screen.getByLabelText("Search students"), "ADM-001");
+    await user.type(screen.getByLabelText("Search students"), "ADM-001");
     expect(screen.getAllByRole("row")).toHaveLength(2);
   });
 

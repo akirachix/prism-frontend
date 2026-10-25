@@ -72,50 +72,54 @@ describe("CaseDetailModal", () => {
   });
 
   it("closes when Escape is pressed", async () => {
+    const user = userEvent.setup();
     const { onClose } = setup();
-    await userEvent.keyboard("{Escape}");
+    await user.keyboard("{Escape}");
     expect(onClose).toHaveBeenCalled();
   });
 
   it("closes when the dark background is clicked, but not the box itself", async () => {
+    const user = userEvent.setup();
     const { onClose } = setup();
-    await userEvent.click(screen.getByRole("dialog"));
+    await user.click(screen.getByRole("dialog"));
     expect(onClose).not.toHaveBeenCalled();
-    await userEvent.click(
-      screen.getByRole("dialog").parentElement as HTMLElement,
-    );
+    await user.click(screen.getByRole("dialog").parentElement as HTMLElement);
     expect(onClose).toHaveBeenCalled();
   });
 
   it("opens the edit form", async () => {
+    const user = userEvent.setup();
     setup();
-    await userEvent.click(screen.getByRole("button", { name: "Edit" }));
+    await user.click(screen.getByRole("button", { name: "Edit" }));
     expect(screen.getByText("Edit the case")).toBeInTheDocument();
   });
 
   it("asks before deleting, and Keep it goes back", async () => {
+    const user = userEvent.setup();
     setup();
-    await userEvent.click(screen.getByRole("button", { name: "Delete" }));
+    await user.click(screen.getByRole("button", { name: "Delete" }));
     expect(screen.getByText(/this cannot be undone/i)).toBeInTheDocument();
-    await userEvent.click(screen.getByRole("button", { name: "Keep it" }));
+    await user.click(screen.getByRole("button", { name: "Keep it" }));
     expect(screen.getByText("Case details")).toBeInTheDocument();
     expect(mockRemove).not.toHaveBeenCalled();
   });
 
   it("deletes the case after confirming", async () => {
+    const user = userEvent.setup();
     mockRemove.mockResolvedValue(undefined);
     const { onDeleted } = setup({ case_id: "c9" });
-    await userEvent.click(screen.getByRole("button", { name: "Delete" }));
-    await userEvent.click(screen.getByRole("button", { name: "Yes, delete" }));
+    await user.click(screen.getByRole("button", { name: "Delete" }));
+    await user.click(screen.getByRole("button", { name: "Yes, delete" }));
     await waitFor(() => expect(onDeleted).toHaveBeenCalledWith("c9"));
     expect(mockRemove).toHaveBeenCalledWith("c9");
   });
 
   it("shows the error and keeps the case when delete fails", async () => {
+    const user = userEvent.setup();
     mockRemove.mockRejectedValue(new ApiError(500, "Server is down"));
     const { onDeleted } = setup();
-    await userEvent.click(screen.getByRole("button", { name: "Delete" }));
-    await userEvent.click(screen.getByRole("button", { name: "Yes, delete" }));
+    await user.click(screen.getByRole("button", { name: "Delete" }));
+    await user.click(screen.getByRole("button", { name: "Yes, delete" }));
     expect(await screen.findByText("Server is down")).toBeInTheDocument();
     expect(onDeleted).not.toHaveBeenCalled();
   });

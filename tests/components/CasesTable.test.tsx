@@ -26,6 +26,7 @@ describe("CasesTable", () => {
   });
 
   it("filters by the search box", async () => {
+    const user = userEvent.setup();
     render(
       <CasesTable
         cases={CASES}
@@ -33,11 +34,12 @@ describe("CasesTable", () => {
         onSelect={jest.fn()}
       />,
     );
-    await userEvent.type(screen.getByLabelText("Search students"), "bbbbbbbb");
+    await user.type(screen.getByLabelText("Search students"), "bbbbbbbb");
     expect(screen.getAllByRole("row")).toHaveLength(2);
   });
 
   it("filters by status", async () => {
+    const user = userEvent.setup();
     render(
       <CasesTable
         cases={CASES}
@@ -45,7 +47,7 @@ describe("CasesTable", () => {
         onSelect={jest.fn()}
       />,
     );
-    await userEvent.selectOptions(
+    await user.selectOptions(
       screen.getByLabelText("Filter by status"),
       "CLOSED",
     );
@@ -53,15 +55,17 @@ describe("CasesTable", () => {
   });
 
   it("opens a case when Open is clicked", async () => {
+    const user = userEvent.setup();
     const onSelect = jest.fn();
     render(
       <CasesTable cases={CASES} studentsById={new Map()} onSelect={onSelect} />,
     );
-    await userEvent.click(screen.getAllByText("Open")[0]);
+    await user.click(screen.getAllByText("Open")[0]);
     expect(onSelect).toHaveBeenCalledWith(CASES[0]);
   });
 
   it("tells the user when nothing matches", async () => {
+    const user = userEvent.setup();
     render(
       <CasesTable
         cases={CASES}
@@ -69,7 +73,7 @@ describe("CasesTable", () => {
         onSelect={jest.fn()}
       />,
     );
-    await userEvent.type(screen.getByLabelText("Search students"), "zzzz");
+    await user.type(screen.getByLabelText("Search students"), "zzzz");
     expect(screen.getByText("No cases match your search.")).toBeInTheDocument();
   });
 });
