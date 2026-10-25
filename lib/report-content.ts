@@ -9,9 +9,9 @@ export interface ContentSection {
 }
 
 const DOMAIN_WORDS: Record<string, string> = {
-  AUTISM: "Social and communication",
+  AUTISM: "Social communication and play",
   ADHD: "Attention and activity",
-  DYSLEXIA: "Reading and language",
+  DYSLEXIA: "Reading and spelling",
 };
 
 const LEVEL_WORDS: Record<string, string> = {

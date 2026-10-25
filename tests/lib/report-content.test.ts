@@ -8,7 +8,7 @@ describe("humanize", () => {
 
   it("never shows a clinical label for a domain", () => {
     expect(humanize("ADHD")).toBe("Attention and activity");
-    expect(displayValue("AUTISM")).toBe("Social and communication");
+    expect(displayValue("AUTISM")).toBe("Social communication and play");
   });
 });
 
@@ -36,7 +36,7 @@ describe("describeReport", () => {
       sections.find((s) => s.title === "Together · Results by area")?.rows,
     ).toEqual([
       { label: "Attention and activity", value: "Worth extra support" },
-      { label: "Social and communication", value: "No concern seen" },
+      { label: "Social communication and play", value: "No concern seen" },
     ]);
     expect(sections.find((s) => s.title === "Together")?.rows).toEqual([
       { label: "Extra support suggested", value: "Yes" },

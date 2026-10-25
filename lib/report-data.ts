@@ -41,12 +41,13 @@ export function screeningRows(content: ScreeningContent): DomainRow[] {
       const p = content.parent?.completed_at
         ? content.parent.scores[domain]
         : undefined;
+      const combined = content.combined?.levels[domain];
       return {
         domain,
         title: DOMAIN_TITLES[domain],
         teacher: t === undefined ? null : levelOf(t),
         parent: p === undefined ? null : levelOf(p),
-        overall: content.combined?.levels[domain] ?? null,
+        overall: combined === undefined ? null : levelOf(combined),
         disagreement: content.combined?.discrepancies.includes(domain) ?? false,
       };
     });

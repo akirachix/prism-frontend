@@ -26,16 +26,18 @@ function setup(overrides = {}) {
 beforeEach(() => mockRemove.mockReset());
 
 describe("CaseDetailModal", () => {
-  it("shows the case, screening and dates sections", () => {
+  it("shows the case and dates sections", () => {
     setup();
     expect(screen.getByText("Case")).toBeInTheDocument();
-    expect(screen.getByText("Screening results")).toBeInTheDocument();
     expect(screen.getByText("Dates")).toBeInTheDocument();
   });
 
-  it("shows a dash for scores that are not set yet", () => {
-    setup();
-    expect(screen.getAllByText("—").length).toBeGreaterThan(0);
+  it("never shows screening scores or the main area to the teacher", () => {
+    setup({ autism_score: 2.4, adhd_score: 1.1, primary_domain: "ADHD" });
+    expect(screen.queryByText("Screening results")).not.toBeInTheDocument();
+    expect(screen.queryByText(/score/i)).not.toBeInTheDocument();
+    expect(screen.queryByText("Primary domain")).not.toBeInTheDocument();
+    expect(screen.queryByText("2.4")).not.toBeInTheDocument();
   });
 
   it("offers Edit, Delete and Close for an open case", () => {

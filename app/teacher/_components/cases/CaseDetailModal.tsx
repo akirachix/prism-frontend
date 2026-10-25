@@ -114,16 +114,6 @@ export default function CaseDetailModal({
       ],
     },
     {
-      title: "Screening results",
-      rows: [
-        ["Autism score", show(item.autism_score)],
-        ["ADHD score", show(item.adhd_score)],
-        ["Dyslexia score", show(item.dyslexia_score)],
-        ["Domain density score", show(item.domain_density_score)],
-        ["Primary domain", show(item.primary_domain)],
-      ],
-    },
-    {
       title: "Dates",
       rows: [
         ["Created", formatDate(item.created_at)],

@@ -7,14 +7,13 @@ import { useMemo, useState } from "react";
 
 import { errorMessage } from "@/lib/api";
 import { logAudit } from "@/lib/audit";
-import { isComplete } from "@/lib/scoring";
-import { saveScreening, type ScreeningContent } from "@/lib/screening";
 import {
-  allQuestions,
-  type Informant,
-  type QuestionSet,
-} from "@/lib/screening-questions";
-import type { Case } from "@/lib/types";
+  saveScreening,
+  type Answers,
+  type Assessment,
+  type Part,
+  type ResponderRole,
+} from "@/lib/screening";
 import { useMediaQuery } from "../hooks";
 import Button from "../ui/Button";
 import { Alert, ProgressBar } from "../ui/bits";
@@ -23,18 +22,20 @@ import "./screening.css";
 
 export default function ScreeningFlow({
   role,
-  caseItem,
-  set,
+  caseId,
+  parts,
+  assessment: savedAssessment,
   saved,
   responderId,
   title,
   exitHref,
   doneHref,
 }: {
-  role: Informant;
-  caseItem: Case;
-  set: QuestionSet;
-  saved: ScreeningContent | null;
+  role: ResponderRole;
+  caseId: string;
+  parts: Part[];
+  assessment: Assessment | null;
+  saved: Answers;
   responderId: string;
   title: string;
   exitHref: string;
@@ -42,14 +43,20 @@ export default function ScreeningFlow({
 }) {
   const router = useRouter();
   const desktop = useMediaQuery("(min-width: 1000px)");
-  const questions = useMemo(() => allQuestions(set), [set]);
-  const mine = role === "TEACHER" ? saved?.teacher : saved?.parent;
-  const [answers, setAnswers] = useState<Record<string, number>>(
-    mine?.answers ?? {},
+  const questions = useMemo(
+    () =>
+      parts.flatMap((part) =>
+        part.questions.map((q) => ({ ...q, tool: part.tool })),
+      ),
+    [parts],
   );
+  const [assessment, setAssessment] = useState<Assessment | null>(
+    savedAssessment,
+  );
+  const [answers, setAnswers] = useState<Answers>(saved);
   const [index, setIndex] = useState(() => {
     const first = questions.findIndex(
-      (q) => typeof mine?.answers?.[q.id] !== "number",
+      (q) => typeof saved[q.question_id] !== "number",
     );
     return first === -1 ? 0 : first;
   });
@@ -61,27 +68,25 @@ export default function ScreeningFlow({
   const start = Math.floor(index / perPage) * perPage;
   const page = questions.slice(start, start + perPage);
   const last = start + perPage >= questions.length;
-  const partOf = (i: number) => questions[i]?.domain;
-  const partIndex = set.parts.findIndex(
-    (part) => part.domain === partOf(start),
-  );
-  const answeredCount = questions.filter(
-    (q) => typeof answers[q.id] === "number",
-  ).length;
+  const partOf = (i: number) => questions[i]?.tool;
+  const partIndex = parts.findIndex((part) => part.tool === partOf(start));
+  const answered = (id: string) => typeof answers[id] === "number";
+  const answeredCount = questions.filter((q) => answered(q.question_id)).length;
 
   async function persist(finish: boolean) {
     setSaving(true);
     setError(null);
     try {
-      await saveScreening({
-        caseItem,
+      const result = await saveScreening({
+        caseId,
         role,
         responderId,
-        set,
+        assessment,
         answers,
         finish,
       });
-      if (finish) logAudit("SUBMIT", "screening", caseItem.case_id, { role });
+      setAssessment(result.assessment);
+      if (finish) logAudit("SUBMIT", "screening", caseId, { role });
       return true;
     } catch (err) {
       setError(errorMessage(err));
@@ -92,16 +97,14 @@ export default function ScreeningFlow({
   }
 
   async function next() {
-    if (page.some((q) => typeof answers[q.id] !== "number")) {
+    if (page.some((q) => !answered(q.question_id))) {
       setMissing(true);
       return;
     }
     setMissing(false);
     if (last) {
-      if (!isComplete(set, answers)) {
-        const gap = questions.findIndex(
-          (q) => typeof answers[q.id] !== "number",
-        );
+      const gap = questions.findIndex((q) => !answered(q.question_id));
+      if (gap !== -1) {
         setIndex(gap);
         setMissing(true);
         return;
@@ -130,7 +133,6 @@ export default function ScreeningFlow({
     if (await persist(false)) router.push(exitHref);
   }
 
-  const parentWording = role === "PARENT";
   const nearEnd = answeredCount >= questions.length - 3 && !last;
 
   return (
@@ -175,13 +177,13 @@ export default function ScreeningFlow({
         </div>
         {role === "TEACHER" && (
           <ol className="portal-parts" aria-label="Parts">
-            {set.parts.map((part, i) => {
-              const done = part.questions.filter(
-                (q) => typeof answers[q.id] === "number",
+            {parts.map((part, i) => {
+              const done = part.questions.filter((q) =>
+                answered(q.question_id),
               ).length;
               return (
                 <li
-                  key={part.domain}
+                  key={part.tool}
                   className={
                     i === partIndex
                       ? "portal-part portal-part--current"
@@ -206,11 +208,11 @@ export default function ScreeningFlow({
           <aside className="portal-sidecard ui-card" aria-label="Parts covered">
             <h2 className="ui-section-title">Parts covered</h2>
             <ol className="portal-steps">
-              {set.parts.map((part, i) => {
+              {parts.map((part, i) => {
                 const state =
                   i < partIndex ? "done" : i === partIndex ? "current" : "todo";
                 return (
-                  <li key={part.domain}>
+                  <li key={part.tool}>
                     <span
                       className={`portal-steps__dot portal-steps__dot--${state}`}
                     >
@@ -238,7 +240,9 @@ export default function ScreeningFlow({
           <div className="screening__main">
             <div className="screening__count screening__count--mobile">
               {role === "PARENT" ? (
-                <span className="screening__label">Screening questions</span>
+                <span className="screening__label">
+                  {parts[partIndex]?.title ?? "Screening questions"}
+                </span>
               ) : (
                 <span>
                   Question {start + 1} of {questions.length}
@@ -256,11 +260,11 @@ export default function ScreeningFlow({
 
             {page.map((question, offset) => {
               const number = start + offset + 1;
-              const value = answers[question.id];
+              const value = answers[question.question_id];
               const unanswered = missing && typeof value !== "number";
               return (
                 <fieldset
-                  key={question.id}
+                  key={question.question_id}
                   className="portal-question screening__question"
                 >
                   <legend className="portal-question__head">
@@ -269,16 +273,14 @@ export default function ScreeningFlow({
                     ) : (
                       <span className="screening__num">{number}.</span>
                     )}
-                    <span>
-                      {parentWording ? question.parent : question.teacher}
-                    </span>
+                    <span>{question.question_text}</span>
                   </legend>
                   <div className="ui-choices">
-                    {question.options.map((option) => {
-                      const checked = value === option.value;
+                    {question.answer_labels.map((label, position) => {
+                      const checked = value === position;
                       return (
                         <label
-                          key={option.label}
+                          key={label}
                           className={
                             checked
                               ? "ui-choice ui-choice--checked"
@@ -287,19 +289,19 @@ export default function ScreeningFlow({
                         >
                           <input
                             type="radio"
-                            name={question.id}
+                            name={question.question_id}
                             className="visually-hidden"
                             checked={checked}
                             onChange={() => {
                               setAnswers((current) => ({
                                 ...current,
-                                [question.id]: option.value,
+                                [question.question_id]: position,
                               }));
                               setMissing(false);
                             }}
                           />
                           <span className="ui-choice__dot" aria-hidden="true" />
-                          {option.label}
+                          {label}
                         </label>
                       );
                     })}

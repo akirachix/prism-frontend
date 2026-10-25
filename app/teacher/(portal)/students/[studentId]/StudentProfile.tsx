@@ -445,11 +445,6 @@ export default function StudentProfile() {
                   <Fact label="Started">
                     {formatLongDay(caseItem.created_at)}
                   </Fact>
-                  <Fact label="Main area">
-                    {caseItem.primary_domain
-                      ? labelOf(caseItem.primary_domain)
-                      : "—"}
-                  </Fact>
                   {caseItem.closed_at && (
                     <Fact label="Closed">
                       {formatLongDay(caseItem.closed_at)}
