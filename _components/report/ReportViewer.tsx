@@ -1,89 +1,90 @@
 "use client";
 
-import { Download } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 
-import { logAudit } from "@/lib/audit";
 import type { Student } from "@/lib/lookups";
-import {
-  loadEvaluationReport,
-  loadScreeningReport,
-  type EvaluationReport,
-} from "@/lib/report-data";
-import type { ScreeningContent } from "@/lib/screening";
-import { useLoad } from "../useLoad";
-import Button from "../ui/Button";
-import { Alert, Empty, Loading } from "../ui/bits";
-import { EvaluationReportDoc, ScreeningReport } from "./ReportDocument";
+import { reportsApi, type Report } from "@/lib/reports";
 
-function exportPdf(kind: string, caseId: string) {
-  logAudit("EXPORT", `${kind}_report`, caseId);
-  window.print();
-}
+export type ReportViewerProps = {
+  kind: "screening" | "evaluation";
+  child?: Student | null;
+  caseId: string;
+};
 
 export default function ReportViewer({
   kind,
   child,
   caseId,
-}: {
-  kind: "screening" | "evaluation";
-  child: Student;
-  caseId: string;
-}) {
-  const params = useSearchParams();
-  const autoPrint = params.get("print") === "1";
-  const printed = useRef(false);
-  const { data, error, loading } = useLoad<{
-    content: ScreeningContent | null;
-    evaluation: EvaluationReport | null;
-  }>(
-    () =>
-      kind === "screening"
-        ? loadScreeningReport(caseId).then((content) => ({
-            content,
-            evaluation: null,
-          }))
-        : loadEvaluationReport(caseId).then((evaluation) => ({
-            content: null,
-            evaluation,
-          })),
-    [kind, caseId],
-  );
-  const ready = Boolean(data?.content || data?.evaluation);
+}: ReportViewerProps) {
+  const [report, setReport] = useState<Report | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (autoPrint && ready && !printed.current) {
-      printed.current = true;
-      setTimeout(() => exportPdf(kind, caseId), 300);
-    }
-  }, [autoPrint, ready, kind, caseId]);
+    let active = true;
 
-  if (loading) return <Loading />;
-  if (error) return <Alert>{error}</Alert>;
-  if (!ready) {
-    return (
-      <Empty>
-        {kind === "screening"
-          ? "The screening report is ready once the screening has started."
-          : "The evaluation report is ready after the 6-week check."}
-      </Empty>
-    );
+    async function loadReport() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const result = await reportsApi.forCase(caseId);
+
+        if (active) {
+          setReport(result);
+        }
+      } catch (loadError) {
+        if (active) {
+          setError(
+            loadError instanceof Error
+              ? loadError.message
+              : "We could not load the report.",
+          );
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void loadReport();
+
+    return () => {
+      active = false;
+    };
+  }, [caseId]);
+
+  const title = kind === "screening" ? "Screening report" : "Evaluation report";
+
+  if (loading) {
+    return <div className="ui-card">Loading report...</div>;
   }
 
+  if (error) {
+    return <div className="ui-card">{error}</div>;
+  }
+
+  if (!report) {
+    return <div className="ui-card">This report is not available.</div>;
+  }
+
+  const content =
+    typeof report.content === "string"
+      ? report.content
+      : JSON.stringify(report.content, null, 2);
+
   return (
-    <>
-      <div className="ui-actions ui-actions--end no-print">
-        <Button onClick={() => exportPdf(kind, caseId)}>
-          <Download size={18} aria-hidden="true" /> Download PDF
-        </Button>
-      </div>
-      {data?.content && (
-        <ScreeningReport child={child} content={data.content} />
+    <section className="ui-card">
+      <h3>{title}</h3>
+      {child && (
+        <p>
+          {child.first_name} {child.last_name}
+        </p>
       )}
-      {data?.evaluation && (
-        <EvaluationReportDoc child={child} report={data.evaluation} />
-      )}
-    </>
+      <pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+        {content}
+      </pre>
+    </section>
   );
 }

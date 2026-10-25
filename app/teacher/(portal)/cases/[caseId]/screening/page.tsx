@@ -1,61 +1,71 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useParams } from "next/navigation";
 
-import ScreeningFlow from "@/_components/screening/ScreeningFlow";
+import ScreeningJourney from "@/_components/screening/ScreeningJourney";
 import ScreeningUnavailable from "@/_components/screening/ScreeningUnavailable";
 import { useUser } from "@/_components/SessionProvider";
-import { Alert, Loading, PageHeader } from "@/_components/ui/bits";
+import { Alert, Empty, Loading, PageHeader } from "@/_components/ui/bits";
 import { useLoad } from "@/_components/useLoad";
 import { casesApi } from "@/lib/cases";
 import { SCREENING_ENABLED } from "@/lib/features";
-import { ageInYears, studentName, studentsApi } from "@/lib/lookups";
-import { loadScreening } from "@/lib/screening";
-import { questionSetFor } from "@/lib/screening-questions";
+import { studentName, studentsApi } from "@/lib/lookups";
+import { loadMyScreening, screeningIsOpen } from "@/lib/screening";
 
 async function load(caseId: string) {
   const caseItem = await casesApi.get(caseId);
-  const [student, screening] = await Promise.all([
+  const [student, mine] = await Promise.all([
     studentsApi.get(caseItem.student_id),
-    loadScreening(caseId),
+    loadMyScreening(caseId, "TEACHER"),
   ]);
-  return { caseItem, student, screening: screening.content };
+  return { caseItem, student, mine };
 }
 
 function TeacherScreening() {
   const { caseId } = useParams<{ caseId: string }>();
   const user = useUser();
-  const router = useRouter();
   const { data, error, loading } = useLoad(() => load(caseId), [caseId]);
-  const finished = Boolean(data?.screening.teacher?.completed_at);
 
-  useEffect(() => {
-    if (finished) router.replace(`/teacher/cases/${caseId}/screening/done`);
-  }, [finished, caseId, router]);
+  if (loading) return <Loading />;
 
-  if (loading || finished) return <Loading />;
-  if (error || !data) {
+  const exitHref = data
+    ? `/teacher/students/${data.student.student_id}`
+    : "/teacher/students";
+  const closed =
+    data &&
+    !data.mine.assessment?.completed_at &&
+    !screeningIsOpen(data.caseItem);
+
+  if (error || !data || closed) {
     return (
       <main className="ui-page">
-        <PageHeader title="Screening" back={{ href: "/teacher/cases" }} />
+        <PageHeader
+          title="Screening"
+          back={{ href: exitHref, label: "Back to the student" }}
+        />
         <div className="ui-body">
-          <Alert>{error ?? "We could not open this screening."}</Alert>
+          {error || !data ? (
+            <Alert>{error ?? "We could not open this screening."}</Alert>
+          ) : (
+            <Empty>
+              The screening for this case is closed, so there is nothing to
+              answer.
+            </Empty>
+          )}
         </div>
       </main>
     );
   }
 
-  const exitHref = `/teacher/cases`;
   return (
-    <ScreeningFlow
+    <ScreeningJourney
       role="TEACHER"
-      caseItem={data.caseItem}
-      set={questionSetFor(ageInYears(data.student.date_of_birth))}
-      saved={data.screening}
+      caseId={caseId}
       responderId={user.user_id}
-      title={studentName(data.student)}
+      childName={studentName(data.student)}
+      initial={data.mine}
       exitHref={exitHref}
+      exitLabel="Back to the student"
       doneHref={`/teacher/cases/${caseId}/screening/done`}
     />
   );

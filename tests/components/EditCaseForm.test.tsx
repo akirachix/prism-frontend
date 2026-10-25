@@ -53,14 +53,12 @@ describe("EditCaseForm", () => {
     expect(mockUpdate).toHaveBeenCalledWith("c1", { status: "CLOSED" });
   });
 
-  it("sends a score as a number", async () => {
-    mockUpdate.mockResolvedValue(makeCase({ autism_score: 4 }));
+  it("has no score or main area fields", () => {
     setup();
-    await userEvent.type(screen.getByLabelText("Autism score"), "4");
-    await save();
-    await waitFor(() =>
-      expect(mockUpdate).toHaveBeenCalledWith("c1", { autism_score: 4 }),
-    );
+    expect(screen.queryByLabelText(/score/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByLabelText("Main area of concern"),
+    ).not.toBeInTheDocument();
   });
 
   it("shows the backend's message when saving fails", async () => {

@@ -28,12 +28,6 @@
   color: #0a2a66;
 }
 
-.edit-case__scores {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-}
-
 .edit-case__error {
   margin: 0;
   background: #fde8ea;

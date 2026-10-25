@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { formatDate, labelOf } from "@/lib/format";
 import { studentName, type Student } from "@/lib/lookups";
 import { FINISHED_STATUSES, type Case } from "@/lib/types";
-import "./cases-table.module.css";
+import "./cases-table.css";
 
 interface Props {
   cases: Case[];

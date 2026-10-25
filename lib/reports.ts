@@ -51,16 +51,6 @@ export const reportsApi = {
   listAll: () => request<Report[]>("/reports"),
   forCase: <T extends object = Record<string, unknown>>(caseId: string) =>
     request<Report<T>>(`/reports/case/${caseId}`),
-  create: (caseId: string, content: object) =>
-    request<Report>("/reports", {
-      method: "POST",
-      body: JSON.stringify({ case_id: caseId, content }),
-    }),
-  replace: (caseId: string, content: object) =>
-    request<Report>(`/reports/case/${caseId}`, {
-      method: "PUT",
-      body: JSON.stringify({ content }),
-    }),
   screening: (caseId: string) => request<Report>(`/reports/case/${caseId}`),
   plan: (caseId: string) => request<Plan>(`/ieps/case/${caseId}/active`),
   recommendation: (caseId: string) =>

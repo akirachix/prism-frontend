@@ -17,7 +17,7 @@ import { greeting } from "@/lib/format";
 import { notificationsApi } from "@/lib/notifications";
 import { fullName } from "@/lib/users";
 import "@/_components/plan/plan.css";
-import "./page.module.css";
+import "./teacher-home.css";
 
 export default function TeacherHomePage() {
   const user = useUser();
