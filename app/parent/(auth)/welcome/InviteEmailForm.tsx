@@ -46,11 +46,9 @@ export default function InviteEmailForm({ token }: { token: string }) {
         })}
       />
       {error && <Alert>{error}</Alert>}
-      <div className="ui-form__end">
-        <Button type="submit" loading={isSubmitting}>
-          {isSubmitting ? "Checking…" : "Continue"}
-        </Button>
-      </div>
+      <Button type="submit" loading={isSubmitting} block>
+        {isSubmitting ? "Checking…" : "Continue"}
+      </Button>
     </form>
   );
 }

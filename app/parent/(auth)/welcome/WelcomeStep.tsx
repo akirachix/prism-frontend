@@ -26,7 +26,7 @@ export default function WelcomeStep() {
   }
 
   return (
-    <div className="auth-step">
+    <div className="auth-step auth-welcome">
       <div>
         <h1 className="auth-title">Welcome</h1>
         <p className="auth-lead">
