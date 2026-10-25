@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import NewPasswordForm from "@/_components/auth/NewPasswordForm";
+import ParentInviteForm from "./ParentInviteForm";
 import ParentAuth from "../ParentAuth";
 
 export const metadata = { title: "Create a password · Mirai for parents" };
@@ -13,12 +13,7 @@ export default function SetPasswordPage() {
         Your invitation has been verified. Add your name and create a password.
       </p>
       <Suspense fallback={null}>
-        <NewPasswordForm
-          portal="parent"
-          mode="invite"
-          askName
-          submitLabel="Update profile"
-        />
+        <ParentInviteForm />
       </Suspense>
     </ParentAuth>
   );

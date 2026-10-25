@@ -19,6 +19,7 @@ const PUBLIC_AUTH_PATHS = [
   "/auth/accept-invitation",
   "/auth/forgot-password",
   "/auth/reset-password",
+  "/students/parent-invitation",
 ];
 
 function isPublic(path: string): boolean {
