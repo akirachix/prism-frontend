@@ -5,6 +5,7 @@ import {
   currentIep,
   evaluationIsOpen,
   iepsApi,
+  plansForCase,
   planState,
   planWeek,
   regeneratePlan,
@@ -216,5 +217,20 @@ describe("regeneratePlan", () => {
     await expect(regeneratePlan(makeIep(), "x", noWait)).rejects.toThrow(
       "The AI could not write the plan: busy",
     );
+  });
+});
+
+describe("plansForCase", () => {
+  it("reads every page of a case's plans", async () => {
+    const firstPage = Array.from({ length: 200 }, (_, i) =>
+      makeIep({ iep_id: `p${i}` }),
+    );
+    mockRequest.mockImplementation(async (path: string) =>
+      path.includes("offset=200") ? [makeIep({ iep_id: "last" })] : firstPage,
+    );
+    const plans = await plansForCase("c1");
+    expect(plans).toHaveLength(201);
+    expect(plans[200].iep_id).toBe("last");
+    expect(mockRequest.mock.calls[0][0]).toMatch(/case_id=c1/);
   });
 });

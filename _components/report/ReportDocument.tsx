@@ -27,7 +27,6 @@ function LevelTag({ level }: { level: Level | null }) {
   );
 }
 
-/** A printable report. "Download PDF" prints this page to PDF. */
 export function ScreeningReport({
   child,
   content,

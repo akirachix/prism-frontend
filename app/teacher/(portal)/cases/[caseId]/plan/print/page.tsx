@@ -11,7 +11,7 @@ import { Alert, Empty, Loading, PageHeader } from "@/_components/ui/bits";
 import { orNull, useLoad } from "@/_components/useLoad";
 import { logAudit } from "@/lib/audit";
 import { casesApi } from "@/lib/cases";
-import { canDownload, currentIep, iepsApi } from "@/lib/ieps";
+import { canDownload, currentIep, plansForCase } from "@/lib/ieps";
 import { studentName, studentsApi } from "@/lib/lookups";
 import { schoolsApi } from "@/lib/schools";
 import "@/_components/portal.css";
@@ -25,13 +25,12 @@ async function load(caseId: string, schoolId: string | null) {
   const caseItem = await casesApi.get(caseId);
   const [student, ieps, school] = await Promise.all([
     studentsApi.get(caseItem.student_id),
-    iepsApi.list({ case_id: caseId }),
+    plansForCase(caseId),
     schoolId ? orNull(schoolsApi.get(schoolId)) : Promise.resolve(null),
   ]);
   return { student, iep: currentIep(ieps), school };
 }
 
-/** The approved plan as a clean page; the browser saves it as a PDF. */
 export default function PlanPrintPage() {
   const { caseId } = useParams<{ caseId: string }>();
   const user = useUser();

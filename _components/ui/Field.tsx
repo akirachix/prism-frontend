@@ -12,7 +12,6 @@ interface FieldProps {
   optional?: boolean;
 }
 
-/** Label, input and error message, wired together for screen readers. */
 export function TextField({
   label,
   error,

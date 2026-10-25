@@ -20,11 +20,38 @@ export interface EvaluationResponse {
   submitted_at: string;
 }
 
+export type EvaluationWindowStatus =
+  "NOT_APPROVED" | "NOT_OPEN" | "OPEN" | "LOCKED";
+
+export interface EvaluationRound {
+  iep_id: string;
+  status: EvaluationWindowStatus;
+  opens_at: string | null;
+  locked_until: string | null;
+  last_submitted_at: string | null;
+  questions: EvaluationQuestion[];
+  my_responses: EvaluationResponse[];
+}
+
+export interface EvaluationAnswer {
+  eval_question_id: string;
+  score: number;
+}
+
 export const evaluationsApi = {
   questions: (iepId: string) =>
     request<EvaluationQuestion[]>(
       `/iep-evaluation-questions${query({ iep_id: iepId })}`,
     ),
+  current: (iepId: string) =>
+    request<EvaluationRound>(
+      `/iep-evaluation-questions/current${query({ iep_id: iepId })}`,
+    ),
+  submit: (iepId: string, answers: EvaluationAnswer[]) =>
+    request<EvaluationRound>("/iep-evaluation-responses/submit", {
+      method: "POST",
+      body: JSON.stringify({ iep_id: iepId, answers }),
+    }),
   responses: (filters: {
     eval_question_id?: string;
     responder_id?: string;
@@ -50,7 +77,6 @@ export const evaluationsApi = {
     }),
 };
 
-/** The five faces on the 6-week check, from -2 to 2. */
 export const SCALE = [
   { score: -2, label: "Much worse", face: "😞" },
   { score: -1, label: "A little worse", face: "🙁" },

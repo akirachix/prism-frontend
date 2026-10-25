@@ -42,3 +42,15 @@
 .students-card-plan {
   padding: 0 14px 12px 70px;
 }
+
+.students-person {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.students-person .portal-person__name {
+  overflow-wrap: anywhere;
+}

@@ -1,0 +1,18 @@
+.updates__link:hover,
+.updates__link:focus-visible {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.updates__dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--red);
+  vertical-align: middle;
+}
+
+.updates__more {
+  margin-top: 8px;
+}

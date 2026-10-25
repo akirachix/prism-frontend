@@ -60,6 +60,6 @@ describe("CasesTable with student names", () => {
       <CasesTable cases={CASES} studentsById={STUDENTS} onSelect={jest.fn()} />,
     );
     const select = screen.getByLabelText("Filter by status");
-    expect(within(select).getAllByRole("option")).toHaveLength(3); // All + 2
+    expect(within(select).getAllByRole("option")).toHaveLength(3);
   });
 });

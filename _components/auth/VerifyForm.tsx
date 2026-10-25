@@ -25,11 +25,6 @@ import { landingFor } from "./flow";
 
 const CODE_LENGTH = 6;
 
-/**
- * The 6-digit code step. Handles both first-time set-up
- * (mfa_enrollment_required → /auth/mfa/enroll/confirm) and later
- * sign-ins (mfa_required → /auth/mfa/verify).
- */
 export default function VerifyForm({ portal }: { portal: Portal }) {
   const router = useRouter();
   const params = useSearchParams();
@@ -54,8 +49,6 @@ export default function VerifyForm({ portal }: { portal: Portal }) {
     if (hydrated && !usable) router.replace(`/${portal}/login`);
   }, [hydrated, usable, portal, router]);
 
-  // First-time set-up: ask the server to start enrolment (this sends the
-  // code). Guarded so React's dev double-run does not send two codes.
   const enrollToken =
     usable && flow.stage === "mfa_enrollment_required" ? flow.step_token : null;
   useEffect(() => {
@@ -87,9 +80,7 @@ export default function VerifyForm({ portal }: { portal: Portal }) {
         try {
           user = await usersApi.update(user.user_id, flow.pending_name);
           startSession({ ...pair, user }, flow.remember !== false);
-        } catch {
-          // The name can be fixed later from the profile page.
-        }
+        } catch {}
       }
       clearFlow();
       router.replace(landingFor(user, portal, next));

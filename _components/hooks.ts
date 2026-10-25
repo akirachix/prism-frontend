@@ -6,7 +6,6 @@ import type { AuthFlow } from "@/lib/auth";
 
 const noop = () => () => {};
 
-/** False while the server HTML is being hydrated, true afterwards. */
 export function useHydrated(): boolean {
   return useSyncExternalStore(
     noop,
@@ -25,7 +24,6 @@ function readRawFlow(): string | null {
   }
 }
 
-/** The saved sign-in step, or null when there is none (or it expired). */
 export function useStoredFlow(): AuthFlow | null {
   const raw = useSyncExternalStore(noop, readRawFlow, () => null);
   return useMemo(() => {
@@ -40,7 +38,6 @@ export function useStoredFlow(): AuthFlow | null {
   }, [raw]);
 }
 
-/** True when the media query matches. False on the server. */
 export function useMediaQuery(query: string): boolean {
   const subscribe = useCallback(
     (onChange: () => void) => {

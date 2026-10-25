@@ -2,7 +2,10 @@ import { request } from "@/lib/api";
 import { getStudents, studentName } from "@/lib/lookups";
 import { makeStudent } from "@/tests/helpers";
 
-jest.mock("@/lib/api", () => ({ request: jest.fn() }));
+jest.mock("@/lib/api", () => ({
+  ...jest.requireActual("@/lib/api"),
+  request: jest.fn(),
+}));
 
 const mockRequest = request as jest.Mock;
 
@@ -20,9 +23,9 @@ describe("studentName", () => {
 });
 
 describe("getStudents", () => {
-  it("asks the backend for up to 200 students", async () => {
+  it("asks the backend for the students", async () => {
     await getStudents();
-    expect(mockRequest.mock.calls[0][0]).toBe("/students");
+    expect(mockRequest.mock.calls[0][0]).toMatch(/^\/students(\?|$)/);
   });
 
   it("can ask for one teacher's students", async () => {

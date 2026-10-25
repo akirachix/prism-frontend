@@ -1,0 +1,278 @@
+.eval-reports {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eval-report {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1.5px solid rgba(10, 42, 102, 0.18);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  padding: 14px 16px;
+}
+
+.eval-report__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.eval-report__head .ui-pill {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.eval-report__icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--sky);
+  color: var(--navy);
+}
+
+.eval-report__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.eval-report__meta strong {
+  overflow-wrap: anywhere;
+}
+
+.eval-report__meta span {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.eval-report__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.eval-report__actions .ui-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.eval-report__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: none;
+  padding: 4px 0;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--red);
+  cursor: pointer;
+}
+
+.eval-report__toggle svg {
+  transition: transform 0.15s;
+}
+
+.eval-report__chevron--open {
+  transform: rotate(180deg);
+}
+
+.eval-report__answers {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.eval-report__answer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid rgba(10, 42, 102, 0.12);
+  padding: 10px 0;
+}
+
+.eval-report__answer dt {
+  line-height: 1.4;
+}
+
+.eval-report__answer dd {
+  flex-shrink: 0;
+  margin: 0;
+  max-width: 45%;
+  font-weight: 700;
+  text-align: right;
+}
+
+.eval-report__q {
+  margin-right: 8px;
+  font-weight: 700;
+  color: var(--red);
+}
+
+.eval-reports__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.eval-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(10, 42, 102, 0.45);
+}
+
+.eval-overlay__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--cream);
+  padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
+  color: var(--navy);
+}
+
+.eval-overlay__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.eval-overlay__head h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.eval-overlay__head p {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.eval-overlay__close {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid var(--navy);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--navy);
+  cursor: pointer;
+}
+
+@media (min-width: 769px) {
+  .eval-overlay {
+    align-items: center;
+    padding: 32px;
+  }
+
+  .eval-overlay__panel {
+    max-width: 760px;
+    max-height: 84vh;
+    border-radius: var(--radius-lg);
+    padding: 28px 32px;
+  }
+}
+
+@media (max-width: 420px) {
+  .eval-report__head {
+    flex-wrap: wrap;
+  }
+
+  .eval-report__head .ui-pill {
+    margin-left: 52px;
+  }
+
+  .eval-report__answer {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .eval-report__answer dd {
+    max-width: none;
+    text-align: left;
+  }
+}
+
+.eval-print {
+  display: none;
+}
+
+@media print {
+  body.eval-printing > *:not(.eval-print) {
+    display: none !important;
+  }
+
+  body.eval-printing .eval-print {
+    display: block;
+    padding: 0 8px;
+    color: #000000;
+    font-size: 12pt;
+  }
+
+  .eval-print__logo {
+    width: 140px;
+    height: auto;
+  }
+
+  .eval-print h1 {
+    margin: 12px 0 16px;
+    font-size: 18pt;
+  }
+
+  .eval-print__facts {
+    width: 100%;
+    margin-bottom: 16px;
+    border-collapse: collapse;
+  }
+
+  .eval-print__facts th,
+  .eval-print__facts td {
+    border-bottom: 1px solid #cccccc;
+    padding: 6px 4px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .eval-print__facts th {
+    width: 30%;
+  }
+
+  .eval-print .eval-report__answer {
+    break-inside: avoid;
+  }
+
+  .eval-print__foot {
+    margin-top: 18px;
+    font-size: 9pt;
+  }
+}

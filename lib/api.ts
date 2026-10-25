@@ -116,7 +116,6 @@ export async function request<T>(
 
 export { query } from "@/lib/query";
 
-/** The largest page the backend allows (`limit` max on list endpoints). */
 export const MAX_PAGE_SIZE = 200;
 
 export async function fetchAll<T>(

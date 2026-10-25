@@ -9,11 +9,6 @@ import { reportsApi, type Report } from "@/lib/reports";
 import { withCase } from "./useReportCase";
 import "./reports.css";
 
-/**
- * Local testing only (npm run dev): before sign-in exists there is no
- * "your child", so this lists every report in the database and opens the
- * chosen case's reports. It never renders in a production build.
- */
 export default function DevReportPicker() {
   const [reports, setReports] = useState<Report[] | null>(null);
   const [error, setError] = useState<string | null>(null);

@@ -10,8 +10,8 @@ import "../_components/parent-shell.css";
 const LINKS: NavLink[] = [
   { href: "/parent", label: "Home", icon: "home", exact: true },
   { href: "/parent/reports", label: "Reports", icon: "reports" },
-  // School and Evaluation go back in once /parent/school and
-  // /parent/evaluation exist; linking them now opens a 404.
+  { href: "/parent/school", label: "School", icon: "school" },
+  { href: "/parent/evaluation", label: "Evaluation", icon: "evaluation" },
   { href: "/parent/account", label: "Profile", icon: "account" },
 ];
 

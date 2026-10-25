@@ -1,6 +1,5 @@
 import { request } from "@/lib/api";
 
-/** A background AI job (POST /ai/... returns one; poll GET /ai/jobs/{id}). */
 export interface AIJob {
   job_id: string;
   case_id: string;
@@ -13,7 +12,6 @@ export interface AIJob {
 }
 
 export const aiApi = {
-  /** Ask the AI for a new plan for the case. */
   startIep: (caseId: string) =>
     request<AIJob>(`/ai/cases/${caseId}/iep`, { method: "POST" }),
   job: (jobId: string) => request<AIJob>(`/ai/jobs/${jobId}`),
@@ -32,16 +30,11 @@ export function jobFailed(job: AIJob): boolean {
 export interface WaitOptions {
   intervalMs?: number;
   timeoutMs?: number;
-  /** Replaced in tests so they do not really wait. */
   sleep?: (ms: number) => Promise<void>;
 }
 
 const pause = (ms: number) => new Promise<void>((done) => setTimeout(done, ms));
 
-/**
- * Poll a job until it succeeds. Throws with a message the teacher can read
- * when it fails or takes too long.
- */
 export async function waitForJob(
   jobId: string,
   { intervalMs = 3000, timeoutMs = 180000, sleep = pause }: WaitOptions = {},

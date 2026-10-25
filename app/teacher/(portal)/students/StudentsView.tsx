@@ -5,8 +5,9 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
+import AddStudentModal from "@/app/teacher/_components/students/AddStudentModal";
 import { useUser } from "@/_components/SessionProvider";
-import { ButtonLink } from "@/_components/ui/Button";
+import Button, { ButtonLink } from "@/_components/ui/Button";
 import {
   Alert,
   Avatar,
@@ -17,16 +18,20 @@ import {
 } from "@/_components/ui/bits";
 import { useLoad } from "@/_components/useLoad";
 import { loadClassroom, studentStatus } from "@/lib/classroom";
+import {
+  checkStates,
+  unavailableCount,
+  withCheckState,
+} from "@/lib/evaluation-flow";
 import { canDownload, planState, type IEP } from "@/lib/ieps";
-import { studentName } from "@/lib/lookups";
+import { ageInYears, studentName } from "@/lib/lookups";
 import { fullName } from "@/lib/users";
 import "@/_components/portal.css";
 import "./students.css";
 
-type Filter = "all" | "action" | "plan";
+type Filter = "all" | "action" | "plan" | "active";
 const PAGE_SIZE = 12;
 
-/** "Review plan" / "View plan" and, for an active plan, its PDF. */
 function PlanActions({ caseId, iep }: { caseId: string; iep: IEP }) {
   const base = `/teacher/cases/${caseId}/plan`;
   const waiting = planState(iep).waitingForMe && iep.status !== "ACTIVE";
@@ -53,17 +58,21 @@ export default function StudentsView() {
   const user = useUser();
   const router = useRouter();
   const params = useSearchParams();
-  // "active" is the older name of the plan filter; keep links to it working.
   const asked = params.get("filter");
   const filter: Filter =
-    asked === "action"
-      ? "action"
-      : asked === "plan" || asked === "active"
-        ? "plan"
-        : "all";
+    asked === "action" || asked === "plan" || asked === "active"
+      ? asked
+      : "all";
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [adding, setAdding] = useState(false);
   const room = useLoad(() => loadClassroom(user.user_id), [user.user_id]);
+  const activePlans = room.data
+    ? Array.from(room.data.iepByCase.values())
+        .filter((iep) => iep.status === "ACTIVE")
+        .map((iep) => iep.iep_id)
+    : [];
+  const checks = useLoad(() => checkStates(activePlans), [activePlans]);
 
   const rows = useMemo(() => {
     if (!room.data) return [];
@@ -72,22 +81,28 @@ export default function StudentsView() {
       .map((student) => {
         const caseItem = data.caseByStudent.get(student.student_id);
         const iep = caseItem ? data.iepByCase.get(caseItem.case_id) : undefined;
-        return { student, caseItem, iep, status: studentStatus(caseItem, iep) };
+        const base = studentStatus(caseItem, iep);
+        const state = iep ? checks.data?.get(iep.iep_id) : undefined;
+        return { student, caseItem, iep, status: withCheckState(base, state) };
       })
       .sort((a, b) =>
         studentName(a.student).localeCompare(studentName(b.student)),
       );
-  }, [room.data]);
+  }, [room.data, checks.data]);
+
+  const missingChecks = unavailableCount(checks.data);
 
   const counts = {
     all: rows.length,
     action: rows.filter((row) => row.status.needsAction).length,
     plan: rows.filter((row) => row.iep).length,
+    active: rows.filter((row) => row.status.activePlan).length,
   };
 
   const visible = rows.filter((row) => {
     if (filter === "action" && !row.status.needsAction) return false;
     if (filter === "plan" && !row.iep) return false;
+    if (filter === "active" && !row.status.activePlan) return false;
     const term = search.trim().toLowerCase();
     if (!term) return true;
     return `${studentName(row.student)} ${row.student.admission_number}`
@@ -107,6 +122,7 @@ export default function StudentsView() {
     { key: "all", label: `All (${counts.all})` },
     { key: "action", label: `Needs my action (${counts.action})` },
     { key: "plan", label: `Plans (IEP) (${counts.plan})` },
+    { key: "active", label: `Active IEP (${counts.active})` },
   ];
 
   return (
@@ -138,14 +154,14 @@ export default function StudentsView() {
               }}
             />
           </div>
-          <ButtonLink
-            href="/teacher/students/new"
+          <Button
             variant="orange"
             small
             className="students-add"
+            onClick={() => setAdding(true)}
           >
             + Add student
-          </ButtonLink>
+          </Button>
         </div>
 
         <div className="portal-chips" role="group" aria-label="Filter students">
@@ -163,6 +179,20 @@ export default function StudentsView() {
         </div>
 
         {room.error && <Alert>{room.error}</Alert>}
+        {missingChecks > 0 && (
+          <Alert tone="warning">
+            We could not load the 6-week check status for {missingChecks}{" "}
+            {missingChecks === 1 ? "student" : "students"}. Their status shows
+            as unavailable.{" "}
+            <Button
+              variant="link"
+              onClick={() => checks.reload()}
+              loading={checks.loading}
+            >
+              Try again
+            </Button>
+          </Alert>
+        )}
         {room.loading && <Loading label="Loading your class…" />}
         {!room.loading && !room.error && visible.length === 0 && (
           <Empty>
@@ -185,8 +215,13 @@ export default function StudentsView() {
                       name={studentName(student)}
                       id={student.student_id}
                     />
-                    <span className="portal-person__name">
-                      {studentName(student)}
+                    <span className="students-person">
+                      <span className="portal-person__name">
+                        {studentName(student)}
+                      </span>
+                      <span className="portal-person__sub">
+                        {student.admission_number}
+                      </span>
                     </span>
                     <Pill tone={status.tone}>{status.label}</Pill>
                   </Link>
@@ -205,6 +240,7 @@ export default function StudentsView() {
                   <tr>
                     <th>Names</th>
                     <th>Admission number</th>
+                    <th>Age</th>
                     <th>Status</th>
                     <th>Plan (IEP)</th>
                   </tr>
@@ -218,6 +254,7 @@ export default function StudentsView() {
                         </Link>
                       </td>
                       <td>{student.admission_number}</td>
+                      <td>{ageInYears(student.date_of_birth) ?? "—"}</td>
                       <td>
                         <Pill tone={status.tone}>{status.label}</Pill>
                       </td>
@@ -252,6 +289,13 @@ export default function StudentsView() {
           </>
         )}
       </div>
+
+      {adding && (
+        <AddStudentModal
+          onClose={() => setAdding(false)}
+          onCreated={() => room.reload()}
+        />
+      )}
     </main>
   );
 }

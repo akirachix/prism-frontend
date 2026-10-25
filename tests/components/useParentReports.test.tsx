@@ -72,7 +72,6 @@ describe("useParentReports", () => {
     );
     rerender({ id: "c2" });
 
-    // Before c2 has loaded, nothing from c1 is left.
     expect(result.current.loading).toBe(true);
     expect(result.current.child).toBeNull();
     expect(result.current.reports).toBeNull();

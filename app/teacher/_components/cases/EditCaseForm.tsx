@@ -44,7 +44,6 @@ export default function EditCaseForm({ item, onBack, onSaved }: Props) {
 
     if (status !== item.status) changes.status = status;
 
-    // "Not set" (empty) means clear the domain, so send null.
     const newDomain = domain === "" ? null : domain;
     if (newDomain !== (item.primary_domain ?? null)) {
       changes.primary_domain = newDomain;
@@ -54,7 +53,6 @@ export default function EditCaseForm({ item, onBack, onSaved }: Props) {
       const value = scores[key].trim();
       const original = item[key];
       if (value === "") {
-        // An emptied box means clear the score, so send null.
         if (original !== null) changes[key] = null;
       } else if (Number(value) !== original) {
         changes[key] = Number(value);

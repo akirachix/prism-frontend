@@ -40,7 +40,6 @@ async function loadStudentCase(studentId: string) {
   return { student, caseItem, iep: currentIep(ieps), parent };
 }
 
-/** The teacher's next step, worked out from the case status and its plan. */
 function nextStep(
   caseItem: Case,
   iep: IEP | null,

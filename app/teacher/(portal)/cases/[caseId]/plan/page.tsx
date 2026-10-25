@@ -22,6 +22,7 @@ import {
   currentIep,
   evaluationIsOpen,
   iepsApi,
+  plansForCase,
   planState,
   regeneratePlan,
   type IEP,
@@ -33,7 +34,7 @@ async function load(caseId: string) {
   const caseItem = await casesApi.get(caseId);
   const [student, ieps] = await Promise.all([
     studentsApi.get(caseItem.student_id),
-    iepsApi.list({ case_id: caseId }),
+    plansForCase(caseId),
   ]);
   return { caseItem, student, iep: currentIep(ieps) };
 }
@@ -156,13 +157,10 @@ export default function TeacherPlanPage() {
       reset();
     } catch (err) {
       setActionError(errorMessage(err));
-      // The plan may now be sent back even though the AI failed; show that.
       try {
-        const ieps = await iepsApi.list({ case_id: caseId });
+        const ieps = await plansForCase(caseId);
         setData({ caseItem, student, iep: currentIep(ieps) });
-      } catch {
-        // Keep what is on screen.
-      }
+      } catch {}
     } finally {
       setGenerating(false);
     }

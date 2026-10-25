@@ -13,7 +13,6 @@ import {
 } from "@/lib/ieps";
 import "./plan.css";
 
-/** The student's plan at a glance, with what the teacher can do next. */
 export default function PlanCard({
   caseId,
   iep,

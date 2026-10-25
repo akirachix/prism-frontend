@@ -6,9 +6,14 @@ import Link from "next/link";
 import { useUser } from "@/_components/SessionProvider";
 import { ButtonLink } from "@/_components/ui/Button";
 import { Alert, Avatar, Empty, Loading } from "@/_components/ui/bits";
+import LatestUpdates from "@/_components/updates/LatestUpdates";
 import { useLoad } from "@/_components/useLoad";
 import { attentionItems, loadClassroom } from "@/lib/classroom";
-import { greeting, relativeDay } from "@/lib/format";
+import {
+  notificationUpdates,
+  teacherEvaluationUpdates,
+} from "@/lib/evaluation-updates";
+import { greeting } from "@/lib/format";
 import { notificationsApi } from "@/lib/notifications";
 import { fullName } from "@/lib/users";
 import "@/_components/plan/plan.css";
@@ -21,8 +26,21 @@ export default function TeacherHomePage() {
     () => notificationsApi.list(user.user_id),
     [user.user_id],
   );
-
   const data = room.data;
+  const activePlans = data
+    ? Array.from(data.iepByCase.values())
+        .filter((iep) => iep.status === "ACTIVE")
+        .map((iep) => iep.iep_id)
+    : null;
+  const checks = useLoad(
+    () => (data ? teacherEvaluationUpdates(data) : Promise.resolve([])),
+    [activePlans],
+  );
+  const updates = [
+    ...notificationUpdates(news.data ?? []),
+    ...(checks.data ?? []),
+  ];
+
   const openCases = data?.cases.filter((item) => !item.closed_at).length ?? 0;
   const ieps = data ? Array.from(data.iepByCase.values()) : [];
   const active = ieps.filter((iep) => iep.status === "ACTIVE").length;
@@ -53,7 +71,7 @@ export default function TeacherHomePage() {
       label: "Active IEP",
       value: active,
       tone: "pink",
-      href: "/teacher/students?filter=plan",
+      href: "/teacher/students?filter=active",
     },
     {
       label: "Unapproved IEP",
@@ -151,34 +169,15 @@ export default function TeacherHomePage() {
           <h2 id="latest-title" className="ui-section-title">
             Latest actions
           </h2>
-          {news.loading ? (
-            <Loading />
-          ) : news.error ? (
-            <Alert>{news.error}</Alert>
-          ) : !news.data || news.data.length === 0 ? (
-            <Empty>No updates yet.</Empty>
-          ) : (
-            <ul className="portal-news">
-              {news.data.map((item) => (
-                <li key={item.notification_id}>
-                  <div className="portal-news__item">
-                    <span
-                      className={
-                        item.is_read
-                          ? "portal-news__text"
-                          : "portal-news__text portal-news__text--unread"
-                      }
-                    >
-                      {item.message}
-                    </span>
-                    <span className="portal-news__date">
-                      {relativeDay(item.created_at)}
-                    </span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
+          <LatestUpdates
+            items={updates}
+            loading={news.loading || checks.loading || room.loading}
+            error={news.error}
+            onRetry={() => {
+              news.reload();
+              checks.reload();
+            }}
+          />
         </section>
       </div>
     </main>

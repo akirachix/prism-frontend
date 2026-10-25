@@ -22,7 +22,6 @@ function exportPdf(kind: string, caseId: string) {
   window.print();
 }
 
-/** Loads one report, shows it, and prints it to PDF on request. */
 export default function ReportViewer({
   kind,
   child,
@@ -56,7 +55,6 @@ export default function ReportViewer({
   useEffect(() => {
     if (autoPrint && ready && !printed.current) {
       printed.current = true;
-      // Let the page paint before the print dialog opens.
       setTimeout(() => exportPdf(kind, caseId), 300);
     }
   }, [autoPrint, ready, kind, caseId]);

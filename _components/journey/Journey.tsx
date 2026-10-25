@@ -3,7 +3,6 @@ import { Check, Star } from "lucide-react";
 import type { JourneyStep } from "@/lib/journey";
 import "../ui/ui.css";
 
-/** The vertical "Amani's journey" timeline. */
 export default function Journey({ steps }: { steps: JourneyStep[] }) {
   return (
     <ol className="ui-journey">

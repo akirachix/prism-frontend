@@ -21,11 +21,6 @@ import { Alert, ProgressBar } from "../ui/bits";
 import "../portal.css";
 import "./screening.css";
 
-/**
- * The screening questions, one part (domain) after another.
- * Answers are saved when a part is finished, on "Save and exit", and at
- * the end, so closing the app loses at most the current part.
- */
 export default function ScreeningFlow({
   role,
   caseItem,
@@ -62,7 +57,6 @@ export default function ScreeningFlow({
   const [error, setError] = useState<string | null>(null);
   const [missing, setMissing] = useState(false);
 
-  // Teachers on a wide screen see two questions at a time (desktop design).
   const perPage = role === "TEACHER" && desktop ? 2 : 1;
   const start = Math.floor(index / perPage) * perPage;
   const page = questions.slice(start, start + perPage);
@@ -116,7 +110,6 @@ export default function ScreeningFlow({
       return;
     }
     const nextStart = start + perPage;
-    // Save at the end of each part.
     if (partOf(nextStart) !== partOf(start)) {
       if (!(await persist(false))) return;
     }

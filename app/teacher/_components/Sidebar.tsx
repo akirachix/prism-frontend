@@ -37,8 +37,6 @@ export interface NavLink {
   label: string;
   exact?: boolean;
   icon?: IconName;
-  /** Another path prefix that belongs to this section (plain string, so a
-   * server layout can pass it). */
   also?: string;
 }
 
@@ -47,7 +45,6 @@ export default function Sidebar({
   variant = "teacher",
 }: {
   links: NavLink[];
-  /** Parent nav highlights the active tab in red on mobile. */
   variant?: "teacher" | "parent";
 }) {
   const pathname = usePathname();
