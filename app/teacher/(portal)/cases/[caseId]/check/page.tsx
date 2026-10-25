@@ -3,58 +3,54 @@
 import { useParams } from "next/navigation";
 
 import EvaluationFlow from "@/_components/evaluation/EvaluationFlow";
-import { useUser } from "@/_components/SessionProvider";
 import { Alert, Empty, Loading, PageHeader } from "@/_components/ui/bits";
 import { useLoad } from "@/_components/useLoad";
 import { casesApi } from "@/lib/cases";
-import { loadEvaluation } from "@/lib/evaluation-flow";
-import { formatDay } from "@/lib/format";
-import { currentIep, iepsApi } from "@/lib/ieps";
+import { evaluatedIep, loadEvaluation } from "@/lib/evaluation-flow";
+import { formatLongDay } from "@/lib/format";
+import { iepsApi } from "@/lib/ieps";
 import { studentName, studentsApi } from "@/lib/lookups";
 import "@/_components/portal.css";
+import "@/_components/evaluation/evaluation.css";
 
-async function load(caseId: string, teacherId: string) {
+async function load(caseId: string) {
   const caseItem = await casesApi.get(caseId);
   const [student, ieps] = await Promise.all([
     studentsApi.get(caseItem.student_id),
-    iepsApi.list({ case_id: caseId }),
+    iepsApi.list({ case_id: caseId, limit: 50 }),
   ]);
-  const iep = currentIep(ieps);
+  const iep = evaluatedIep(ieps);
   const evaluation =
-    iep?.status === "ACTIVE" ? await loadEvaluation(iep, teacherId) : null;
+    iep?.status === "ACTIVE" ? await loadEvaluation(iep) : null;
   return { student, iep, evaluation };
 }
 
 export default function TeacherCheckPage() {
   const { caseId } = useParams<{ caseId: string }>();
-  const user = useUser();
-  const { data, error, loading } = useLoad(
-    () => load(caseId, user.user_id),
-    [caseId, user.user_id],
-  );
+  const { data, error, loading } = useLoad(() => load(caseId), [caseId]);
+  const profileHref = data
+    ? `/teacher/students/${data.student.student_id}`
+    : "/teacher/students";
 
   return (
     <main className="ui-page">
       <PageHeader
         title="6-week check"
-        eyebrow="My students"
-        back={{
-          href: "/teacher/cases",
-        }}
-        tall
+        eyebrow="Student"
+        back={{ href: profileHref, label: "Back to the student" }}
       />
-      <div className="ui-body ui-body--narrow">
-        {loading ? (
+      <div className="ui-body evaluation-page">
+        {loading && !data ? (
           <Loading />
         ) : error || !data ? (
           <Alert>{error ?? "We could not load the 6-week check."}</Alert>
         ) : (
           <>
-            <div className="portal-student-card ui-lift">
+            <div className="portal-student-card">
               <strong>{studentName(data.student)}</strong>
               <span>
                 {data.iep?.approved_at
-                  ? `Plan approved ${formatDay(data.iep.approved_at)}`
+                  ? `Plan approved ${formatLongDay(data.iep.approved_at)}`
                   : "Plan not approved yet"}
               </span>
             </div>
@@ -63,13 +59,15 @@ export default function TeacherCheckPage() {
                 role="TEACHER"
                 iep={data.iep}
                 data={data.evaluation}
-                responderId={user.user_id}
-                doneHref="/teacher/cases"
-                doneLabel="Back to my students"
-                reviewHref="."
+                childName={data.student.first_name}
+                doneHref={profileHref}
+                doneLabel="Back to the student"
               />
             ) : (
-              <Empty>The 6-week check starts after the plan is approved.</Empty>
+              <Empty>
+                The 6-week check opens six weeks after the plan is approved by
+                the school administrator and you.
+              </Empty>
             )}
           </>
         )}

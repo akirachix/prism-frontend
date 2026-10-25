@@ -7,58 +7,62 @@ import "../ui/ui.css";
 
 const ICONS = [Frown, Annoyed, Meh, Smile, Laugh];
 
-/** The five-face scale (-2 to 2) used by the 6-week check. */
+/**
+ * The five-face scale (-2 to 2) used by the 6-week check. The name of each
+ * option is written under its card on every screen size. With `disabled`
+ * the chosen answer is shown but cannot be changed.
+ */
 export default function FaceScale({
   name,
   value,
   onChange,
   legend,
-  showLabels,
+  disabled,
 }: {
   name: string;
   value: number | undefined;
   onChange: (score: number) => void;
   legend: string;
-  showLabels?: boolean;
+  disabled?: boolean;
 }) {
-  const chosen = SCALE.find((item) => item.score === value);
   return (
-    <fieldset className="ui-faces">
+    <fieldset className="ui-faces" disabled={disabled}>
       <legend className="visually-hidden">{legend}</legend>
       <div className="ui-faces__row">
         {SCALE.map((item, index) => {
           const Icon = ICONS[index];
           const checked = value === item.score;
+          const classes = [
+            "ui-face",
+            checked ? "ui-face--checked" : "",
+            disabled ? "ui-face--disabled" : "",
+          ]
+            .filter(Boolean)
+            .join(" ");
           return (
-            <label
-              key={item.score}
-              className={checked ? "ui-face ui-face--checked" : "ui-face"}
-            >
-              <input
-                type="radio"
-                name={name}
-                value={item.score}
-                checked={checked}
-                onChange={() => onChange(item.score)}
-                className="visually-hidden"
-              />
-              <Icon size={30} aria-hidden="true" />
-              <span className="ui-face__radio" aria-hidden="true" />
-              <span className="ui-face__score">{item.score}</span>
-              <span
-                className={showLabels ? "ui-face__label" : "visually-hidden"}
-              >
+            <div key={item.score} className="ui-faces__item">
+              <label className={classes}>
+                <input
+                  type="radio"
+                  name={name}
+                  value={item.score}
+                  checked={checked}
+                  disabled={disabled}
+                  onChange={() => onChange(item.score)}
+                  aria-label={item.label}
+                  className="visually-hidden"
+                />
+                <Icon size={30} aria-hidden="true" />
+                <span className="ui-face__radio" aria-hidden="true" />
+                <span className="ui-face__score">{item.score}</span>
+              </label>
+              <span className="ui-face__label" aria-hidden="true">
                 {item.label}
               </span>
-            </label>
+            </div>
           );
         })}
       </div>
-      {!showLabels && (
-        <p className="ui-faces__chosen" aria-live="polite">
-          {chosen ? chosen.label : " "}
-        </p>
-      )}
     </fieldset>
   );
 }

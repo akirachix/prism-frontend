@@ -20,11 +20,46 @@ export interface EvaluationResponse {
   submitted_at: string;
 }
 
+/** Where the 6-week evaluation stands for the signed-in teacher or parent. */
+export type EvaluationWindowStatus =
+  "NOT_APPROVED" | "NOT_OPEN" | "OPEN" | "LOCKED";
+
+/** GET /iep-evaluation-questions/current: the signed-in person's round. */
+export interface EvaluationRound {
+  iep_id: string;
+  status: EvaluationWindowStatus;
+  opens_at: string | null;
+  locked_until: string | null;
+  last_submitted_at: string | null;
+  questions: EvaluationQuestion[];
+  my_responses: EvaluationResponse[];
+}
+
+export interface EvaluationAnswer {
+  eval_question_id: string;
+  score: number;
+}
+
 export const evaluationsApi = {
   questions: (iepId: string) =>
     request<EvaluationQuestion[]>(
       `/iep-evaluation-questions${query({ iep_id: iepId })}`,
     ),
+  /** The evaluation round: questions, my answers, and whether it is open. */
+  current: (iepId: string) =>
+    request<EvaluationRound>(
+      `/iep-evaluation-questions/current${query({ iep_id: iepId })}`,
+    ),
+  /**
+   * Send every answer in one request. The server saves all of them or none,
+   * so a failed attempt can be repeated safely, and it locks the evaluation
+   * for six weeks.
+   */
+  submit: (iepId: string, answers: EvaluationAnswer[]) =>
+    request<EvaluationRound>("/iep-evaluation-responses/submit", {
+      method: "POST",
+      body: JSON.stringify({ iep_id: iepId, answers }),
+    }),
   responses: (filters: {
     eval_question_id?: string;
     responder_id?: string;

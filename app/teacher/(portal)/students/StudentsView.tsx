@@ -5,8 +5,9 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
+import AddStudentModal from "@/app/teacher/_components/students/AddStudentModal";
 import { useUser } from "@/_components/SessionProvider";
-import { ButtonLink } from "@/_components/ui/Button";
+import Button, { ButtonLink } from "@/_components/ui/Button";
 import {
   Alert,
   Avatar,
@@ -17,8 +18,9 @@ import {
 } from "@/_components/ui/bits";
 import { useLoad } from "@/_components/useLoad";
 import { loadClassroom, studentStatus } from "@/lib/classroom";
+import { checkStates, withCheckState } from "@/lib/evaluation-flow";
 import { canDownload, planState, type IEP } from "@/lib/ieps";
-import { studentName } from "@/lib/lookups";
+import { ageInYears, studentName } from "@/lib/lookups";
 import { fullName } from "@/lib/users";
 import "@/_components/portal.css";
 import "./students.css";
@@ -63,7 +65,14 @@ export default function StudentsView() {
         : "all";
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [adding, setAdding] = useState(false);
   const room = useLoad(() => loadClassroom(user.user_id), [user.user_id]);
+  const activePlans = room.data
+    ? Array.from(room.data.iepByCase.values())
+        .filter((iep) => iep.status === "ACTIVE")
+        .map((iep) => iep.iep_id)
+    : [];
+  const checks = useLoad(() => checkStates(activePlans), [activePlans]);
 
   const rows = useMemo(() => {
     if (!room.data) return [];
@@ -72,12 +81,14 @@ export default function StudentsView() {
       .map((student) => {
         const caseItem = data.caseByStudent.get(student.student_id);
         const iep = caseItem ? data.iepByCase.get(caseItem.case_id) : undefined;
-        return { student, caseItem, iep, status: studentStatus(caseItem, iep) };
+        const base = studentStatus(caseItem, iep);
+        const state = iep ? checks.data?.get(iep.iep_id) : undefined;
+        return { student, caseItem, iep, status: withCheckState(base, state) };
       })
       .sort((a, b) =>
         studentName(a.student).localeCompare(studentName(b.student)),
       );
-  }, [room.data]);
+  }, [room.data, checks.data]);
 
   const counts = {
     all: rows.length,
@@ -138,14 +149,14 @@ export default function StudentsView() {
               }}
             />
           </div>
-          <ButtonLink
-            href="/teacher/students/new"
+          <Button
             variant="orange"
             small
             className="students-add"
+            onClick={() => setAdding(true)}
           >
             + Add student
-          </ButtonLink>
+          </Button>
         </div>
 
         <div className="portal-chips" role="group" aria-label="Filter students">
@@ -185,8 +196,13 @@ export default function StudentsView() {
                       name={studentName(student)}
                       id={student.student_id}
                     />
-                    <span className="portal-person__name">
-                      {studentName(student)}
+                    <span className="students-person">
+                      <span className="portal-person__name">
+                        {studentName(student)}
+                      </span>
+                      <span className="portal-person__sub">
+                        {student.admission_number}
+                      </span>
                     </span>
                     <Pill tone={status.tone}>{status.label}</Pill>
                   </Link>
@@ -205,6 +221,7 @@ export default function StudentsView() {
                   <tr>
                     <th>Names</th>
                     <th>Admission number</th>
+                    <th>Age</th>
                     <th>Status</th>
                     <th>Plan (IEP)</th>
                   </tr>
@@ -218,6 +235,7 @@ export default function StudentsView() {
                         </Link>
                       </td>
                       <td>{student.admission_number}</td>
+                      <td>{ageInYears(student.date_of_birth) ?? "—"}</td>
                       <td>
                         <Pill tone={status.tone}>{status.label}</Pill>
                       </td>
@@ -252,6 +270,13 @@ export default function StudentsView() {
           </>
         )}
       </div>
+
+      {adding && (
+        <AddStudentModal
+          onClose={() => setAdding(false)}
+          onCreated={() => room.reload()}
+        />
+      )}
     </main>
   );
 }

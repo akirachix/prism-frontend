@@ -7,6 +7,7 @@ import "./teacher-layout.css";
 
 const LINKS: NavLink[] = [
   { href: "/teacher", label: "Home", icon: "home", exact: true },
+  { href: "/teacher/students", label: "Students", icon: "students" },
   { href: "/teacher/cases", label: "Cases", icon: "cases", exact: true },
   { href: "/teacher/todo", label: "To do", icon: "todo" },
   { href: "/teacher/account", label: "Account", icon: "account" },

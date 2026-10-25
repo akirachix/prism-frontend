@@ -57,3 +57,13 @@ export function avatarColour(id: string): string {
 }
 
 export type PillTone = "orange" | "blush" | "sky" | "outline" | "red" | "grey";
+
+/** "22 Oct 2026" - a calendar day with its year. */
+export function formatLongDay(value: string | null | undefined): string {
+  if (!value) return "—";
+  return new Date(value).toLocaleDateString("en-KE", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
