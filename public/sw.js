@@ -1,6 +1,5 @@
-const VERSION = "mirai-v1";
+const VERSION = "mirai-v2";
 const STATIC = `${VERSION}-static`;
-const PAGES = `${VERSION}-pages`;
 const PRECACHE = ["/offline.html", "/mirai-logo.png", "/icons/icon-192.png"];
 
 self.addEventListener("install", (event) => {
@@ -31,17 +30,7 @@ self.addEventListener("fetch", (event) => {
 
   if (request.mode === "navigate") {
     event.respondWith(
-      fetch(request)
-        .then((response) => {
-          const copy = response.clone();
-          caches.open(PAGES).then((cache) => cache.put(request, copy));
-          return response;
-        })
-        .catch(() =>
-          caches
-            .match(request)
-            .then((hit) => hit || caches.match("/offline.html")),
-        ),
+      fetch(request).catch(() => caches.match("/offline.html")),
     );
     return;
   }
