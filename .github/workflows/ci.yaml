@@ -17,7 +17,7 @@ permissions:
 jobs:
   build-lint-format-test:
     name: Build, Lint, Format and Test
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, classroom-ci]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

@@ -19,7 +19,6 @@ on:
 jobs:
   ready-checklist:
     name: Ready for Review checklist
-    runs-on: ubuntu-latest
     runs-on: [self-hosted, classroom-ci]
     steps:
       - name: Verify checklist is complete before review
@@ -59,7 +58,7 @@ jobs:
 
   validation:
     name: Build, lint, test, and format
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, classroom-ci]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
