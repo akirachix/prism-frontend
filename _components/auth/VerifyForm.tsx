@@ -99,6 +99,10 @@ export default function VerifyForm({ portal }: { portal: Portal }) {
     try {
       if (flow.stage === "mfa_enrollment_required") {
         setEnroll(await authApi.mfaEnroll(flow.step_token));
+        setInfo("We sent a new code to your email.");
+      } else if (flow.stage === "email_code_required") {
+        const result = await authApi.resendEmailCode(flow.step_token);
+        setInfo(result.detail);
       } else {
         const password = flowPasswordInMemory();
         if (!flow.email || !password) {
@@ -115,8 +119,8 @@ export default function VerifyForm({ portal }: { portal: Portal }) {
         });
         saveFlow(updated);
         setFlow(updated);
+        setInfo("We sent a new code to your email.");
       }
-      setInfo("We sent a new code to your email.");
     } catch (err) {
       setError(errorMessage(err));
     } finally {

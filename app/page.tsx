@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import HomeRedirect from "../_components/HomeRedirect";
+import InstallButton from "../_components/InstallButton";
 import { ButtonLink } from "../_components/ui/Button";
 import "./home.css";
 
@@ -30,6 +31,7 @@ export default function Home() {
           <ButtonLink href="/parent/login" variant="outline" block>
             I am a parent
           </ButtonLink>
+          <InstallButton />
         </div>
       </div>
     </main>
