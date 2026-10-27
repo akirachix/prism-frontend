@@ -19,7 +19,7 @@ on:
 jobs:
   ready-checklist:
     name: Ready for Review checklist
-    runs-on: [self-hosted, classroom-ci]
+    runs-on: ubuntu-latest
     steps:
       - name: Verify checklist is complete before review
         uses: actions/github-script@v7
