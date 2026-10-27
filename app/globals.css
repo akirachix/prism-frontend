@@ -1,0 +1,81 @@
+:root {
+  --background: #fdf3ea;
+  --foreground: #0a2a66;
+
+  --navy: #0a2a66;
+  --navy-deep: #00235b;
+  --red: #d62839;
+  --red-dark: #b81f30;
+  --orange: #ff8c42;
+  --orange-deep: #f47c30;
+  --cream: #fdf3ea;
+  --cream-light: #fff7ef;
+  --blush: #f6dcd2;
+  --peach: #ffc4a8;
+  --sky: #dbe8f5;
+  --sky-deep: #b8d4e8;
+  --muted: #4a5b7a;
+  --line: #7f8fb0;
+  --white: #ffffff;
+  --error-bg: #fde8ea;
+  --error-text: #8a1220;
+  --success: #1f7a4d;
+
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 24px;
+  --shadow: 0 6px 20px rgba(10, 42, 102, 0.08);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-quicksand), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media print {
+  .no-print,
+  .sidebar,
+  .portal-topbar {
+    display: none !important;
+  }
+
+  body,
+  .teacher-shell,
+  .parent-shell {
+    background: #ffffff !important;
+  }
+}

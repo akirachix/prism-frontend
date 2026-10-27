@@ -1,0 +1,4805 @@
+{
+  "openapi": "3.1.0",
+  "info": { "title": "mirAI API", "version": "1.0.0" },
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Login",
+        "operationId": "login_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuthStageResponse" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/change-password": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Change Password",
+        "operationId": "change_password_auth_change_password_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ChangePasswordRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuthStageResponse" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/mfa/enroll": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Mfa Enroll",
+        "operationId": "mfa_enroll_auth_mfa_enroll_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/StepTokenRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MfaEnrollInfo" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/mfa/enroll/confirm": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Mfa Enroll Confirm",
+        "operationId": "mfa_enroll_confirm_auth_mfa_enroll_confirm_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MfaCodeRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TokenPair" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/mfa/verify": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Mfa Verify",
+        "operationId": "mfa_verify_auth_mfa_verify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MfaCodeRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TokenPair" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Refresh",
+        "operationId": "refresh_auth_refresh_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RefreshRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TokenPair" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Logout",
+        "operationId": "logout_auth_logout_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LogoutRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "MirAIBearer": [] }]
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Me",
+        "operationId": "me_auth_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserRead" }
+              }
+            }
+          }
+        },
+        "security": [{ "MirAIBearer": [] }]
+      }
+    },
+    "/auth/accept-invitation": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Accept Invitation",
+        "operationId": "accept_invitation_auth_accept_invitation_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptInvitationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuthStageResponse" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Forgot Password",
+        "operationId": "forgot_password_auth_forgot_password_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ForgotPasswordRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Reset Password",
+        "operationId": "reset_password_auth_reset_password_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ResetPasswordRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create User",
+        "operationId": "create_user_users_post",
+        "security": [{ "MirAIBearer": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Users"],
+        "summary": "List Users",
+        "operationId": "list_users_users_get",
+        "security": [{ "MirAIBearer": [] }],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/UserRead" },
+                  "title": "Response List Users Users Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get User",
+        "operationId": "get_user_users__user_id__get",
+        "security": [{ "MirAIBearer": [] }],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "User Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Users"],
+        "summary": "Update User",
+        "operationId": "update_user_users__user_id__patch",
+        "security": [{ "MirAIBearer": [] }],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "User Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserUpdate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Users"],
+        "summary": "Delete User",
+        "operationId": "delete_user_users__user_id__delete",
+        "security": [{ "MirAIBearer": [] }],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "User Id" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Successful Response" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/activate": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Activate User",
+        "operationId": "activate_user_users__user_id__activate_post",
+        "security": [{ "MirAIBearer": [] }],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "User Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/deactivate": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Deactivate User",
+        "operationId": "deactivate_user_users__user_id__deactivate_post",
+        "security": [{ "MirAIBearer": [] }],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "User Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/resend-invitation": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Resend Invitation",
+        "operationId": "resend_invitation_users__user_id__resend_invitation_post",
+        "security": [{ "MirAIBearer": [] }],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "User Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cases": {
+      "post": {
+        "tags": ["Cases"],
+        "summary": "Create Case",
+        "operationId": "create_case_cases_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CaseCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CaseRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Cases"],
+        "summary": "List Cases",
+        "operationId": "list_cases_cases_get",
+        "parameters": [
+          {
+            "name": "school_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "format": "uuid" },
+                { "type": "null" }
+              ],
+              "title": "School Id"
+            }
+          },
+          {
+            "name": "student_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "format": "uuid" },
+                { "type": "null" }
+              ],
+              "title": "Student Id"
+            }
+          },
+          {
+            "name": "initiated_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "format": "uuid" },
+                { "type": "null" }
+              ],
+              "title": "Initiated By"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "$ref": "#/components/schemas/CaseStatusEnum" },
+                { "type": "null" }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "open_only",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Open Only"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/CaseRead" },
+                  "title": "Response List Cases Cases Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cases/{case_id}": {
+      "get": {
+        "tags": ["Cases"],
+        "summary": "Get Case",
+        "operationId": "get_case_cases__case_id__get",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Case Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CaseRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Cases"],
+        "summary": "Update Case",
+        "operationId": "update_case_cases__case_id__patch",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Case Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CaseUpdate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CaseRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Cases"],
+        "summary": "Delete Case",
+        "operationId": "delete_case_cases__case_id__delete",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Case Id" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Successful Response" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cases/{case_id}/close": {
+      "post": {
+        "tags": ["Cases"],
+        "summary": "Close Case",
+        "operationId": "close_case_cases__case_id__close_post",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Case Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CaseClose" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CaseRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications": {
+      "post": {
+        "tags": ["Notifications"],
+        "summary": "Create Notification",
+        "operationId": "create_notification_notifications_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NotificationCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/NotificationRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Notifications"],
+        "summary": "List Notifications",
+        "operationId": "list_notifications_notifications_get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "format": "uuid" },
+                { "type": "null" }
+              ],
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "format": "uuid" },
+                { "type": "null" }
+              ],
+              "title": "Case Id"
+            }
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "maxLength": 40 },
+                { "type": "null" }
+              ],
+              "title": "Kind"
+            }
+          },
+          {
+            "name": "unread_only",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Unread Only"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/NotificationRead" },
+                  "title": "Response List Notifications Notifications Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications/unread-count": {
+      "get": {
+        "tags": ["Notifications"],
+        "summary": "Unread Count",
+        "operationId": "unread_count_notifications_unread_count_get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "User Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UnreadCount" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications/read-all": {
+      "post": {
+        "tags": ["Notifications"],
+        "summary": "Mark All Read",
+        "operationId": "mark_all_read_notifications_read_all_post",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "User Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MarkAllReadResult" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications/{notification_id}": {
+      "get": {
+        "tags": ["Notifications"],
+        "summary": "Get Notification",
+        "operationId": "get_notification_notifications__notification_id__get",
+        "parameters": [
+          {
+            "name": "notification_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Notification Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/NotificationRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Notifications"],
+        "summary": "Update Notification",
+        "operationId": "update_notification_notifications__notification_id__patch",
+        "parameters": [
+          {
+            "name": "notification_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Notification Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NotificationUpdate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/NotificationRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Notifications"],
+        "summary": "Delete Notification",
+        "operationId": "delete_notification_notifications__notification_id__delete",
+        "parameters": [
+          {
+            "name": "notification_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Notification Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Successful Response" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recommendations": {
+      "post": {
+        "tags": ["Recommendations"],
+        "summary": "Create Recommendation",
+        "operationId": "create_recommendation_recommendations_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RecommendationCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RecommendationRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Recommendations"],
+        "summary": "List Recommendations",
+        "operationId": "list_recommendations_recommendations_get",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "format": "uuid" },
+                { "type": "null" }
+              ],
+              "title": "Case Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RecommendationRead"
+                  },
+                  "title": "Response List Recommendations Recommendations Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recommendations/case/{case_id}": {
+      "get": {
+        "tags": ["Recommendations"],
+        "summary": "Get Recommendation For Case",
+        "operationId": "get_recommendation_for_case_recommendations_case__case_id__get",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Case Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RecommendationRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recommendations/{recommendation_id}": {
+      "get": {
+        "tags": ["Recommendations"],
+        "summary": "Get Recommendation",
+        "operationId": "get_recommendation_recommendations__recommendation_id__get",
+        "parameters": [
+          {
+            "name": "recommendation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Recommendation Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RecommendationRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Recommendations"],
+        "summary": "Update Recommendation",
+        "operationId": "update_recommendation_recommendations__recommendation_id__patch",
+        "parameters": [
+          {
+            "name": "recommendation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Recommendation Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RecommendationUpdate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RecommendationRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Recommendations"],
+        "summary": "Delete Recommendation",
+        "operationId": "delete_recommendation_recommendations__recommendation_id__delete",
+        "parameters": [
+          {
+            "name": "recommendation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Recommendation Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Successful Response" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports": {
+      "post": {
+        "tags": ["Reports"],
+        "summary": "Create Report",
+        "operationId": "create_report_reports_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ReportCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ReportRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Reports"],
+        "summary": "List Reports",
+        "operationId": "list_reports_reports_get",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "format": "uuid" },
+                { "type": "null" }
+              ],
+              "title": "Case Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ReportRead" },
+                  "title": "Response List Reports Reports Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/case/{case_id}": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "Get Report For Case",
+        "operationId": "get_report_for_case_reports_case__case_id__get",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Case Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ReportRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Reports"],
+        "summary": "Generate Report For Case",
+        "description": "Generate the report of a case again: the saved report is replaced and generated_at is updated.",
+        "operationId": "generate_report_for_case_reports_case__case_id__put",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Case Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ReportReplace" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ReportRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/{report_id}": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "Get Report",
+        "operationId": "get_report_reports__report_id__get",
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Report Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ReportRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Reports"],
+        "summary": "Delete Report",
+        "operationId": "delete_report_reports__report_id__delete",
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Report Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Successful Response" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/schools": {
+      "post": {
+        "tags": ["Schools"],
+        "summary": "Create School",
+        "operationId": "create_school_schools_post",
+        "security": [{ "MirAIBearer": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SchoolCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SchoolRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Schools"],
+        "summary": "List Schools",
+        "operationId": "list_schools_schools_get",
+        "security": [{ "MirAIBearer": [] }],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "maxLength": 100 },
+                { "type": "null" }
+              ],
+              "title": "Search"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SchoolRead" },
+                  "title": "Response List Schools Schools Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/schools/{school_id}": {
+      "get": {
+        "tags": ["Schools"],
+        "summary": "Get School",
+        "operationId": "get_school_schools__school_id__get",
+        "security": [{ "MirAIBearer": [] }],
+        "parameters": [
+          {
+            "name": "school_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "School Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SchoolRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Schools"],
+        "summary": "Update School",
+        "operationId": "update_school_schools__school_id__patch",
+        "security": [{ "MirAIBearer": [] }],
+        "parameters": [
+          {
+            "name": "school_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "School Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SchoolUpdate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SchoolRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Schools"],
+        "summary": "Delete School",
+        "operationId": "delete_school_schools__school_id__delete",
+        "security": [{ "MirAIBearer": [] }],
+        "parameters": [
+          {
+            "name": "school_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "School Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Successful Response" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/professionals": {
+      "post": {
+        "tags": ["Professionals"],
+        "summary": "Create Professional",
+        "operationId": "create_professional_professionals_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ProfessionalCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProfessionalRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Professionals"],
+        "summary": "List Professionals",
+        "operationId": "list_professionals_professionals_get",
+        "parameters": [
+          {
+            "name": "specialty",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "$ref": "#/components/schemas/SpecialtyEnum" },
+                { "type": "null" }
+              ],
+              "title": "Specialty"
+            }
+          },
+          {
+            "name": "is_active",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+              "title": "Is Active"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "maxLength": 100 },
+                { "type": "null" }
+              ],
+              "description": "Matches first name, last name or location",
+              "title": "Search"
+            },
+            "description": "Matches first name, last name or location"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ProfessionalRead" },
+                  "title": "Response List Professionals Professionals Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/professionals/{professional_id}": {
+      "get": {
+        "tags": ["Professionals"],
+        "summary": "Get Professional",
+        "operationId": "get_professional_professionals__professional_id__get",
+        "parameters": [
+          {
+            "name": "professional_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Professional Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProfessionalRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Professionals"],
+        "summary": "Update Professional",
+        "operationId": "update_professional_professionals__professional_id__patch",
+        "parameters": [
+          {
+            "name": "professional_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Professional Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ProfessionalUpdate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProfessionalRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Professionals"],
+        "summary": "Delete Professional",
+        "operationId": "delete_professional_professionals__professional_id__delete",
+        "parameters": [
+          {
+            "name": "professional_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Professional Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Successful Response" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ieps": {
+      "post": {
+        "tags": ["IEPs"],
+        "summary": "Create Iep",
+        "operationId": "create_iep_ieps_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/IEPCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/IEPRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["IEPs"],
+        "summary": "List Ieps",
+        "operationId": "list_ieps_ieps_get",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "format": "uuid" },
+                { "type": "null" }
+              ],
+              "title": "Case Id"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "$ref": "#/components/schemas/IEPStatusEnum" },
+                { "type": "null" }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "generated_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "$ref": "#/components/schemas/GeneratedByEnum" },
+                { "type": "null" }
+              ],
+              "title": "Generated By"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/IEPRead" },
+                  "title": "Response List Ieps Ieps Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ieps/case/{case_id}/active": {
+      "get": {
+        "tags": ["IEPs"],
+        "summary": "Get Active Iep For Case",
+        "operationId": "get_active_iep_for_case_ieps_case__case_id__active_get",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Case Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/IEPRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ieps/{iep_id}": {
+      "get": {
+        "tags": ["IEPs"],
+        "summary": "Get Iep",
+        "operationId": "get_iep_ieps__iep_id__get",
+        "parameters": [
+          {
+            "name": "iep_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Iep Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/IEPRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["IEPs"],
+        "summary": "Update Iep",
+        "operationId": "update_iep_ieps__iep_id__patch",
+        "parameters": [
+          {
+            "name": "iep_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Iep Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/IEPUpdate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/IEPRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["IEPs"],
+        "summary": "Delete Iep",
+        "operationId": "delete_iep_ieps__iep_id__delete",
+        "parameters": [
+          {
+            "name": "iep_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Iep Id" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Successful Response" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ieps/{iep_id}/submit": {
+      "post": {
+        "tags": ["IEPs"],
+        "summary": "Submit Iep",
+        "operationId": "submit_iep_ieps__iep_id__submit_post",
+        "parameters": [
+          {
+            "name": "iep_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Iep Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/IEPRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ieps/{iep_id}/approve": {
+      "post": {
+        "tags": ["IEPs"],
+        "summary": "Approve Iep",
+        "operationId": "approve_iep_ieps__iep_id__approve_post",
+        "parameters": [
+          {
+            "name": "iep_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Iep Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/IEPApprove" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/IEPRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ieps/{iep_id}/reject": {
+      "post": {
+        "tags": ["IEPs"],
+        "summary": "Reject Iep",
+        "operationId": "reject_iep_ieps__iep_id__reject_post",
+        "parameters": [
+          {
+            "name": "iep_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Iep Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/IEPReject" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/IEPRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/iep-evaluation-questions": {
+      "post": {
+        "tags": ["IEP evaluation questions"],
+        "summary": "Add one evaluation question to an IEP",
+        "operationId": "create_question_iep_evaluation_questions_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluationQuestionCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "201 Created - the new question.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationQuestionRead"
+                }
+              }
+            }
+          },
+          "404": { "description": "Error response for status code 404" },
+          "409": { "description": "Error response for status code 409" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["IEP evaluation questions"],
+        "summary": "List evaluation questions (by IEP, then position)",
+        "description": "- **200** always. - **422** a filter is invalid.",
+        "operationId": "list_questions_iep_evaluation_questions_get",
+        "parameters": [
+          {
+            "name": "iep_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "format": "uuid" },
+                { "type": "null" }
+              ],
+              "title": "Iep Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK - the questions; an empty list when none match.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EvaluationQuestionRead"
+                  },
+                  "title": "Response List Questions Iep Evaluation Questions Get"
+                }
+              }
+            }
+          },
+          "422": { "description": "Error response for status code 422" }
+        }
+      }
+    },
+    "/iep-evaluation-questions/bulk": {
+      "post": {
+        "tags": ["IEP evaluation questions"],
+        "summary": "Add several questions to an IEP at once (all or nothing)",
+        "operationId": "create_questions_iep_evaluation_questions_bulk_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluationQuestionBulkCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "201 Created - the new questions, in order.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/EvaluationQuestionRead"
+                  },
+                  "type": "array",
+                  "title": "Response Create Questions Iep Evaluation Questions Bulk Post"
+                }
+              }
+            }
+          },
+          "404": { "description": "Error response for status code 404" },
+          "409": { "description": "Error response for status code 409" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/iep-evaluation-questions/{eval_question_id}": {
+      "get": {
+        "tags": ["IEP evaluation questions"],
+        "summary": "Get one evaluation question",
+        "description": "- **200** found. - **404** not found. - **422** the id is not a UUID.",
+        "operationId": "get_question_iep_evaluation_questions__eval_question_id__get",
+        "parameters": [
+          {
+            "name": "eval_question_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Eval Question Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK - the question.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationQuestionRead"
+                }
+              }
+            }
+          },
+          "404": { "description": "Error response for status code 404" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["IEP evaluation questions"],
+        "summary": "Change the text or position of a question",
+        "operationId": "update_question_iep_evaluation_questions__eval_question_id__patch",
+        "parameters": [
+          {
+            "name": "eval_question_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Eval Question Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluationQuestionUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200 OK - the updated question.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationQuestionRead"
+                }
+              }
+            }
+          },
+          "404": { "description": "Error response for status code 404" },
+          "409": { "description": "Error response for status code 409" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["IEP evaluation questions"],
+        "summary": "Delete a question",
+        "operationId": "delete_question_iep_evaluation_questions__eval_question_id__delete",
+        "parameters": [
+          {
+            "name": "eval_question_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Eval Question Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "204 No Content - deleted; the body is empty."
+          },
+          "404": { "description": "Error response for status code 404" },
+          "409": { "description": "Error response for status code 409" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/iep-evaluation-responses": {
+      "post": {
+        "tags": ["IEP evaluation responses"],
+        "summary": "Create Response",
+        "operationId": "create_response_iep_evaluation_responses_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluationResponseCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationResponseRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["IEP evaluation responses"],
+        "summary": "List Responses",
+        "operationId": "list_responses_iep_evaluation_responses_get",
+        "parameters": [
+          {
+            "name": "eval_question_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "format": "uuid" },
+                { "type": "null" }
+              ],
+              "title": "Eval Question Id"
+            }
+          },
+          {
+            "name": "responder_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "format": "uuid" },
+                { "type": "null" }
+              ],
+              "title": "Responder Id"
+            }
+          },
+          {
+            "name": "responder_role",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "$ref": "#/components/schemas/ResponderRoleEnum" },
+                { "type": "null" }
+              ],
+              "title": "Responder Role"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EvaluationResponseRead"
+                  },
+                  "title": "Response List Responses Iep Evaluation Responses Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/iep-evaluation-responses/{eval_response_id}": {
+      "get": {
+        "tags": ["IEP evaluation responses"],
+        "summary": "Get Response",
+        "operationId": "get_response_iep_evaluation_responses__eval_response_id__get",
+        "parameters": [
+          {
+            "name": "eval_response_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Eval Response Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationResponseRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["IEP evaluation responses"],
+        "summary": "Update Response",
+        "operationId": "update_response_iep_evaluation_responses__eval_response_id__patch",
+        "parameters": [
+          {
+            "name": "eval_response_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Eval Response Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluationResponseUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationResponseRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["IEP evaluation responses"],
+        "summary": "Delete Response",
+        "operationId": "delete_response_iep_evaluation_responses__eval_response_id__delete",
+        "parameters": [
+          {
+            "name": "eval_response_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Eval Response Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Successful Response" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/audit-logs": {
+      "post": {
+        "tags": ["Audit Logs"],
+        "summary": "Create Audit Log",
+        "operationId": "create_audit_log_audit_logs_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AuditLogCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuditLogRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Audit Logs"],
+        "summary": "List Audit Logs",
+        "operationId": "list_audit_logs_audit_logs_get",
+        "parameters": [
+          {
+            "name": "school_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "format": "uuid" },
+                { "type": "null" }
+              ],
+              "title": "School Id"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "format": "uuid" },
+                { "type": "null" }
+              ],
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "$ref": "#/components/schemas/AuditActionEnum" },
+                { "type": "null" }
+              ],
+              "title": "Action"
+            }
+          },
+          {
+            "name": "resource_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [{ "type": "string" }, { "type": "null" }],
+              "title": "Resource Type"
+            }
+          },
+          {
+            "name": "resource_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [{ "type": "string" }, { "type": "null" }],
+              "title": "Resource Id"
+            }
+          },
+          {
+            "name": "created_from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "format": "date-time" },
+                { "type": "null" }
+              ],
+              "title": "Created From"
+            }
+          },
+          {
+            "name": "created_to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                { "type": "string", "format": "date-time" },
+                { "type": "null" }
+              ],
+              "title": "Created To"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/AuditLogRead" },
+                  "title": "Response List Audit Logs Audit Logs Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/audit-logs/{audit_id}": {
+      "get": {
+        "tags": ["Audit Logs"],
+        "summary": "Get Audit Log",
+        "operationId": "get_audit_log_audit_logs__audit_id__get",
+        "parameters": [
+          {
+            "name": "audit_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Audit Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuditLogRead" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "Root",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": { "type": "string" },
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AcceptInvitationRequest": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 10,
+            "title": "Token"
+          },
+          "new_password": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "New Password"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["token", "new_password"],
+        "title": "AcceptInvitationRequest"
+      },
+      "AuditActionEnum": {
+        "type": "string",
+        "enum": [
+          "LOGIN",
+          "LOGIN_FAILED",
+          "LOGOUT",
+          "CREATE",
+          "VIEW",
+          "UPDATE",
+          "DELETE",
+          "SUBMIT",
+          "APPROVE",
+          "REJECT",
+          "GENERATE",
+          "EXPORT"
+        ],
+        "title": "AuditActionEnum"
+      },
+      "AuditLogCreate": {
+        "properties": {
+          "school_id": {
+            "anyOf": [
+              { "type": "string", "format": "uuid" },
+              { "type": "null" }
+            ],
+            "title": "School Id"
+          },
+          "user_id": {
+            "anyOf": [
+              { "type": "string", "format": "uuid" },
+              { "type": "null" }
+            ],
+            "title": "User Id"
+          },
+          "actor_role": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/RoleEnum" },
+              { "type": "null" }
+            ]
+          },
+          "action": { "$ref": "#/components/schemas/AuditActionEnum" },
+          "resource_type": { "type": "string", "title": "Resource Type" },
+          "resource_id": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Resource Id"
+          },
+          "details": {
+            "anyOf": [
+              { "additionalProperties": true, "type": "object" },
+              { "type": "null" }
+            ],
+            "title": "Details"
+          },
+          "ip_address": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Ip Address"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["action", "resource_type"],
+        "title": "AuditLogCreate",
+        "description": "One entry in the audit trail. Entries can be added and read, never changed or removed."
+      },
+      "AuditLogRead": {
+        "properties": {
+          "audit_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Audit Id"
+          },
+          "school_id": {
+            "anyOf": [
+              { "type": "string", "format": "uuid" },
+              { "type": "null" }
+            ],
+            "title": "School Id"
+          },
+          "user_id": {
+            "anyOf": [
+              { "type": "string", "format": "uuid" },
+              { "type": "null" }
+            ],
+            "title": "User Id"
+          },
+          "actor_role": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/RoleEnum" },
+              { "type": "null" }
+            ]
+          },
+          "action": { "$ref": "#/components/schemas/AuditActionEnum" },
+          "resource_type": { "type": "string", "title": "Resource Type" },
+          "resource_id": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Resource Id"
+          },
+          "details": {
+            "anyOf": [
+              { "additionalProperties": true, "type": "object" },
+              { "type": "null" }
+            ],
+            "title": "Details"
+          },
+          "ip_address": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Ip Address"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": ["audit_id", "action", "resource_type", "created_at"],
+        "title": "AuditLogRead"
+      },
+      "AuthStage": {
+        "type": "string",
+        "enum": [
+          "password_change_required",
+          "mfa_enrollment_required",
+          "mfa_required"
+        ],
+        "title": "AuthStage"
+      },
+      "AuthStageResponse": {
+        "properties": {
+          "stage": { "$ref": "#/components/schemas/AuthStage" },
+          "step_token": { "type": "string", "title": "Step Token" },
+          "expires_in": { "type": "integer", "title": "Expires In" },
+          "detail": { "type": "string", "title": "Detail" }
+        },
+        "type": "object",
+        "required": ["stage", "step_token", "expires_in", "detail"],
+        "title": "AuthStageResponse"
+      },
+      "CaseClose": {
+        "properties": {
+          "reason": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 3,
+            "title": "Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["reason"],
+        "title": "CaseClose"
+      },
+      "CaseCreate": {
+        "properties": {
+          "school_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "School Id"
+          },
+          "student_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Student Id"
+          },
+          "initiated_by": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Initiated By"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["school_id", "student_id", "initiated_by"],
+        "title": "CaseCreate",
+        "description": "Opens a case. It always starts as INITIATED; scores come later as the screenings are scored."
+      },
+      "CaseRead": {
+        "properties": {
+          "case_id": { "type": "string", "format": "uuid", "title": "Case Id" },
+          "school_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "School Id"
+          },
+          "student_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Student Id"
+          },
+          "initiated_by": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Initiated By"
+          },
+          "status": { "$ref": "#/components/schemas/CaseStatusEnum" },
+          "autism_score": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Autism Score"
+          },
+          "adhd_score": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Adhd Score"
+          },
+          "dyslexia_score": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Dyslexia Score"
+          },
+          "domain_density_score": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Domain Density Score"
+          },
+          "primary_domain": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/TargetNeurodivergenceEnum" },
+              { "type": "null" }
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          },
+          "closed_at": {
+            "anyOf": [
+              { "type": "string", "format": "date-time" },
+              { "type": "null" }
+            ],
+            "title": "Closed At"
+          },
+          "closed_reason": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Closed Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "case_id",
+          "school_id",
+          "student_id",
+          "initiated_by",
+          "status",
+          "autism_score",
+          "adhd_score",
+          "dyslexia_score",
+          "domain_density_score",
+          "primary_domain",
+          "created_at",
+          "updated_at",
+          "closed_at",
+          "closed_reason"
+        ],
+        "title": "CaseRead"
+      },
+      "CaseStatusEnum": {
+        "type": "string",
+        "enum": [
+          "INITIATED",
+          "TEACHER_SCREENING_COMPLETED",
+          "PARENT_SCREENING_COMPLETED",
+          "IEP_PENDING_APPROVAL",
+          "IEP_ACTIVE",
+          "EVALUATION_PENDING",
+          "NO_CONCERN_IDENTIFIED",
+          "CLOSED",
+          "COMPLETED"
+        ],
+        "title": "CaseStatusEnum"
+      },
+      "CaseUpdate": {
+        "properties": {
+          "status": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/CaseStatusEnum" },
+              { "type": "null" }
+            ]
+          },
+          "autism_score": {
+            "anyOf": [
+              { "type": "number", "maximum": 3.0, "minimum": 0.0 },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*(?:\\d{0,3}|(?=[\\d.]{1,6}0*$)\\d{0,3}\\.\\d{0,2}0*$)"
+              },
+              { "type": "null" }
+            ],
+            "title": "Autism Score"
+          },
+          "adhd_score": {
+            "anyOf": [
+              { "type": "number", "maximum": 3.0, "minimum": 0.0 },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*(?:\\d{0,3}|(?=[\\d.]{1,6}0*$)\\d{0,3}\\.\\d{0,2}0*$)"
+              },
+              { "type": "null" }
+            ],
+            "title": "Adhd Score"
+          },
+          "dyslexia_score": {
+            "anyOf": [
+              { "type": "number", "maximum": 3.0, "minimum": 0.0 },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*(?:\\d{0,3}|(?=[\\d.]{1,6}0*$)\\d{0,3}\\.\\d{0,2}0*$)"
+              },
+              { "type": "null" }
+            ],
+            "title": "Dyslexia Score"
+          },
+          "domain_density_score": {
+            "anyOf": [
+              { "type": "number", "maximum": 3.0, "minimum": 0.0 },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*(?:\\d{0,3}|(?=[\\d.]{1,6}0*$)\\d{0,3}\\.\\d{0,2}0*$)"
+              },
+              { "type": "null" }
+            ],
+            "title": "Domain Density Score"
+          },
+          "primary_domain": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/TargetNeurodivergenceEnum" },
+              { "type": "null" }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "CaseUpdate",
+        "description": "Every field is optional; only the ones sent are changed. Closing a case has its own endpoint."
+      },
+      "ChangePasswordRequest": {
+        "properties": {
+          "step_token": {
+            "type": "string",
+            "maxLength": 4096,
+            "minLength": 10,
+            "title": "Step Token"
+          },
+          "current_password": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Current Password"
+          },
+          "new_password": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "New Password"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["step_token", "current_password", "new_password"],
+        "title": "ChangePasswordRequest"
+      },
+      "EvaluationQuestionBulkCreate": {
+        "properties": {
+          "iep_id": { "type": "string", "format": "uuid", "title": "Iep Id" },
+          "questions": {
+            "items": { "type": "string" },
+            "type": "array",
+            "maxItems": 50,
+            "minItems": 1,
+            "title": "Questions"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["iep_id", "questions"],
+        "title": "EvaluationQuestionBulkCreate"
+      },
+      "EvaluationQuestionCreate": {
+        "properties": {
+          "iep_id": { "type": "string", "format": "uuid", "title": "Iep Id" },
+          "question_text": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 3,
+            "title": "Question Text"
+          },
+          "position": {
+            "anyOf": [
+              { "type": "integer", "maximum": 100.0, "minimum": 1.0 },
+              { "type": "null" }
+            ],
+            "title": "Position"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["iep_id", "question_text"],
+        "title": "EvaluationQuestionCreate"
+      },
+      "EvaluationQuestionRead": {
+        "properties": {
+          "eval_question_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Eval Question Id"
+          },
+          "iep_id": { "type": "string", "format": "uuid", "title": "Iep Id" },
+          "position": { "type": "integer", "title": "Position" },
+          "question_text": { "type": "string", "title": "Question Text" },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "eval_question_id",
+          "iep_id",
+          "position",
+          "question_text",
+          "created_at"
+        ],
+        "title": "EvaluationQuestionRead"
+      },
+      "EvaluationQuestionUpdate": {
+        "properties": {
+          "question_text": {
+            "anyOf": [
+              { "type": "string", "maxLength": 2000, "minLength": 3 },
+              { "type": "null" }
+            ],
+            "title": "Question Text"
+          },
+          "position": {
+            "anyOf": [
+              { "type": "integer", "maximum": 100.0, "minimum": 1.0 },
+              { "type": "null" }
+            ],
+            "title": "Position"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "EvaluationQuestionUpdate"
+      },
+      "EvaluationResponseCreate": {
+        "properties": {
+          "eval_question_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Eval Question Id"
+          },
+          "responder_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Responder Id"
+          },
+          "responder_role": {
+            "$ref": "#/components/schemas/ResponderRoleEnum"
+          },
+          "score": {
+            "type": "integer",
+            "maximum": 2.0,
+            "minimum": -2.0,
+            "title": "Score"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "eval_question_id",
+          "responder_id",
+          "responder_role",
+          "score"
+        ],
+        "title": "EvaluationResponseCreate"
+      },
+      "EvaluationResponseRead": {
+        "properties": {
+          "eval_response_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Eval Response Id"
+          },
+          "eval_question_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Eval Question Id"
+          },
+          "responder_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Responder Id"
+          },
+          "responder_role": {
+            "$ref": "#/components/schemas/ResponderRoleEnum"
+          },
+          "score": { "type": "integer", "title": "Score" },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Submitted At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "eval_response_id",
+          "eval_question_id",
+          "responder_id",
+          "responder_role",
+          "score",
+          "submitted_at"
+        ],
+        "title": "EvaluationResponseRead"
+      },
+      "EvaluationResponseUpdate": {
+        "properties": {
+          "score": {
+            "type": "integer",
+            "maximum": 2.0,
+            "minimum": -2.0,
+            "title": "Score"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["score"],
+        "title": "EvaluationResponseUpdate"
+      },
+      "ForgotPasswordRequest": {
+        "properties": {
+          "email": { "type": "string", "format": "email", "title": "Email" }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["email"],
+        "title": "ForgotPasswordRequest"
+      },
+      "GeneratedByEnum": {
+        "type": "string",
+        "enum": ["MANUAL", "AI"],
+        "title": "GeneratedByEnum"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": { "$ref": "#/components/schemas/ValidationError" },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HomeActivity": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 2,
+            "title": "Title"
+          },
+          "steps": {
+            "items": { "type": "string" },
+            "type": "array",
+            "maxItems": 10,
+            "minItems": 1,
+            "title": "Steps"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["title", "steps"],
+        "title": "HomeActivity"
+      },
+      "IEPApprove": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": ["TEACHER", "ADMIN"],
+            "title": "Role"
+          },
+          "approved_by": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Approved By"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["role", "approved_by"],
+        "title": "IEPApprove"
+      },
+      "IEPCreate": {
+        "properties": {
+          "generated_content": {
+            "type": "string",
+            "maxLength": 50000,
+            "minLength": 1,
+            "title": "Generated Content",
+            "description": "The plan, as markdown."
+          },
+          "rag_file_references": {
+            "items": { "type": "string" },
+            "type": "array",
+            "maxItems": 100,
+            "title": "Rag File References"
+          },
+          "short_term_goals": {
+            "items": { "type": "string" },
+            "type": "array",
+            "maxItems": 50,
+            "title": "Short Term Goals"
+          },
+          "strategies": {
+            "items": { "type": "string" },
+            "type": "array",
+            "maxItems": 50,
+            "title": "Strategies"
+          },
+          "case_id": { "type": "string", "format": "uuid", "title": "Case Id" },
+          "created_by": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Created By"
+          },
+          "generated_by": {
+            "$ref": "#/components/schemas/GeneratedByEnum",
+            "default": "MANUAL"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["DRAFT", "PENDING_APPROVAL"],
+            "title": "Status",
+            "default": "DRAFT"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["generated_content", "case_id", "created_by"],
+        "title": "IEPCreate"
+      },
+      "IEPRead": {
+        "properties": {
+          "iep_id": { "type": "string", "format": "uuid", "title": "Iep Id" },
+          "case_id": { "type": "string", "format": "uuid", "title": "Case Id" },
+          "version_number": { "type": "integer", "title": "Version Number" },
+          "status": { "$ref": "#/components/schemas/IEPStatusEnum" },
+          "generated_content": {
+            "type": "string",
+            "title": "Generated Content"
+          },
+          "rag_file_references": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Rag File References"
+          },
+          "short_term_goals": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Short Term Goals"
+          },
+          "strategies": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Strategies"
+          },
+          "generated_by": { "$ref": "#/components/schemas/GeneratedByEnum" },
+          "teacher_approved": {
+            "type": "boolean",
+            "title": "Teacher Approved"
+          },
+          "teacher_approved_by": {
+            "anyOf": [
+              { "type": "string", "format": "uuid" },
+              { "type": "null" }
+            ],
+            "title": "Teacher Approved By"
+          },
+          "admin_approved": { "type": "boolean", "title": "Admin Approved" },
+          "admin_approved_by": {
+            "anyOf": [
+              { "type": "string", "format": "uuid" },
+              { "type": "null" }
+            ],
+            "title": "Admin Approved By"
+          },
+          "rejection_reason": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Rejection Reason"
+          },
+          "approved_at": {
+            "anyOf": [
+              { "type": "string", "format": "date-time" },
+              { "type": "null" }
+            ],
+            "title": "Approved At"
+          },
+          "evaluation_unlock_date": {
+            "anyOf": [
+              { "type": "string", "format": "date-time" },
+              { "type": "null" }
+            ],
+            "title": "Evaluation Unlock Date"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Created By"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "superseded_at": {
+            "anyOf": [
+              { "type": "string", "format": "date-time" },
+              { "type": "null" }
+            ],
+            "title": "Superseded At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "iep_id",
+          "case_id",
+          "version_number",
+          "status",
+          "generated_content",
+          "rag_file_references",
+          "short_term_goals",
+          "strategies",
+          "generated_by",
+          "teacher_approved",
+          "teacher_approved_by",
+          "admin_approved",
+          "admin_approved_by",
+          "rejection_reason",
+          "approved_at",
+          "evaluation_unlock_date",
+          "created_by",
+          "created_at",
+          "superseded_at"
+        ],
+        "title": "IEPRead"
+      },
+      "IEPReject": {
+        "properties": {
+          "reason": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 3,
+            "title": "Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["reason"],
+        "title": "IEPReject"
+      },
+      "IEPStatusEnum": {
+        "type": "string",
+        "enum": [
+          "DRAFT",
+          "PENDING_APPROVAL",
+          "ACTIVE",
+          "REJECTED",
+          "SUPERSEDED"
+        ],
+        "title": "IEPStatusEnum"
+      },
+      "IEPUpdate": {
+        "properties": {
+          "generated_content": {
+            "anyOf": [
+              { "type": "string", "maxLength": 50000, "minLength": 1 },
+              { "type": "null" }
+            ],
+            "title": "Generated Content"
+          },
+          "rag_file_references": {
+            "anyOf": [
+              {
+                "items": { "type": "string" },
+                "type": "array",
+                "maxItems": 100
+              },
+              { "type": "null" }
+            ],
+            "title": "Rag File References"
+          },
+          "short_term_goals": {
+            "anyOf": [
+              {
+                "items": { "type": "string" },
+                "type": "array",
+                "maxItems": 50
+              },
+              { "type": "null" }
+            ],
+            "title": "Short Term Goals"
+          },
+          "strategies": {
+            "anyOf": [
+              {
+                "items": { "type": "string" },
+                "type": "array",
+                "maxItems": 50
+              },
+              { "type": "null" }
+            ],
+            "title": "Strategies"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "IEPUpdate"
+      },
+      "LoginRequest": {
+        "properties": {
+          "email": { "type": "string", "format": "email", "title": "Email" },
+          "password": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Password"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["email", "password"],
+        "title": "LoginRequest"
+      },
+      "LogoutRequest": {
+        "properties": {
+          "refresh_token": {
+            "anyOf": [
+              { "type": "string", "maxLength": 4096 },
+              { "type": "null" }
+            ],
+            "title": "Refresh Token"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "LogoutRequest"
+      },
+      "MarkAllReadResult": {
+        "properties": {
+          "user_id": { "type": "string", "format": "uuid", "title": "User Id" },
+          "updated": { "type": "integer", "title": "Updated" }
+        },
+        "type": "object",
+        "required": ["user_id", "updated"],
+        "title": "MarkAllReadResult"
+      },
+      "MessageResponse": {
+        "properties": { "detail": { "type": "string", "title": "Detail" } },
+        "type": "object",
+        "required": ["detail"],
+        "title": "MessageResponse"
+      },
+      "MfaCodeRequest": {
+        "properties": {
+          "step_token": {
+            "type": "string",
+            "maxLength": 4096,
+            "minLength": 10,
+            "title": "Step Token"
+          },
+          "code": { "type": "string", "pattern": "^\\d{6}$", "title": "Code" }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["step_token", "code"],
+        "title": "MfaCodeRequest"
+      },
+      "MfaEnrollInfo": {
+        "properties": {
+          "secret": { "type": "string", "title": "Secret" },
+          "otpauth_uri": { "type": "string", "title": "Otpauth Uri" }
+        },
+        "type": "object",
+        "required": ["secret", "otpauth_uri"],
+        "title": "MfaEnrollInfo"
+      },
+      "NotificationCreate": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 2,
+            "title": "Kind",
+            "description": "Short label such as IEP_APPROVED or REPORT_READY."
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Message"
+          },
+          "user_id": { "type": "string", "format": "uuid", "title": "User Id" },
+          "case_id": {
+            "anyOf": [
+              { "type": "string", "format": "uuid" },
+              { "type": "null" }
+            ],
+            "title": "Case Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["kind", "message", "user_id"],
+        "title": "NotificationCreate"
+      },
+      "NotificationRead": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 2,
+            "title": "Kind",
+            "description": "Short label such as IEP_APPROVED or REPORT_READY."
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Message"
+          },
+          "notification_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Notification Id"
+          },
+          "user_id": { "type": "string", "format": "uuid", "title": "User Id" },
+          "case_id": {
+            "anyOf": [
+              { "type": "string", "format": "uuid" },
+              { "type": "null" }
+            ],
+            "title": "Case Id"
+          },
+          "read_at": {
+            "anyOf": [
+              { "type": "string", "format": "date-time" },
+              { "type": "null" }
+            ],
+            "title": "Read At"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "is_read": { "type": "boolean", "title": "Is Read", "readOnly": true }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "message",
+          "notification_id",
+          "user_id",
+          "case_id",
+          "read_at",
+          "created_at",
+          "is_read"
+        ],
+        "title": "NotificationRead"
+      },
+      "NotificationUpdate": {
+        "properties": { "is_read": { "type": "boolean", "title": "Is Read" } },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["is_read"],
+        "title": "NotificationUpdate",
+        "description": "The only thing that changes on a notification is whether it has been read."
+      },
+      "ProfessionalCreate": {
+        "properties": {
+          "first_name": { "type": "string", "title": "First Name" },
+          "last_name": { "type": "string", "title": "Last Name" },
+          "specialty": { "$ref": "#/components/schemas/SpecialtyEnum" },
+          "contact_details": { "type": "string", "title": "Contact Details" },
+          "location_address": { "type": "string", "title": "Location Address" },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active",
+            "default": true
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "first_name",
+          "last_name",
+          "specialty",
+          "contact_details",
+          "location_address"
+        ],
+        "title": "ProfessionalCreate"
+      },
+      "ProfessionalRead": {
+        "properties": {
+          "professional_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Professional Id"
+          },
+          "first_name": { "type": "string", "title": "First Name" },
+          "last_name": { "type": "string", "title": "Last Name" },
+          "specialty": { "$ref": "#/components/schemas/SpecialtyEnum" },
+          "contact_details": { "type": "string", "title": "Contact Details" },
+          "location_address": { "type": "string", "title": "Location Address" },
+          "is_active": { "type": "boolean", "title": "Is Active" },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "professional_id",
+          "first_name",
+          "last_name",
+          "specialty",
+          "contact_details",
+          "location_address",
+          "is_active",
+          "created_at"
+        ],
+        "title": "ProfessionalRead"
+      },
+      "ProfessionalUpdate": {
+        "properties": {
+          "first_name": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "First Name"
+          },
+          "last_name": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Last Name"
+          },
+          "specialty": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/SpecialtyEnum" },
+              { "type": "null" }
+            ]
+          },
+          "contact_details": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Contact Details"
+          },
+          "location_address": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Location Address"
+          },
+          "is_active": {
+            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+            "title": "Is Active"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ProfessionalUpdate"
+      },
+      "RecommendationCreate": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "maxLength": 3000,
+            "minLength": 3,
+            "title": "Message",
+            "description": "Plain-language guidance for the parent."
+          },
+          "home_activities": {
+            "items": { "$ref": "#/components/schemas/HomeActivity" },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Home Activities"
+          },
+          "template_ids": {
+            "items": { "type": "string" },
+            "type": "array",
+            "maxItems": 50,
+            "title": "Template Ids"
+          },
+          "case_id": { "type": "string", "format": "uuid", "title": "Case Id" }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["message", "case_id"],
+        "title": "RecommendationCreate"
+      },
+      "RecommendationRead": {
+        "properties": {
+          "recommendation_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Recommendation Id"
+          },
+          "case_id": { "type": "string", "format": "uuid", "title": "Case Id" },
+          "message": { "type": "string", "title": "Message" },
+          "home_activities": {
+            "items": { "$ref": "#/components/schemas/HomeActivity" },
+            "type": "array",
+            "title": "Home Activities"
+          },
+          "template_ids": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Template Ids"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "recommendation_id",
+          "case_id",
+          "message",
+          "home_activities",
+          "template_ids",
+          "created_at"
+        ],
+        "title": "RecommendationRead"
+      },
+      "RecommendationUpdate": {
+        "properties": {
+          "message": {
+            "anyOf": [
+              { "type": "string", "maxLength": 3000, "minLength": 3 },
+              { "type": "null" }
+            ],
+            "title": "Message"
+          },
+          "home_activities": {
+            "anyOf": [
+              {
+                "items": { "$ref": "#/components/schemas/HomeActivity" },
+                "type": "array",
+                "maxItems": 20
+              },
+              { "type": "null" }
+            ],
+            "title": "Home Activities"
+          },
+          "template_ids": {
+            "anyOf": [
+              {
+                "items": { "type": "string" },
+                "type": "array",
+                "maxItems": 50
+              },
+              { "type": "null" }
+            ],
+            "title": "Template Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "RecommendationUpdate"
+      },
+      "RefreshRequest": {
+        "properties": {
+          "refresh_token": {
+            "type": "string",
+            "maxLength": 4096,
+            "minLength": 10,
+            "title": "Refresh Token"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["refresh_token"],
+        "title": "RefreshRequest"
+      },
+      "ReportCreate": {
+        "properties": {
+          "case_id": { "type": "string", "format": "uuid", "title": "Case Id" },
+          "content": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Content"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["case_id", "content"],
+        "title": "ReportCreate",
+        "description": "Saves the first report of a case. To generate it again, use the replace endpoint."
+      },
+      "ReportRead": {
+        "properties": {
+          "report_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Report Id"
+          },
+          "case_id": { "type": "string", "format": "uuid", "title": "Case Id" },
+          "content": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Content"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Generated At"
+          }
+        },
+        "type": "object",
+        "required": ["report_id", "case_id", "content", "generated_at"],
+        "title": "ReportRead"
+      },
+      "ReportReplace": {
+        "properties": {
+          "content": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Content"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["content"],
+        "title": "ReportReplace",
+        "description": "The new content of a case's report. It replaces the saved one and generated_at is updated."
+      },
+      "ResetPasswordRequest": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 10,
+            "title": "Token"
+          },
+          "new_password": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "New Password"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["token", "new_password"],
+        "title": "ResetPasswordRequest"
+      },
+      "ResponderRoleEnum": {
+        "type": "string",
+        "enum": ["TEACHER", "PARENT"],
+        "title": "ResponderRoleEnum"
+      },
+      "RoleEnum": {
+        "type": "string",
+        "enum": ["SYSTEM_ADMIN", "SCHOOL_ADMIN", "TEACHER", "PARENT"],
+        "title": "RoleEnum"
+      },
+      "SchoolCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 2,
+            "title": "Name"
+          },
+          "county": {
+            "type": "string",
+            "maxLength": 60,
+            "minLength": 2,
+            "title": "County"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["name", "county"],
+        "title": "SchoolCreate"
+      },
+      "SchoolRead": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 2,
+            "title": "Name"
+          },
+          "county": {
+            "type": "string",
+            "maxLength": 60,
+            "minLength": 2,
+            "title": "County"
+          },
+          "school_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "School Id"
+          },
+          "is_active": { "type": "boolean", "title": "Is Active" },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": ["name", "county", "school_id", "is_active", "created_at"],
+        "title": "SchoolRead"
+      },
+      "SchoolUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              { "type": "string", "maxLength": 200, "minLength": 2 },
+              { "type": "null" }
+            ],
+            "title": "Name"
+          },
+          "county": {
+            "anyOf": [
+              { "type": "string", "maxLength": 60, "minLength": 2 },
+              { "type": "null" }
+            ],
+            "title": "County"
+          },
+          "is_active": {
+            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+            "title": "Is Active"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "SchoolUpdate"
+      },
+      "SpecialtyEnum": {
+        "type": "string",
+        "enum": ["PSYCHOLOGIST", "PSYCHIATRIST"],
+        "title": "SpecialtyEnum"
+      },
+      "StepTokenRequest": {
+        "properties": {
+          "step_token": {
+            "type": "string",
+            "maxLength": 4096,
+            "minLength": 10,
+            "title": "Step Token"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["step_token"],
+        "title": "StepTokenRequest"
+      },
+      "TargetNeurodivergenceEnum": {
+        "type": "string",
+        "enum": ["AUTISM", "ADHD", "DYSLEXIA"],
+        "title": "TargetNeurodivergenceEnum"
+      },
+      "TokenPair": {
+        "properties": {
+          "access_token": { "type": "string", "title": "Access Token" },
+          "refresh_token": { "type": "string", "title": "Refresh Token" },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "default": "bearer"
+          },
+          "expires_in": { "type": "integer", "title": "Expires In" },
+          "user": { "$ref": "#/components/schemas/UserRead" }
+        },
+        "type": "object",
+        "required": ["access_token", "refresh_token", "expires_in", "user"],
+        "title": "TokenPair"
+      },
+      "UnreadCount": {
+        "properties": {
+          "user_id": { "type": "string", "format": "uuid", "title": "User Id" },
+          "unread": { "type": "integer", "title": "Unread" }
+        },
+        "type": "object",
+        "required": ["user_id", "unread"],
+        "title": "UnreadCount"
+      },
+      "UserCreate": {
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "First Name"
+          },
+          "last_name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Last Name"
+          },
+          "email": { "type": "string", "format": "email", "title": "Email" },
+          "phone": {
+            "anyOf": [
+              { "type": "string", "maxLength": 30 },
+              { "type": "null" }
+            ],
+            "title": "Phone"
+          },
+          "role": { "$ref": "#/components/schemas/RoleEnum" },
+          "school_id": {
+            "anyOf": [
+              { "type": "string", "format": "uuid4" },
+              { "type": "null" }
+            ],
+            "title": "School Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["first_name", "last_name", "email", "role"],
+        "title": "UserCreate"
+      },
+      "UserRead": {
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "First Name"
+          },
+          "last_name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Last Name"
+          },
+          "email": { "type": "string", "format": "email", "title": "Email" },
+          "phone": {
+            "anyOf": [
+              { "type": "string", "maxLength": 30 },
+              { "type": "null" }
+            ],
+            "title": "Phone"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid4",
+            "title": "User Id"
+          },
+          "school_id": {
+            "anyOf": [
+              { "type": "string", "format": "uuid4" },
+              { "type": "null" }
+            ],
+            "title": "School Id"
+          },
+          "role": { "$ref": "#/components/schemas/RoleEnum" },
+          "must_change_password": {
+            "type": "boolean",
+            "title": "Must Change Password"
+          },
+          "mfa_enabled": { "type": "boolean", "title": "Mfa Enabled" },
+          "is_active": { "type": "boolean", "title": "Is Active" },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "first_name",
+          "last_name",
+          "email",
+          "user_id",
+          "school_id",
+          "role",
+          "must_change_password",
+          "mfa_enabled",
+          "is_active",
+          "created_at"
+        ],
+        "title": "UserRead"
+      },
+      "UserUpdate": {
+        "properties": {
+          "first_name": {
+            "anyOf": [
+              { "type": "string", "maxLength": 100, "minLength": 1 },
+              { "type": "null" }
+            ],
+            "title": "First Name"
+          },
+          "last_name": {
+            "anyOf": [
+              { "type": "string", "maxLength": 100, "minLength": 1 },
+              { "type": "null" }
+            ],
+            "title": "Last Name"
+          },
+          "phone": {
+            "anyOf": [
+              { "type": "string", "maxLength": 30 },
+              { "type": "null" }
+            ],
+            "title": "Phone"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "UserUpdate"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": { "type": "string", "title": "Message" },
+          "type": { "type": "string", "title": "Error Type" },
+          "input": { "title": "Input" },
+          "ctx": { "type": "object", "title": "Context" }
+        },
+        "type": "object",
+        "required": ["loc", "msg", "type"],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": { "MirAIBearer": { "type": "http", "scheme": "bearer" } }
+  }
+}

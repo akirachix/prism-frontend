@@ -1,0 +1,96 @@
+.school {
+  max-width: 1200px;
+}
+
+.school__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.school__card,
+.school__teacher {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: 18px;
+}
+
+.school__head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.school__icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--navy-deep);
+  color: var(--white);
+}
+
+.school__icon--plain {
+  background: var(--sky);
+  color: var(--navy);
+}
+
+.school__title {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.school__subtitle {
+  margin: 2px 0 0;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.school__muted {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.school__contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.school__contacts li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.school__contacts svg {
+  flex-shrink: 0;
+}
+
+.school__contacts a {
+  color: var(--navy);
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 900px) {
+  .school__grid {
+    grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+    gap: 20px;
+  }
+
+  .school__card,
+  .school__teacher {
+    padding: 22px 24px;
+  }
+}

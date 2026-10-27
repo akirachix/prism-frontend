@@ -1,0 +1,71 @@
+.edit-case {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  color: #0a2a66;
+}
+
+.edit-case__title {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.edit-case__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.edit-case__field select,
+.edit-case__field input {
+  border: 2px solid #0a2a66;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 12px 14px;
+  font: inherit;
+  font-weight: 400;
+  color: #0a2a66;
+}
+
+.edit-case__error {
+  margin: 0;
+  background: #fde8ea;
+  border: 1px solid #d62839;
+  border-radius: 12px;
+  color: #8a1220;
+  padding: 12px 16px;
+}
+
+.edit-case__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.edit-case__cancel,
+.edit-case__save {
+  border-radius: 999px;
+  padding: 12px 26px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.edit-case__cancel {
+  border: 2px solid #0a2a66;
+  background: #ffffff;
+  color: #0a2a66;
+}
+
+.edit-case__save {
+  border: 2px solid #d62839;
+  background: #d62839;
+  color: #ffffff;
+}
+
+.edit-case__save:disabled,
+.edit-case__cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

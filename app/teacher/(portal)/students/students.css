@@ -1,0 +1,66 @@
+.students-top {
+  flex-wrap: wrap;
+}
+
+.students-search {
+  order: 3;
+  flex: 1 1 100%;
+}
+
+.students-foot {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+@media (min-width: 769px) {
+  .students-search {
+    order: 0;
+    flex: 0 1 420px;
+    margin-left: auto;
+  }
+
+  .students-add {
+    order: 4;
+  }
+
+  .students-top .ui-section-title {
+    font-size: 1.6rem;
+  }
+}
+
+.students-plan {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.students-noplan {
+  color: var(--muted);
+}
+
+.students-card-plan {
+  margin-top: -1.5px;
+  padding: 10px 16px 14px 70px;
+  border: 1.5px solid var(--navy);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  background: var(--white);
+}
+
+.portal-list li:has(.students-card-plan) > .portal-person {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.students-person {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.students-person .portal-person__name {
+  overflow-wrap: anywhere;
+}
