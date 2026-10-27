@@ -3,7 +3,10 @@ import { clearSession, getSession, setSession } from "@/lib/session";
 import type { UserRead } from "@/lib/users";
 
 export type AuthStage =
-  "password_change_required" | "mfa_enrollment_required" | "mfa_required";
+  | "password_change_required"
+  | "mfa_enrollment_required"
+  | "mfa_required"
+  | "email_code_required";
 
 export interface AuthStageResponse {
   stage: AuthStage;
@@ -47,6 +50,8 @@ export const authApi = {
     post<TokenPair>("/auth/mfa/enroll/confirm", { step_token, code }),
   mfaVerify: (step_token: string, code: string) =>
     post<TokenPair>("/auth/mfa/verify", { step_token, code }),
+  resendEmailCode: (step_token: string) =>
+    post<{ detail: string }>("/auth/email-code/resend", { step_token }),
   acceptInvitation: (token: string, new_password: string) =>
     post<AuthStageResponse>("/auth/accept-invitation", { token, new_password }),
   forgotPassword: (email: string) =>
