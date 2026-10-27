@@ -58,7 +58,7 @@ jobs:
 
   validation:
     name: Build, lint, test, and format
-    runs-on: [self-hosted, classroom-ci]
+    runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
