@@ -1,4 +1,4 @@
-import { request } from "@/lib/api";
+import { ApiError, request } from "@/lib/api";
 
 export interface AIJob {
   job_id: string;
@@ -43,14 +43,16 @@ export async function waitForJob(
     const job = await aiApi.job(jobId);
     if (jobSucceeded(job)) return job;
     if (jobFailed(job)) {
-      throw new Error(
+      throw new ApiError(
+        0,
         job.error
           ? `The AI could not write the plan: ${job.error}`
           : "The AI could not write the plan. Please try again.",
       );
     }
     if (waited >= timeoutMs) {
-      throw new Error(
+      throw new ApiError(
+        0,
         "The new plan is taking longer than usual. Open this page again in a few minutes.",
       );
     }

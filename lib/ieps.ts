@@ -1,5 +1,5 @@
 import { aiApi, waitForJob, type WaitOptions } from "@/lib/ai";
-import { fetchAll, request } from "@/lib/api";
+import { ApiError, fetchAll, request } from "@/lib/api";
 import { query } from "@/lib/query";
 import type { PillTone } from "@/lib/format";
 
@@ -168,7 +168,7 @@ export async function regeneratePlan(
     ? await iepsApi.get(done.result_id)
     : currentIep(await plansForCase(iep.case_id));
   if (!next || next.iep_id === iep.iep_id) {
-    throw new Error("The new plan was not found. Open this page again.");
+    throw new ApiError(0, "The new plan was not found. Open this page again.");
   }
   if (next.status === "DRAFT") next = await iepsApi.submit(next.iep_id);
   return next;
