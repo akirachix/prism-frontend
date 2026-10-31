@@ -8,7 +8,7 @@ import ProfessionalsList from "@/app/parent/_components/reports/ProfessionalsLis
 import ReportsHeader from "@/app/parent/_components/reports/ReportsHeader";
 import { useParentReports } from "@/app/parent/_components/reports/useParentReports";
 import {
-  useReportCaseId,
+  useReportCase,
   withCase,
 } from "@/app/parent/_components/reports/useReportCase";
 import "@/app/parent/_components/reports/reports.css";
@@ -71,7 +71,8 @@ function ReportsOverviewContent({ caseId }: { caseId: string | null }) {
         {!caseId ? (
           <>
             <p className="preports__message">
-              Open Reports from your child&apos;s page to see their reports.
+              There are no reports yet. They appear here once your child&apos;s
+              screening has started.
             </p>
             {process.env.NODE_ENV === "development" && <DevReportPicker />}
           </>
@@ -200,7 +201,17 @@ function ReportsOverviewContent({ caseId }: { caseId: string | null }) {
 }
 
 export default function ReportsOverview() {
-  const caseId = useReportCaseId();
+  const { caseId, loading } = useReportCase();
 
+  if (loading) {
+    return (
+      <main className="preports">
+        <ReportsHeader title="Reports" />
+        <div className="preports__body">
+          <p className="preports__message">Loading reports…</p>
+        </div>
+      </main>
+    );
+  }
   return <ReportsOverviewContent key={caseId ?? "none"} caseId={caseId} />;
 }

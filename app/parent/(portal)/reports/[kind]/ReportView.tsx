@@ -11,7 +11,7 @@ import {
 import ReportsHeader from "@/app/parent/_components/reports/ReportsHeader";
 import { useParentReports } from "@/app/parent/_components/reports/useParentReports";
 import {
-  useReportCaseId,
+  useReportCase,
   withCase,
 } from "@/app/parent/_components/reports/useReportCase";
 import "@/app/parent/_components/reports/reports.css";
@@ -137,8 +137,18 @@ function ReportContent({
 export default function ReportView() {
   const { kind } = useParams<{ kind: string }>();
   const autoPrint = useSearchParams().get("print") === "1";
-  const caseId = useReportCaseId();
+  const { caseId, loading } = useReportCase();
 
+  if (loading) {
+    return (
+      <main className="preports">
+        <ReportsHeader title={TITLES[kind] ?? "Report"} />
+        <div className="preports__body">
+          <p className="preports__message">Loading…</p>
+        </div>
+      </main>
+    );
+  }
   return (
     <ReportContent
       key={caseId ?? "none"}
