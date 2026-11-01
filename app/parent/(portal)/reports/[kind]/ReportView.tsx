@@ -8,6 +8,7 @@ import {
   PlanDocument,
   ScreeningDocument,
 } from "@/app/parent/_components/reports/ReportDocuments";
+import ReportCaseState from "@/app/parent/_components/reports/ReportCaseState";
 import ReportsHeader from "@/app/parent/_components/reports/ReportsHeader";
 import { useParentReports } from "@/app/parent/_components/reports/useParentReports";
 import {
@@ -137,16 +138,15 @@ function ReportContent({
 export default function ReportView() {
   const { kind } = useParams<{ kind: string }>();
   const autoPrint = useSearchParams().get("print") === "1";
-  const { caseId, loading } = useReportCase();
+  const { caseId, loading, error, retry } = useReportCase();
 
-  if (loading) {
+  if (loading || error) {
     return (
-      <main className="preports">
-        <ReportsHeader title={TITLES[kind] ?? "Report"} />
-        <div className="preports__body">
-          <p className="preports__message">Loading…</p>
-        </div>
-      </main>
+      <ReportCaseState
+        title={TITLES[kind] ?? "Report"}
+        error={error}
+        onRetry={retry}
+      />
     );
   }
   return (

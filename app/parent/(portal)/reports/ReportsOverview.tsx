@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import DevReportPicker from "@/app/parent/_components/reports/DevReportPicker";
 import ProfessionalsList from "@/app/parent/_components/reports/ProfessionalsList";
+import ReportCaseState from "@/app/parent/_components/reports/ReportCaseState";
 import ReportsHeader from "@/app/parent/_components/reports/ReportsHeader";
 import { useParentReports } from "@/app/parent/_components/reports/useParentReports";
 import {
@@ -201,17 +202,10 @@ function ReportsOverviewContent({ caseId }: { caseId: string | null }) {
 }
 
 export default function ReportsOverview() {
-  const { caseId, loading } = useReportCase();
+  const { caseId, loading, error, retry } = useReportCase();
 
-  if (loading) {
-    return (
-      <main className="preports">
-        <ReportsHeader title="Reports" />
-        <div className="preports__body">
-          <p className="preports__message">Loading reports…</p>
-        </div>
-      </main>
-    );
+  if (loading || error) {
+    return <ReportCaseState title="Reports" error={error} onRetry={retry} />;
   }
   return <ReportsOverviewContent key={caseId ?? "none"} caseId={caseId} />;
 }
