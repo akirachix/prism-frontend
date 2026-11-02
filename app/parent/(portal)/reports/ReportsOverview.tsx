@@ -5,10 +5,11 @@ import Link from "next/link";
 
 import DevReportPicker from "@/app/parent/_components/reports/DevReportPicker";
 import ProfessionalsList from "@/app/parent/_components/reports/ProfessionalsList";
+import ReportCaseState from "@/app/parent/_components/reports/ReportCaseState";
 import ReportsHeader from "@/app/parent/_components/reports/ReportsHeader";
 import { useParentReports } from "@/app/parent/_components/reports/useParentReports";
 import {
-  useReportCaseId,
+  useReportCase,
   withCase,
 } from "@/app/parent/_components/reports/useReportCase";
 import "@/app/parent/_components/reports/reports.css";
@@ -71,7 +72,8 @@ function ReportsOverviewContent({ caseId }: { caseId: string | null }) {
         {!caseId ? (
           <>
             <p className="preports__message">
-              Open Reports from your child&apos;s page to see their reports.
+              There are no reports yet. They appear here once your child&apos;s
+              screening has started.
             </p>
             {process.env.NODE_ENV === "development" && <DevReportPicker />}
           </>
@@ -200,7 +202,10 @@ function ReportsOverviewContent({ caseId }: { caseId: string | null }) {
 }
 
 export default function ReportsOverview() {
-  const caseId = useReportCaseId();
+  const { caseId, loading, error, retry } = useReportCase();
 
+  if (loading || error) {
+    return <ReportCaseState title="Reports" error={error} onRetry={retry} />;
+  }
   return <ReportsOverviewContent key={caseId ?? "none"} caseId={caseId} />;
 }

@@ -4,6 +4,8 @@ import ReportsOverview from "./ReportsOverview";
 
 export const metadata = { title: "Reports · Mirai" };
 
+export const instant = false;
+
 export default function ParentReportsPage() {
   return (
     <Suspense fallback={null}>
