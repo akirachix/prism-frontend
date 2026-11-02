@@ -1,4 +1,9 @@
-import { describeReport, displayValue, humanize } from "@/lib/report-content";
+import {
+  describeReport,
+  displayValue,
+  humanize,
+  reportDisclaimer,
+} from "@/lib/report-content";
 
 describe("humanize", () => {
   it("turns keys into words", () => {
@@ -65,5 +70,86 @@ describe("describeReport", () => {
 
   it("returns nothing for an empty report", () => {
     expect(describeReport({})).toEqual([]);
+  });
+});
+
+describe("describeReport with the backend report builder", () => {
+  const content = {
+    disclaimer: "This report is not a diagnosis.",
+    summary: {
+      overall_score: 2.75,
+      scale_max: 3,
+      primary_domain: "ADHD",
+      support_plan_recommended: true,
+      next_step: "Talk with your child's teacher.",
+    },
+    domains: [
+      {
+        domain: "ADHD",
+        tool: "SNAP_IV",
+        score: 2.75,
+        scale_max: 3,
+        level: "HIGH",
+        band_label: "High",
+        meaning: "Attention difficulties were seen often.",
+      },
+    ],
+    not_screened: [{ domain: "DYSLEXIA", status: "Not screened further" }],
+  };
+  const sections = describeReport(content);
+
+  it("shows each area with its level and meaning in plain words", () => {
+    expect(
+      sections.find((s) => s.title === "Attention and activity")?.rows,
+    ).toEqual([
+      { label: "Score", value: "2.8 out of 3" },
+      { label: "What we saw", value: "Worth extra support" },
+      {
+        label: "What this means",
+        value: "Attention difficulties were seen often.",
+      },
+    ]);
+  });
+
+  it("lists areas that were not looked at further", () => {
+    expect(
+      sections.find((s) => s.title === "Areas not looked at further")?.rows,
+    ).toEqual([
+      {
+        label: "Reading and spelling",
+        value: "No further questions were needed",
+      },
+    ]);
+  });
+
+  it("shows the overall score with its scale in the overview", () => {
+    const overview = sections.find((s) => s.title === "Overview");
+    const row = overview?.rows.find((r) => r.label === "Overall score");
+    expect(row?.value).toBe("2.8 out of 3");
+  });
+
+  it("hides raw scales, tools and band labels", () => {
+    const text = JSON.stringify(sections);
+    for (const hidden of ["2.75", "Scale max", "SNAP_IV", "Band label"]) {
+      expect(text).not.toContain(hidden);
+    }
+  });
+
+  it("keeps the disclaimer out of the sections so it shows only once", () => {
+    expect(JSON.stringify(sections)).not.toContain("not a diagnosis");
+    expect(reportDisclaimer(content)).toBe("This report is not a diagnosis.");
+    expect(reportDisclaimer({})).toBeNull();
+  });
+
+  it("gives every section its own title", () => {
+    const titles = sections.map((s) => s.title);
+    expect(new Set(titles).size).toBe(titles.length);
+  });
+
+  it("skips an empty not-screened list", () => {
+    const titles = describeReport({ ...content, not_screened: [] }).map(
+      (s) => s.title,
+    );
+    expect(titles).not.toContain("Areas not looked at further");
   });
 });

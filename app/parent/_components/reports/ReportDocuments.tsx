@@ -1,18 +1,17 @@
-import { describeReport } from "@/lib/report-content";
+import { describeReport, reportDisclaimer } from "@/lib/report-content";
 import type { Plan, Recommendation, Report } from "@/lib/reports";
 import { formatDate } from "@/lib/format";
 import "./reports.css";
 
-function Disclaimer() {
-  return (
-    <p className="preports__disclaimer">
-      ⚠ This is a screening result, not a diagnosis.
-    </p>
-  );
+const DEFAULT_DISCLAIMER = "This is a screening result, not a diagnosis.";
+
+function Disclaimer({ text = DEFAULT_DISCLAIMER }: { text?: string | null }) {
+  return <p className="preports__disclaimer">⚠ {text || DEFAULT_DISCLAIMER}</p>;
 }
 
 export function ScreeningDocument({ report }: { report: Report }) {
-  const sections = describeReport(report.content ?? {});
+  const content = report.content ?? {};
+  const sections = describeReport(content);
   return (
     <>
       <p className="preports__doc-meta">
@@ -35,7 +34,7 @@ export function ScreeningDocument({ report }: { report: Report }) {
           </section>
         ))
       )}
-      <Disclaimer />
+      <Disclaimer text={reportDisclaimer(content)} />
     </>
   );
 }
