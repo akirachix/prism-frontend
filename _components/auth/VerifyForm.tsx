@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 
-import { errorMessage } from "@/lib/api";
+import { ApiError, errorMessage } from "@/lib/api";
 import {
   authApi,
   clearFlow,
@@ -91,6 +91,25 @@ export default function VerifyForm({ portal }: { portal: Portal }) {
     }
   }
 
+  async function resendByLogin(current: AuthFlow): Promise<boolean> {
+    const password = flowPasswordInMemory();
+    if (!current.email || !password) {
+      router.replace(
+        `/${portal}/login?email=${encodeURIComponent(current.email ?? "")}`,
+      );
+      return false;
+    }
+    const response = await authApi.login(current.email, password);
+    const updated = flowFromStage(portal, response, {
+      email: current.email,
+      remember: current.remember,
+      pending_name: current.pending_name,
+    });
+    saveFlow(updated);
+    setFlow(updated);
+    return true;
+  }
+
   async function resend() {
     if (!flow) return;
     setResending(true);
@@ -100,25 +119,18 @@ export default function VerifyForm({ portal }: { portal: Portal }) {
       if (flow.stage === "mfa_enrollment_required") {
         setEnroll(await authApi.mfaEnroll(flow.step_token));
         setInfo("We sent a new code to your email.");
-      } else if (flow.stage === "email_code_required") {
-        const result = await authApi.resendEmailCode(flow.step_token);
-        setInfo(result.detail);
-      } else {
-        const password = flowPasswordInMemory();
-        if (!flow.email || !password) {
-          router.replace(
-            `/${portal}/login?email=${encodeURIComponent(flow.email ?? "")}`,
-          );
+        return;
+      }
+      if (flow.stage === "email_code_required") {
+        try {
+          const result = await authApi.resendEmailCode(flow.step_token);
+          setInfo(result.detail);
           return;
+        } catch (err) {
+          if (!(err instanceof ApiError && err.status === 404)) throw err;
         }
-        const response = await authApi.login(flow.email, password);
-        const updated = flowFromStage(portal, response, {
-          email: flow.email,
-          remember: flow.remember,
-          pending_name: flow.pending_name,
-        });
-        saveFlow(updated);
-        setFlow(updated);
+      }
+      if (await resendByLogin(flow)) {
         setInfo("We sent a new code to your email.");
       }
     } catch (err) {
