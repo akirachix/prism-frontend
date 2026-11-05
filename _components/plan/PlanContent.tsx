@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import PlanText from "@/app/teacher/_components/PlanText";
 import type { IEP } from "@/lib/ieps";
 import "./plan.css";
 
@@ -15,7 +16,13 @@ export default function PlanContent({ iep }: { iep: IEP }) {
     <div className="plan">
       <section className="plan__section">
         <h2 className="plan__heading">The plan</h2>
-        <p className="plan__text">{open ? text : preview}</p>
+        {open ? (
+          <PlanText text={text} />
+        ) : (
+          <p className="plan__text">
+            {preview.replace(/[#*]+/g, "").replace(/\s+/g, " ")}
+          </p>
+        )}
       </section>
 
       {iep.short_term_goals.length > 0 && (

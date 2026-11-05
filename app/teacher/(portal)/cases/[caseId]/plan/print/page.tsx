@@ -14,6 +14,7 @@ import { casesApi } from "@/lib/cases";
 import { canDownload, currentIep, plansForCase } from "@/lib/ieps";
 import { studentName, studentsApi } from "@/lib/lookups";
 import { schoolsApi } from "@/lib/schools";
+import PlanText from "@/app/teacher/_components/PlanText";
 import "@/_components/portal.css";
 
 function longDate(value: string | null | undefined): string {
@@ -111,7 +112,7 @@ export default function PlanPrintPage() {
 
               <section>
                 <h2>The plan</h2>
-                <p>{data.iep.generated_content.trim()}</p>
+                <PlanText text={data.iep.generated_content.trim()} />
               </section>
 
               {data.iep.short_term_goals.length > 0 && (

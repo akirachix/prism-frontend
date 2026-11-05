@@ -1,0 +1,30 @@
+.plan-text h1 {
+  font-size: 1.25rem;
+  margin: 0 0 12px;
+  color: #0b2a6f;
+}
+.plan-text h2 {
+  font-size: 1.1rem;
+  margin: 18px 0 8px;
+  color: #0b2a6f;
+}
+.plan-text h3 {
+  font-size: 1rem;
+  margin: 14px 0 6px;
+}
+.plan-text p {
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+.plan-text ul,
+.plan-text ol {
+  margin: 0 0 10px;
+  padding-left: 20px;
+}
+.plan-text li {
+  margin-bottom: 4px;
+}
+.plan-text h2,
+.plan-text h3 {
+  break-after: avoid;
+}
