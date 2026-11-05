@@ -787,12 +787,12 @@
   flex-direction: column;
   gap: 20px;
   width: 100%;
-  max-width: 1080px;
+  max-width: none;
   padding: 24px 20px 32px;
 }
 
 .ui-body--narrow {
-  max-width: 720px;
+  max-width: none;
 }
 
 .ui-body--center {
@@ -858,6 +858,10 @@
 
   .ui-body {
     padding: 36px 48px 48px;
+  }
+
+  .ui-body--center {
+    margin: 0;
   }
 }
 
