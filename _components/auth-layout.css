@@ -487,3 +487,293 @@
     margin-top: -8px;
   }
 }
+
+/* ===== Parent auth, desktop (matches the MacBook frames) ===== */
+@media (min-width: 901px) {
+  .auth--parent {
+    background: var(--cream-light);
+  }
+
+  /* Left navy panel: copy sits just under the heart icon baked into the bg image */
+  .auth--parent .auth__panel {
+    justify-content: flex-start;
+    padding: 46vh clamp(28px, 3.6vw, 52px) 0;
+    background-position: left top;
+  }
+
+  .auth--parent .auth__panel-copy {
+    max-width: clamp(20rem, 27vw, 26rem);
+  }
+
+  .auth--parent .auth__panel-title {
+    margin-bottom: 20px;
+    font-size: clamp(1.9rem, 2.8vw, 2.6rem);
+    line-height: 1.15;
+  }
+
+  .auth--parent .auth__panel-text {
+    font-size: clamp(0.9rem, 1.05vw, 1.05rem);
+    line-height: 1.5;
+  }
+
+  /* Top bar */
+  .auth--parent .auth__topbar {
+    min-height: clamp(64px, 5.4vw, 78px);
+    padding: 0 clamp(24px, 2.8vw, 40px);
+    border-bottom: 1px solid #7f8fb0;
+    font-size: 0.9rem;
+  }
+
+  .auth--parent .auth__topbar-account {
+    font-weight: 400;
+  }
+
+  .auth--parent .auth__topbar-account svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Content: left-aligned, no card, wide form */
+  .auth--parent .auth__content {
+    max-width: none;
+    margin: 0;
+    align-items: flex-start;
+    padding: 48px clamp(32px, 4.2vw, 64px) 10vh;
+  }
+
+  .auth--parent .auth__content > * {
+    width: 100%;
+    max-width: 750px;
+  }
+
+  /* Centered screens (invite, verify) */
+  .auth--parent .auth__content > .auth-center {
+    max-width: 440px;
+    margin-inline: auto;
+  }
+
+  .auth--parent .auth__content > .auth-center:has(.ui-otp) {
+    max-width: 680px;
+  }
+
+  .auth--parent .auth-card {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    padding: 0;
+  }
+
+  /* Text */
+  .auth--parent .auth-title {
+    margin-bottom: 16px;
+    font-size: clamp(2rem, 2.8vw, 2.5rem);
+    font-weight: 700;
+  }
+
+  .auth--parent .auth-center .auth-title {
+    font-size: clamp(1.7rem, 2.3vw, 2.1rem);
+  }
+
+  .auth--parent .auth__content > .auth-lead {
+    margin-bottom: 36px;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+
+  .auth--parent .auth-center .auth-lead {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .auth--parent .ui-field__label {
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  .auth--parent .ui-form {
+    gap: 24px;
+  }
+
+  /* Inputs: white, thin border, nearly square corners, tall */
+  .auth--parent .ui-input {
+    min-height: clamp(56px, 4.6vw, 68px);
+    border: 1px solid #7f8fb0;
+    border-radius: 4px;
+    background: var(--white);
+    padding-left: 24px;
+    font-size: 0.95rem;
+  }
+
+  .auth--parent .ui-input::placeholder {
+    font-size: 0.85rem;
+    color: #5b6b8c;
+  }
+
+  /* Buttons */
+  .auth--parent .ui-btn {
+    border-width: 1.5px;
+    font-weight: 500;
+  }
+
+  /* Sign in / Save password sit on the right and are not full width */
+  .auth--parent .ui-form__center {
+    justify-content: flex-end;
+  }
+
+  .auth--parent .ui-form__center .ui-btn--block,
+  .auth--parent .ui-form__end .ui-btn {
+    width: clamp(200px, 21vw, 300px);
+    max-width: none;
+    margin: 0;
+  }
+
+  .auth--parent .auth-actions--verify .ui-btn--block {
+    max-width: 570px;
+  }
+
+  /* Remember me checkbox: white square with a navy border */
+  .auth--parent .auth-remember input {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 1px solid #7f8fb0;
+    border-radius: 3px;
+    background: var(--white) center / 14px no-repeat;
+  }
+
+  .auth--parent .auth-remember input:checked {
+    border-color: var(--navy);
+    background-color: var(--navy);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.5'%3E%3Cpath d='m3.5 8.5 3 3 6-7'/%3E%3C/svg%3E");
+  }
+
+  .auth--parent .auth-forgot--red {
+    font-size: 0.9rem;
+  }
+
+  /* Verification code boxes */
+  .auth--parent .ui-otp__boxes {
+    max-width: 680px;
+    gap: clamp(8px, 1.2vw, 18px);
+  }
+
+  .auth--parent .ui-otp__box {
+    aspect-ratio: 1 / 0.72;
+    border: 1px solid #7f8fb0;
+    border-radius: 4px;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  .auth--parent .ui-otp__label {
+    margin-top: 12px;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  /* Envelope badge */
+  .auth--parent .ui-badge {
+    width: 124px;
+    height: 124px;
+  }
+
+  .auth--parent .ui-badge__ring {
+    border-width: 1px;
+  }
+
+  .auth--parent .ui-badge__square {
+    inset: 17px;
+    border-radius: 2px;
+  }
+
+  /* "This invitation is just for your parent account" */
+  .auth--parent .auth-invite-info {
+    width: 100%;
+    border-radius: 4px;
+    background: #f3e8dc;
+    font-size: 0.85rem;
+    color: #6b7894;
+  }
+}
+
+/* ===== Teacher auth, desktop ===== */
+@media (min-width: 901px) {
+  .auth--teacher {
+    background: var(--cream-light);
+  }
+
+  .auth--teacher .auth__content {
+    max-width: 560px;
+    padding: 48px 32px;
+  }
+
+  .auth--teacher .auth-title,
+  .auth--teacher .auth-center .auth-title {
+    margin-bottom: 20px;
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+
+  .auth--teacher .auth-lead {
+    font-size: 0.85rem;
+  }
+
+  /* Login card */
+  .auth--teacher .auth-card {
+    padding: 28px 28px 36px;
+    border: 1px solid #7f8fb0;
+    border-radius: 10px;
+    background: #faf6f1;
+  }
+
+  .auth--teacher .ui-field__label {
+    font-size: 0.9rem;
+  }
+
+  .auth--teacher .ui-input {
+    border: 1px solid #7f8fb0;
+    border-radius: 6px;
+  }
+
+  .auth--teacher .ui-btn {
+    min-height: 40px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  /* Sign in is a centred pill, not full width */
+  .auth--teacher .ui-form__center .ui-btn--block {
+    width: 62%;
+    max-width: none;
+    margin: 0 auto;
+  }
+
+  .auth--teacher .auth-forgot {
+    font-size: 0.85rem;
+  }
+
+  .auth--teacher .auth-note-wrap {
+    margin-top: 40px;
+  }
+
+  .auth--teacher .ui-note {
+    border-radius: 4px;
+    font-size: 0.85rem;
+  }
+
+  /* Verify */
+  .auth--teacher .ui-otp__boxes {
+    max-width: 490px;
+    gap: 12px;
+  }
+
+  .auth--teacher .ui-otp__box {
+    aspect-ratio: 1 / 0.9;
+    border: 1px solid #7f8fb0;
+    border-radius: 3px;
+  }
+
+  .auth--teacher .auth-actions .ui-btn--block {
+    max-width: 410px;
+  }
+}

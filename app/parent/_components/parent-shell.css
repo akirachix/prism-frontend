@@ -77,3 +77,331 @@
     background: #ffffff;
   }
 }
+
+.parent-shell {
+  --squiggle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='20' viewBox='0 0 56 20' fill='none' stroke='%23f47c30' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M3 15C9 3 16 3 21 10s12 7 17 0 10-7 15-1'/%3E%3C/svg%3E");
+}
+
+@media (min-width: 769px) {
+  .parent-shell,
+  .parent-shell .ui-page,
+  .parent-shell .preports {
+    background: var(--cream-light);
+  }
+
+  .parent-shell .sidebar--parent {
+    gap: 36px;
+    padding: 28px 0 24px 20px;
+  }
+
+  .parent-shell .sidebar--parent .sidebar__logo {
+    padding: 0;
+  }
+
+  .parent-shell .sidebar--parent .sidebar__logo-img {
+    width: 120px;
+  }
+
+  .parent-shell .sidebar--parent .sidebar__nav {
+    gap: 12px;
+  }
+
+  .parent-shell .sidebar--parent .sidebar__link {
+    min-height: 48px;
+    gap: 14px;
+    padding: 0 20px 0 17px;
+    border-radius: 999px 0 0 999px;
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+
+  .parent-shell .sidebar--parent .sidebar__link--active {
+    font-weight: 600;
+  }
+
+  .parent-shell .sidebar--parent .sidebar__icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .parent-shell .sidebar--parent::after {
+    content: "Mirai parent portal";
+    margin-top: auto;
+    padding-top: 36px;
+    background: var(--squiggle) left top / 56px 20px no-repeat;
+    font-size: 0.75rem;
+    color: var(--white);
+  }
+
+  .parent-shell .portal-topbar {
+    min-height: clamp(64px, 5.4vw, 78px);
+    padding: 0 40px;
+    border-bottom: 1px solid #7f8fb0;
+    font-size: 0.95rem;
+  }
+
+  .parent-shell .portal-topbar__account {
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+
+  .parent-shell .portal-topbar__account svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .parent-shell .portal-topbar__squiggle {
+    right: 40px;
+    bottom: -66px;
+    width: 56px;
+    height: 20px;
+    background: var(--squiggle) center / contain no-repeat;
+    font-size: 0;
+    pointer-events: none;
+  }
+
+  .parent-shell .ui-header {
+    padding: 36px 40px 8px;
+  }
+
+  .parent-shell .ui-header__title {
+    font-size: clamp(2rem, 2.8vw, 2.5rem);
+    font-weight: 700;
+  }
+
+  .parent-shell .ui-body {
+    gap: 16px;
+    max-width: none;
+    padding: 20px clamp(40px, 5.6vw, 80px) 48px 40px;
+  }
+
+  .parent-shell .ui-body--center {
+    margin: 0;
+  }
+
+  .parent-shell .ui-card {
+    border: 1px solid #7f8fb0;
+    border-radius: 10px;
+  }
+
+  .parent-shell .ui-btn {
+    border-width: 1.5px;
+    font-weight: 500;
+  }
+
+  .parent-shell .ui-input {
+    min-height: clamp(56px, 4.6vw, 68px);
+    border: 1px solid #7f8fb0;
+    border-radius: 4px;
+    background: var(--cream-light);
+    padding-left: 24px;
+  }
+
+  .parent-shell .ui-progress {
+    height: 8px;
+    border: 0;
+    background: #f1e3d6;
+  }
+
+  .parent-shell .screening__header--parent .ui-header__back {
+    gap: 14px;
+    font-size: 1.4rem;
+    font-weight: 400;
+  }
+
+  .parent-shell .screening__header--parent .ui-header__back span {
+    font-size: clamp(2rem, 2.8vw, 2.5rem);
+    font-weight: 700;
+  }
+
+  .parent-shell .portal-flow {
+    display: block;
+  }
+
+  .parent-shell .portal-sidecard {
+    display: none;
+  }
+
+  .parent-shell .screening__body {
+    max-width: none;
+  }
+
+  .parent-shell .screening__label,
+  .parent-shell .screening__almost {
+    font-size: 0.8rem;
+  }
+
+  .parent-shell .screening__main .portal-question__head {
+    font-size: 1.15rem;
+  }
+
+  .parent-shell .screening__main .ui-choice {
+    gap: 16px;
+    min-height: 64px;
+    padding: 0 20px;
+    border: 1px solid #7f8fb0;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 400;
+  }
+
+  .parent-shell .ui-choice__dot {
+    width: 26px;
+    height: 26px;
+  }
+
+  .parent-shell .screening__main .ui-actions {
+    justify-content: flex-end;
+  }
+
+  .parent-shell .screening__next {
+    width: auto;
+    min-width: 140px;
+    min-height: 60px;
+    padding: 0 40px;
+  }
+
+  .parent-shell .evaluation-page {
+    max-width: none;
+    margin: 0;
+  }
+
+  .parent-shell .evaluation__progress-label {
+    font-size: 0.8rem;
+  }
+
+  .parent-shell .evaluation .portal-question__head {
+    align-items: center;
+    font-size: 1.15rem;
+  }
+
+  .parent-shell .evaluation .portal-qtag {
+    border-radius: 999px;
+    padding: 2px 12px;
+    font-size: 0.75rem;
+  }
+
+  .parent-shell .evaluation .ui-faces__row {
+    gap: clamp(16px, 3.6vw, 54px);
+  }
+
+  .parent-shell .evaluation .ui-face {
+    min-height: 132px;
+    border: 1px solid var(--navy);
+    border-radius: 4px;
+  }
+
+  .parent-shell .evaluation .ui-face__label {
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .parent-shell .evaluation__center {
+    margin: clamp(32px, 6vh, 64px) auto 0;
+  }
+
+  .parent-shell .evaluation__title {
+    font-size: clamp(2rem, 2.8vw, 2.5rem);
+  }
+
+  .parent-shell .evaluation__center p {
+    font-size: 1.35rem;
+  }
+
+  .parent-shell .evaluation__confirm-actions .ui-btn,
+  .parent-shell .evaluation__done-actions .ui-btn {
+    min-width: clamp(240px, 33vw, 480px);
+    min-height: 64px;
+  }
+
+  .parent-shell .portal-result {
+    border: 1px solid #7f8fb0;
+    border-radius: 10px;
+    background: var(--white);
+  }
+
+  .parent-shell .portal-result--plain {
+    border: 0;
+    background: transparent;
+  }
+
+  .parent-shell .portal-result__title,
+  .parent-shell .portal-result__title--big {
+    font-size: clamp(1.8rem, 2.6vw, 2.4rem);
+  }
+
+  .parent-shell main .portal-result p {
+    font-size: 1.35rem;
+    color: var(--muted);
+  }
+
+  .parent-shell .portal-result .ui-actions,
+  .parent-shell .portal-result__actions {
+    flex-wrap: nowrap;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .parent-shell .portal-result .ui-actions .ui-btn,
+  .parent-shell .portal-result__actions .ui-btn {
+    flex: 1;
+    min-height: 64px;
+  }
+
+  .parent-shell .ui-form .ui-actions {
+    flex-wrap: nowrap;
+  }
+
+  .parent-shell .ui-form .ui-actions .ui-btn {
+    flex: 1;
+    min-height: 64px;
+  }
+
+  .parent-shell .account__card {
+    gap: 24px;
+    padding: 32px 36px;
+    border-color: var(--navy-deep);
+    border-radius: 6px;
+    background: var(--navy-deep);
+    color: var(--white);
+  }
+
+  .parent-shell .account__card .ui-avatar {
+    width: 56px;
+    height: 56px;
+    border: 0;
+    background: transparent !important;
+    color: var(--white);
+  }
+
+  .parent-shell .account__name {
+    font-size: 1.7rem;
+    font-weight: 500;
+    color: var(--white);
+  }
+
+  .parent-shell .account__meta {
+    font-size: 0.9rem;
+    color: var(--white);
+  }
+
+  .parent-shell .account .ui-section-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .parent-shell .portal-menu {
+    border: 1px solid #7f8fb0;
+    border-radius: 6px;
+  }
+
+  .parent-shell .portal-menu a,
+  .parent-shell .portal-menu button {
+    padding: 28px;
+    font-size: 1.05rem;
+  }
+
+  .parent-shell .portal-menu a > svg:last-child {
+    color: var(--red);
+  }
+}
