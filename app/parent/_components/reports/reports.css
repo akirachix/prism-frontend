@@ -357,4 +357,14 @@
   .parent-shell .preports__back {
     color: #0a2a66;
   }
+  .parent-shell .preports__body {
+    gap: 20px;
+    max-width: none;
+    padding: 24px clamp(40px, 5.6vw, 80px) 56px 40px;
+  }
+}
+@media (min-width: 1500px) {
+  .parent-shell .preports__pros {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }

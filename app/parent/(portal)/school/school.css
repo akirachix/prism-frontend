@@ -94,3 +94,37 @@
     padding: 22px 24px;
   }
 }
+@media (min-width: 769px) {
+  .parent-shell .school__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .parent-shell .school__card,
+  .parent-shell .school__teacher {
+    gap: 20px;
+    padding: 28px 32px;
+  }
+
+  .parent-shell .school__icon {
+    width: 72px;
+    height: 72px;
+  }
+
+  .parent-shell .school__icon--plain {
+    background: transparent;
+  }
+
+  .parent-shell .school__title {
+    font-size: 1.6rem;
+    font-weight: 500;
+  }
+
+  .parent-shell .school__subtitle {
+    font-size: 1.15rem;
+  }
+
+  .parent-shell .school__muted {
+    font-size: 0.85rem;
+  }
+}
