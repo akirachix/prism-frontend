@@ -102,3 +102,74 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ===== Home, desktop ===== */
+@media (min-width: 769px) {
+  .parent-shell .parent-home__hello {
+    font-size: clamp(1.6rem, 2.1vw, 1.9rem);
+    font-weight: 700;
+  }
+
+  .parent-shell .parent-home__lead {
+    font-size: 0.95rem;
+  }
+
+  .parent-shell .parent-home__child {
+    gap: 24px;
+    padding: 30px 32px;
+  }
+
+  .parent-shell .parent-home__icon {
+    width: 64px;
+    height: 64px;
+  }
+
+  .parent-shell .parent-home__child-title {
+    font-size: 1.7rem;
+    font-weight: 500;
+  }
+
+  /* 2 x 2 grid instead of 4 across */
+  .parent-shell .parent-home__facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 32px;
+  }
+
+  .parent-shell .parent-home__facts dt {
+    font-size: 0.9rem;
+  }
+
+  .parent-shell .parent-home__facts dd {
+    font-size: 1.3rem;
+    font-weight: 500;
+  }
+
+  .parent-shell .parent-home__actions {
+    gap: 16px;
+  }
+
+  .parent-shell .parent-home__actions .ui-btn {
+    min-height: 56px;
+  }
+
+  .parent-shell .parent-home__reports {
+    font-size: 1.05rem;
+    font-weight: 500;
+  }
+
+  .parent-shell .parent-home__tiles {
+    gap: 16px;
+  }
+
+  /* Icon above the title, not beside it */
+  .parent-shell .parent-home__tile {
+    flex-direction: column;
+    gap: 12px;
+    padding: 24px 28px;
+  }
+
+  .parent-shell .parent-home__tile strong {
+    font-size: 1.15rem;
+    font-weight: 500;
+  }
+}

@@ -179,22 +179,41 @@ export async function parentEvaluationUpdates(
   now = new Date(),
 ): Promise<UpdateItem[]> {
   if (!iep || iep.status !== "ACTIVE") return [];
-  return orUnavailable(
-    (async () => {
-      const round = await evaluationsApi.current(iep.iep_id);
-      const other = await otherSubmission(round, "TEACHER");
-      return roundUpdates({
-        round,
-        other,
-        role: "PARENT",
-        name: child.first_name,
-        checkHref: "/parent/evaluation",
-        reportHref: "/parent/school",
+
+  const generatedAt = iep.approved_at ?? iep.created_at;
+  const generated = generatedAt
+    ? {
+        id: `plan-generated-${iep.iep_id}`,
+        text: `Your IEP was generated on ${formatLongDay(generatedAt)}.`,
+        date: generatedAt,
+        href: "/parent/reports",
+      }
+    : null;
+
+  try {
+    const round = await evaluationsApi.current(iep.iep_id);
+    const other = await otherSubmission(round, "TEACHER");
+    const items = roundUpdates({
+      round,
+      other,
+      role: "PARENT",
+      name: child.first_name,
+      checkHref: "/parent/evaluation",
+      reportHref: "/parent/school",
+      now,
+    });
+    return sortUpdates([...(generated ? [generated] : []), ...items]);
+  } catch {
+    return sortUpdates([
+      ...(generated ? [generated] : []),
+      unavailableUpdate(
+        iep.iep_id,
+        child.first_name,
+        "/parent/evaluation",
         now,
-      });
-    })(),
-    unavailableUpdate(iep.iep_id, child.first_name, "/parent/evaluation", now),
-  );
+      ),
+    ]);
+  }
 }
 
 export function notificationUpdates(list: Notification[]): UpdateItem[] {

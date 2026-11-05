@@ -95,6 +95,35 @@ describe("roundUpdates", () => {
     expect(items[0].text).toContain("School");
     expect(items[0].date).toBe("2026-10-22T08:00:00Z");
   });
+
+  it("includes plan generation and evaluation timing for the parent", async () => {
+    mockRequest.mockResolvedValueOnce(
+      round({
+        status: "LOCKED",
+        locked_until: "2026-10-31T00:00:00Z",
+        last_submitted_at: "2026-10-20T00:00:00Z",
+      }),
+    );
+    mockRequest.mockResolvedValueOnce([]);
+
+    const items = await parentEvaluationUpdates(
+      makeStudent({ first_name: "Maya" }),
+      makeIep({
+        status: "ACTIVE",
+        created_at: "2026-10-18T08:00:00Z",
+        approved_at: "2026-10-18T08:00:00Z",
+        evaluation_unlock_date: "2026-10-13T00:00:00Z",
+      }),
+      NOW,
+    );
+
+    expect(items.map((item) => item.text)).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("IEP was generated"),
+        expect.stringContaining("days left"),
+      ]),
+    );
+  });
 });
 
 describe("sortUpdates", () => {
@@ -120,10 +149,11 @@ describe("when the 6-week check cannot be loaded", () => {
       makeIep({ status: "ACTIVE" }),
       NOW,
     );
-    expect(items).toHaveLength(1);
-    expect(items[0].unavailable).toBe(true);
-    expect(items[0].text).toContain("could not load");
-    expect(items[0].href).toBe("/parent/evaluation");
+    expect(items).toHaveLength(2);
+    expect(items.some((item) => item.unavailable)).toBe(true);
+    const unavailable = items.find((item) => item.unavailable);
+    expect(unavailable?.text).toContain("could not load");
+    expect(unavailable?.href).toBe("/parent/evaluation");
     expect(hasUnavailable(items)).toBe(true);
   });
 
