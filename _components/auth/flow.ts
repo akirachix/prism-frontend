@@ -14,7 +14,7 @@ import type { UserRead } from "@/lib/users";
 type Router = { push: (href: string) => void; replace: (href: string) => void };
 
 const AUTH_PAGE =
-  /^\/(teacher|parent)\/(login|verify|new-password|forgot-password|reset-password|welcome|invite|set-password)\b/;
+  /^\/(teacher|parent)\/(login|verify|new-password|forgot-password|reset-password|welcome|invite|set-password|accept-invitation)\b/;
 
 export function safeNext(next: string | null, fallback: string): string {
   if (!next || !next.startsWith("/") || next.startsWith("//")) return fallback;
