@@ -1,3 +1,4 @@
+import type { Grade } from "@/lib/grades";
 import { request } from "@/lib/api";
 import { query } from "@/lib/query";
 
@@ -12,6 +13,7 @@ export interface Student {
   date_of_birth?: string | null;
   gender?: string | null;
   class_name?: string | null;
+  grade?: Grade | null;
   parent_id?: string | null;
   is_active?: boolean;
   created_at?: string;
@@ -30,6 +32,7 @@ export interface StudentCreate {
   last_name: string;
   date_of_birth: string;
   gender: "MALE" | "FEMALE";
+  grade?: Grade;
   parent_id?: string | null;
   parent?: ParentIn | null;
 }

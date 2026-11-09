@@ -24,6 +24,7 @@ import {
   withCheckState,
 } from "@/lib/evaluation-flow";
 import { canDownload, planState, type IEP } from "@/lib/ieps";
+import { gradeLabel } from "@/lib/grades";
 import { ageInYears, studentName } from "@/lib/lookups";
 import { fullName } from "@/lib/users";
 import "@/_components/portal.css";
@@ -221,6 +222,7 @@ export default function StudentsView() {
                       </span>
                       <span className="portal-person__sub">
                         {student.admission_number}
+                        {student.grade ? ` · ${gradeLabel(student.grade)}` : ""}
                       </span>
                     </span>
                     <Pill tone={status.tone}>{status.label}</Pill>
@@ -240,6 +242,7 @@ export default function StudentsView() {
                   <tr>
                     <th>Names</th>
                     <th>Admission number</th>
+                    <th>Grade</th>
                     <th>Age</th>
                     <th>Status</th>
                     <th>Plan (IEP)</th>
@@ -254,6 +257,7 @@ export default function StudentsView() {
                         </Link>
                       </td>
                       <td>{student.admission_number}</td>
+                      <td>{student.grade ? gradeLabel(student.grade) : "—"}</td>
                       <td>{ageInYears(student.date_of_birth) ?? "—"}</td>
                       <td>
                         <Pill tone={status.tone}>{status.label}</Pill>

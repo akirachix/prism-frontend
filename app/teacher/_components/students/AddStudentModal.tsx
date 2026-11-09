@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
+import { useUser } from "@/_components/SessionProvider";
 import { errorMessage } from "@/lib/api";
+import { GRADES, type Grade } from "@/lib/grades";
 import {
   ageInYears,
   birthDateLimits,
@@ -21,6 +23,7 @@ export interface AddStudentValues {
   first_name: string;
   last_name: string;
   admission_number: string;
+  grade: "" | Grade;
   date_of_birth: string;
   gender: "" | "MALE" | "FEMALE";
   parent_first_name: string;
@@ -33,6 +36,7 @@ const EMPTY: AddStudentValues = {
   first_name: "",
   last_name: "",
   admission_number: "",
+  grade: "",
   date_of_birth: "",
   gender: "",
   parent_first_name: "",
@@ -56,6 +60,7 @@ const RULES: Record<keyof AddStudentValues, FieldRule> = {
   first_name: required("Enter the student's first name."),
   last_name: required("Enter the student's last name."),
   admission_number: required("Enter the admission number."),
+  grade: { required: "Choose the student's grade." },
   date_of_birth: { validate: (value) => birthDateProblem(value) ?? true },
   gender: { required: "Choose the student's gender." },
   parent_first_name: required("Enter the parent's first name."),
@@ -86,13 +91,23 @@ export default function AddStudentModal({
   onClose: () => void;
   onCreated: (created: Student) => void;
 }) {
+  const user = useUser();
+  const ownGrades = (user as { grades?: Grade[] }).grades ?? [];
+  const gradeOptions = ownGrades.length
+    ? GRADES.filter((g) => ownGrades.includes(g.value))
+    : GRADES;
+  const onlyGrade: "" | Grade =
+    gradeOptions.length === 1 ? gradeOptions[0].value : "";
   const {
     register,
     handleSubmit,
     control,
     getValues,
     formState: { errors, isSubmitting },
-  } = useForm<AddStudentValues>({ defaultValues: EMPTY, mode: "onChange" });
+  } = useForm<AddStudentValues>({
+    defaultValues: { ...EMPTY, grade: onlyGrade },
+    mode: "onChange",
+  });
 
   const [error, setError] = useState<string | null>(null);
   const [created, setCreated] = useState<Student | null>(null);
@@ -132,6 +147,7 @@ export default function AddStudentModal({
         last_name: values.last_name.trim(),
         date_of_birth: values.date_of_birth,
         gender: values.gender as "MALE" | "FEMALE",
+        grade: values.grade as Grade,
         parent: {
           first_name: values.parent_first_name.trim(),
           last_name: values.parent_last_name.trim(),
@@ -267,19 +283,44 @@ export default function AddStudentModal({
               </div>
             </div>
 
-            <label className="close-form__label" htmlFor="student-admission">
-              Admission number
-            </label>
-            <input
-              id="student-admission"
-              className="close-form__field"
-              autoComplete="off"
-              {...field("admission_number")}
-            />
-            <FieldError
-              id="admission_number-error"
-              message={errors.admission_number?.message}
-            />
+            <div className="add-student__row">
+              <div>
+                <label
+                  className="close-form__label"
+                  htmlFor="student-admission"
+                >
+                  Admission number
+                </label>
+                <input
+                  id="student-admission"
+                  className="close-form__field"
+                  autoComplete="off"
+                  {...field("admission_number")}
+                />
+                <FieldError
+                  id="admission_number-error"
+                  message={errors.admission_number?.message}
+                />
+              </div>
+              <div>
+                <label className="close-form__label" htmlFor="student-grade">
+                  Grade
+                </label>
+                <select
+                  id="student-grade"
+                  className="close-form__field"
+                  {...field("grade")}
+                >
+                  {gradeOptions.length > 1 && <option value="">Choose</option>}
+                  {gradeOptions.map((g) => (
+                    <option key={g.value} value={g.value}>
+                      {g.label}
+                    </option>
+                  ))}
+                </select>
+                <FieldError id="grade-error" message={errors.grade?.message} />
+              </div>
+            </div>
 
             <div className="add-student__row">
               <div>
