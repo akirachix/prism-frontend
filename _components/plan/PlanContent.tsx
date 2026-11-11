@@ -9,20 +9,15 @@ import "./plan.css";
 export default function PlanContent({ iep }: { iep: IEP }) {
   const [open, setOpen] = useState(false);
   const text = iep.generated_content.trim();
-  const preview = text.length > 420 ? `${text.slice(0, 420).trimEnd()}…` : text;
-  const long = preview !== text || iep.strategies.length > 0;
+  const long = text.length > 420 || iep.strategies.length > 0;
 
   return (
     <div className="plan">
       <section className="plan__section">
         <h2 className="plan__heading">The plan</h2>
-        {open ? (
+        <div className={open ? "" : "plan__clamp"}>
           <PlanText text={text} />
-        ) : (
-          <p className="plan__text">
-            {preview.replace(/[#*]+/g, "").replace(/\s+/g, " ")}
-          </p>
-        )}
+        </div>
       </section>
 
       {iep.short_term_goals.length > 0 && (
