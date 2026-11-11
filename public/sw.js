@@ -1,4 +1,4 @@
-const VERSION = "mirai-v2";
+const VERSION = "mirai-v3";
 const STATIC = `${VERSION}-static`;
 const PRECACHE = ["/offline.html", "/mirai-logo.png", "/icons/icon-192.png"];
 
