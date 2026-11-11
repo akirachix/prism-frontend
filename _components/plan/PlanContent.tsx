@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import Markdown from "@/_components/ui/Markdown";
+
 import type { IEP } from "@/lib/ieps";
 import "./plan.css";
 
@@ -15,7 +17,7 @@ export default function PlanContent({ iep }: { iep: IEP }) {
     <div className="plan">
       <section className="plan__section">
         <h2 className="plan__heading">The plan</h2>
-        <p className="plan__text">{open ? text : preview}</p>
+        <Markdown text={open ? text : preview} className="plan__text" />
       </section>
 
       {iep.short_term_goals.length > 0 && (

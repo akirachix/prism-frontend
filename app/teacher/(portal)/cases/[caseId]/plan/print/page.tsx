@@ -1,5 +1,6 @@
 "use client";
 
+import Markdown from "@/_components/ui/Markdown";
 import { Download } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -111,7 +112,7 @@ export default function PlanPrintPage() {
 
               <section>
                 <h2>The plan</h2>
-                <p>{data.iep.generated_content.trim()}</p>
+                <Markdown text={data.iep.generated_content} />
               </section>
 
               {data.iep.short_term_goals.length > 0 && (

@@ -1,3 +1,4 @@
+import Markdown from "@/_components/ui/Markdown";
 import { describeReport, reportDisclaimer } from "@/lib/report-content";
 import type { Plan, Recommendation, Report } from "@/lib/reports";
 import { formatDate } from "@/lib/format";
@@ -49,7 +50,7 @@ export function PlanDocument({ plan }: { plan: Plan }) {
       </p>
       <section className="preports__doc-section">
         <h3 className="preports__doc-heading">The plan</h3>
-        <p className="preports__text">{plan.generated_content}</p>
+        <Markdown text={plan.generated_content} className="preports__text" />
       </section>
       {plan.short_term_goals.length > 0 && (
         <section className="preports__doc-section">
